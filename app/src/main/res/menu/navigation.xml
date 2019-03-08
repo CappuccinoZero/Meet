@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:title="首页"
+        android:icon="@drawable/item_icon_home"
+        android:id="@+id/item_home"/>
+    <item
+        android:title="科普"
+        android:icon="@drawable/item_icon_book"
+        android:id="@+id/item_book"/>
+    <item
+        android:title=""
+        android:icon="@null"
+        android:checkable="false"
+        android:id="@+id/item_null"/>
+    <item
+        android:title="发现"
+        android:icon="@drawable/item_icon_find"
+        android:id="@+id/item_find"/>
+    <item
+        android:title="鉴别"
+        android:icon="@drawable/item_icon_know"
+        android:id="@+id/item_know"/>
+
+</menu>

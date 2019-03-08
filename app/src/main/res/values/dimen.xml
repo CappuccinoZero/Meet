@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="text_0">12sp</dimen>
+    <dimen name="text_1">14sp</dimen>
+    <dimen name="text_2">16sp</dimen>
+    <dimen name="text_3">20sp</dimen>
+    <dimen name="text_4">24sp</dimen>
+    <dimen name="text_5">34sp</dimen>
+    <dimen name="history_toobar_height">40dp</dimen>
+    <dimen name="history_head">250dp</dimen>
+    <dimen name="history_appbarlayout">160dp</dimen>
+    <dimen name="history_recycler_margin">20dp</dimen>
+    <dimen name="dialog_margin">20dp</dimen>
+    <dimen name="dialog_loading">100dp</dimen>
+    <dimen name="ency_head">200dp</dimen>
+    <dimen name="ency_appbar">80dp</dimen>
+    <dimen name="touch_distance">100dp</dimen>
+</resources>

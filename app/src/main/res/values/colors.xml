@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="transparent">#00FFFFFF</color>
+    <color name="colorPrimary">#FFFFFF</color>
+    <color name="colorPrimaryDark">#FFFFFF</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="release_bg">#191919</color>
+    <color name="pink_A700">#C51162</color>
+    <color name="camera_setting_color">#00BFA5</color>
+    <color name="camera_setting_box">#009688</color>
+    <color name="camera_setting_line">#FF4081</color>
+    <color name="Histroy_fb_color_red">#FF5252</color>
+    <color name="Histroy_fb_color_green">#00BFA5</color>
+    <color name="Histroy_fb_color_back">#5C6BC0</color>
+    <color name="Histroy_toorbar_color">#00B8D4</color>
+    <color name="teal_A400">#1DE9B6</color>
+    <color name="text_back_0">#42000000</color>
+    <color name="text_back_1">#8A000000</color>
+    <color name="text_back_2">#DE000000</color>
+    <color name="text_white_0">#4DFFFFFF</color>
+    <color name="text_white_1">#B3FFFFFF</color>
+    <color name="text_white_2">#FFFFFF</color>
+    <color name="line_white">#1FFFFFFF</color>
+    <color name="line_back">#1F000000</color>
+</resources>

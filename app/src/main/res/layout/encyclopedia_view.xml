@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F5F5F5"
+    >
+    <LinearLayout
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:layout_gravity="center_horizontal"
+            android:layout_width="200dp"
+            android:layout_height="100dp"
+            android:src="@drawable/flower"
+            />
+        <LinearLayout
+            android:layout_marginStart="25dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="汉语："
+                android:textColor="@color/text_back_2"
+                android:textSize="18sp"
+                android:id="@+id/ency_chinese"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:text="中文名"
+                android:textColor="@color/text_back_2"
+                android:textSize="17sp"
+                android:maxLines="2"
+                android:id="@+id/ency_title_0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <ImageView
+                android:id="@+id/ency_horn_0"
+                android:layout_marginStart="10dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:src="@mipmap/horn" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="英语："
+                android:textColor="@color/text_back_2"
+                android:textSize="18sp"
+                android:id="@+id/ency_english"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:text="english name"
+                android:textColor="@color/text_back_2"
+                android:textSize="17sp"
+                android:id="@+id/ency_title_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:clickable="true"
+                android:id="@+id/ency_horn_1"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:src="@mipmap/horn" />
+        </LinearLayout>
+        <View
+            android:layerType="software"
+            android:layout_marginEnd="3dp"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="10dp"
+            android:id="@+id/dash_line_0"
+            android:layout_marginBottom="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="1.5dp"
+            android:background="@drawable/bg_dash_line"
+            android:layout_below="@+id/introduction_content"
+            />
+        <TextView
+            android:textColor="@color/text_back_1"
+            android:visibility="visible"
+            android:layout_marginTop="20dp"
+            android:textSize="@dimen/text_2"
+            android:text="@string/test"
+            android:id="@+id/ency_content_0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/ency_ima_1"
+            />
+        <TextView
+            android:textColor="@color/text_back_1"
+            android:visibility="gone"
+            android:layout_marginTop="20dp"
+            android:textSize="@dimen/text_2"
+            android:text="@string/test"
+            android:id="@+id/ency_content_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:textColor="@color/text_back_1"
+            android:visibility="gone"
+            android:layout_marginTop="20dp"
+            android:textSize="@dimen/text_2"
+            android:text="@string/test"
+            android:id="@+id/ency_content_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:textColor="@color/text_back_1"
+            android:visibility="gone"
+            android:layout_marginTop="20dp"
+            android:textSize="@dimen/text_2"
+            android:text="@string/test"
+            android:id="@+id/ency_content_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:textColor="@color/text_back_1"
+            android:visibility="gone"
+            android:layout_marginTop="20dp"
+            android:textSize="@dimen/text_2"
+            android:text="@string/test"
+            android:id="@+id/ency_content_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:textColor="@color/text_back_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/ency_ima_2"
+            />
+        <TextView
+            android:textColor="@color/text_back_1"
+            android:visibility="gone"
+            android:layout_marginTop="20dp"
+            android:textSize="@dimen/text_2"
+            android:text="@string/test"
+            android:id="@+id/ency_content_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <View
+        android:layout_marginTop="15dp"
+        android:background="#80969696"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="30dp">
+        <ImageView
+            android:layout_marginStart="4dp"
+            android:layout_gravity="center_vertical"
+            android:src="@mipmap/baidu"
+            android:layout_width="18dp"
+            android:layout_height="18dp"/>
+        <TextView
+            android:clickable="true"
+            android:padding="1dp"
+            android:background="@drawable/bg_ripple_rrect_gray"
+            android:layout_marginStart="4dp"
+            android:layout_gravity="center_vertical"
+            android:textSize="@dimen/text_1"
+            android:id="@+id/baidu"
+            android:text="@string/baidu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</LinearLayout>
