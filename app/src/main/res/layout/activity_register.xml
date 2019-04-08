@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/wave_layout"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <pers.lin.linanimations.animations.WaveView
+        android:layout_above="@+id/wave_bottomView"
+        android:id="@+id/login_waveView"
+        app:backgroundTint="#fff"
+        app:wave_asBackground="#fff"
+        app:waveSpeed="10"
+        app:waveWidth="250dp"
+        app:waveHeight="30dp"
+        app:container="rect"
+        app:parcent="0.05"
+        app:randomWave="true"
+        app:firstColor="#FAFFCDD2"
+        app:secondColor="#FFAB40"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <ImageView
+        android:id="@+id/waveBack"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="25dp"
+        android:clickable="true"
+        android:src="@drawable/line_back"
+        android:background="@drawable/bg_ripple_oval_black"
+        android:padding="1dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp" />
+    <View
+        android:background="@drawable/bg_gradient_login"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/wave_bottomView"
+        android:layout_width="match_parent"
+        android:layout_height="150dp">
+    </View>
+    <android.support.design.widget.TextInputLayout
+        android:layout_marginTop="120dp"
+        android:id="@+id/login_register_layout"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:inputType="numberSigned"
+            android:id="@+id/login_register_edit"
+            android:hint="输入手机号码"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </android.support.design.widget.TextInputLayout>
+    <android.support.design.widget.TextInputLayout
+        android:layout_below="@+id/login_register_layout"
+        android:id="@+id/register_password_layout"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:inputType="textPassword"
+            android:id="@+id/register_password_edit"
+            android:hint="设置登录密码"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </android.support.design.widget.TextInputLayout>
+    <Button
+        android:id="@+id/register_next"
+        android:layout_marginTop="50dp"
+        android:layout_below="@+id/register_password_layout"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:text="下一步"
+        android:background="@drawable/bg_ripple_register_next"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</RelativeLayout>

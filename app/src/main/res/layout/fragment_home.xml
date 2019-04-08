@@ -109,17 +109,17 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="wrap_content"
         android:layout_height="match_parent">
-        <com.lin.meet.demo.MyRefresh
+        <com.lin.meet.override.MyRefresh
             android:id="@+id/home_refresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <com.lin.meet.demo.MyViewPage
+            <com.lin.meet.override.MyViewPage
                 android:id="@+id/home_viewPage"
                 android:orientation="vertical"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
-        </com.lin.meet.demo.MyRefresh>
+        </com.lin.meet.override.MyRefresh>
         <LinearLayout
             android:visibility="gone"
             android:id="@+id/home_loading"

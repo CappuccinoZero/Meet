@@ -46,7 +46,7 @@
             android:layout_marginRight="6dp"
             />
     </LinearLayout>
-    <com.lin.meet.demo.MyLayout
+    <com.lin.meet.override.MyLayout
         android:id="@+id/c_layout_0"
         android:background="@drawable/bg_ripple_rrect_gray"
         android:layout_width="match_parent"
@@ -70,7 +70,7 @@
             android:layout_marginTop="2dp"
             android:text="静止时会尝试自动识别物体"
             android:textSize="@dimen/text_1" />
-        <com.lin.meet.demo.SmoothCheckBox
+        <com.lin.meet.override.SmoothCheckBox
             android:id="@+id/c_box_0"
             android:layout_width="24dp"
             android:layout_height="24dp"
@@ -81,8 +81,8 @@
             app:isRect="true"
             app:color_checked="@color/camera_setting_box"
             />
-    </com.lin.meet.demo.MyLayout>
-    <com.lin.meet.demo.MyLayout
+    </com.lin.meet.override.MyLayout>
+    <com.lin.meet.override.MyLayout
         android:id="@+id/c_layout_5"
         android:background="@drawable/bg_ripple_rrect_gray"
         android:layout_width="match_parent"
@@ -106,7 +106,7 @@
             android:layout_marginTop="2dp"
             android:text="触摸屏幕会进行拍摄识别"
             android:textSize="@dimen/text_1" />
-        <com.lin.meet.demo.SmoothCheckBox
+        <com.lin.meet.override.SmoothCheckBox
             android:id="@+id/c_box_4"
             android:layout_width="24dp"
             android:layout_height="24dp"
@@ -117,8 +117,8 @@
             app:isRect="true"
             app:color_checked="@color/camera_setting_box"
             />
-    </com.lin.meet.demo.MyLayout>
-    <com.lin.meet.demo.MyLayout
+    </com.lin.meet.override.MyLayout>
+    <com.lin.meet.override.MyLayout
         android:id="@+id/c_layout_1"
         android:background="@drawable/bg_ripple_rrect_gray"
         android:layout_width="match_parent"
@@ -142,7 +142,7 @@
             android:layout_marginTop="2dp"
             android:text="对话框会跟随重力改变而偏移"
             android:textSize="@dimen/text_1" />
-        <com.lin.meet.demo.SmoothCheckBox
+        <com.lin.meet.override.SmoothCheckBox
             android:id="@+id/c_box_1"
             android:layout_width="24dp"
             android:layout_height="24dp"
@@ -153,7 +153,7 @@
             app:isRect="true"
             app:color_checked="@color/camera_setting_box"
             />
-    </com.lin.meet.demo.MyLayout>
+    </com.lin.meet.override.MyLayout>
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -174,7 +174,7 @@
             android:layout_marginRight="6dp"
             />
     </LinearLayout>
-    <com.lin.meet.demo.MyLayout
+    <com.lin.meet.override.MyLayout
         android:id="@+id/c_layout_2"
         android:background="@drawable/bg_ripple_rrect_gray"
         android:layout_width="match_parent"
@@ -198,7 +198,7 @@
             android:layout_marginTop="2dp"
             android:text="保存您拍摄过的所有照片"
             android:textSize="@dimen/text_1" />
-        <com.lin.meet.demo.SmoothCheckBox
+        <com.lin.meet.override.SmoothCheckBox
             android:id="@+id/c_box_2"
             android:layout_width="24dp"
             android:layout_height="24dp"
@@ -209,8 +209,8 @@
             app:isRect="true"
             app:color_checked="@color/camera_setting_box"
             />
-    </com.lin.meet.demo.MyLayout>
-    <com.lin.meet.demo.MyLayout
+    </com.lin.meet.override.MyLayout>
+    <com.lin.meet.override.MyLayout
         android:visibility="visible"
         android:id="@+id/c_layout_3"
         android:background="@drawable/bg_ripple_rrect_gray"
@@ -235,7 +235,7 @@
             android:layout_marginTop="2dp"
             android:text="每张图片嵌入地理位置信息"
             android:textSize="@dimen/text_1" />
-        <com.lin.meet.demo.SmoothCheckBox
+        <com.lin.meet.override.SmoothCheckBox
             android:id="@+id/c_box_3"
             android:layout_width="24dp"
             android:layout_height="24dp"
@@ -246,7 +246,7 @@
             app:isRect="true"
             app:color_checked="@color/camera_setting_box"
             />
-    </com.lin.meet.demo.MyLayout>
+    </com.lin.meet.override.MyLayout>
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"

@@ -15,4 +15,9 @@
     <dimen name="ency_head">200dp</dimen>
     <dimen name="ency_appbar">80dp</dimen>
     <dimen name="touch_distance">100dp</dimen>
+    <dimen name="per_roll_default">300dp</dimen>
+    <dimen name="per_roll_default_transY">200dp</dimen>
+    <dimen name="per_show_title">10dp</dimen>
+    <dimen name="per_roll_maxdistance">350dp</dimen>
+    <dimen name="per_roll_mindistance">1dp</dimen>
 </resources>

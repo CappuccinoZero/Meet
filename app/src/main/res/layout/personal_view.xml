@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:text="个人信息"
+        android:textSize="@dimen/text_3"
+        android:textColor="#C51162"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:text="账号："
+            android:textSize="@dimen/text_2"
+            android:textColor="@color/text_back_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/perId"
+            android:text="10000"
+            android:textSize="@dimen/text_2"
+            android:textColor="@color/text_back_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:text="昵称："
+            android:textSize="@dimen/text_2"
+            android:textColor="@color/text_back_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/perName"
+            android:text="噬魂兽"
+            android:textSize="@dimen/text_2"
+            android:textColor="@color/text_back_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:text="性别："
+            android:textSize="@dimen/text_2"
+            android:textColor="@color/text_back_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/perSex2"
+            android:text="未知"
+            android:textSize="@dimen/text_2"
+            android:textColor="@color/text_back_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:text="职业："
+            android:textSize="@dimen/text_2"
+            android:textColor="@color/text_back_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/perWork"
+            android:text="自由开发者"
+            android:textSize="@dimen/text_2"
+            android:textColor="@color/text_back_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:text="生日："
+            android:textSize="@dimen/text_2"
+            android:textColor="@color/text_back_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/perBirthday"
+            android:text="9102年20月12日"
+            android:textSize="@dimen/text_2"
+            android:textColor="@color/text_back_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:text="邮箱："
+            android:textSize="@dimen/text_2"
+            android:textColor="@color/text_back_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/perEmail"
+            android:text="zero@lin.zxc.com"
+            android:textSize="@dimen/text_2"
+            android:textColor="@color/text_back_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:text="星座："
+            android:textSize="@dimen/text_2"
+            android:textColor="@color/text_back_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/perConstellation"
+            android:text="射手座"
+            android:textSize="@dimen/text_2"
+            android:textColor="@color/text_back_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:text="地区："
+            android:textSize="@dimen/text_2"
+            android:textColor="@color/text_back_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/perFrom2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="圣诞岛"
+            android:textColor="@color/text_back_2"
+            android:textSize="@dimen/text_2" />
+    </LinearLayout>
+    <TextView
+        android:layout_marginTop="20dp"
+        android:text="个性签名"
+        android:textSize="@dimen/text_3"
+        android:textColor="#C51162"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/perSignature"
+        android:layout_marginEnd="4dp"
+        android:text="没什么好说的，没说么好玩的，随便好写的"
+        android:textSize="@dimen/text_2"
+        android:textColor="@color/text_back_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:maxLines="2"
+        android:layout_marginTop="20dp"
+        android:text="自我介绍"
+        android:textSize="@dimen/text_3"
+        android:textColor="#C51162"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/perIntroduce"
+        android:maxLines="4"
+        android:layout_marginEnd="4dp"
+        android:text="这个人很懒很懒，什么都没写。"
+        android:textSize="@dimen/text_2"
+        android:textColor="@color/text_back_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

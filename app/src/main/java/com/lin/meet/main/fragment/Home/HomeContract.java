@@ -1,11 +1,13 @@
 package com.lin.meet.main.fragment.Home;
 
+import android.support.v4.app.Fragment;
+
 interface HomeContract {
     interface View{
         void isShowLoad(Boolean s);
-        void refreshPictures();
+        void refreshPictures(PictureFragment fragment);
     }
     interface presenter{
-        void doRefresh();
+        void doRefresh(Fragment fragment, int i);
     }
 }

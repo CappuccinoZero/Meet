@@ -28,7 +28,7 @@
                 android:src="@drawable/default_image"
                 android:transitionName="MyShare_0"
                 />
-            <com.lin.meet.demo.SmoothCheckBox
+            <com.lin.meet.override.SmoothCheckBox
                 android:visibility="visible"
                 android:layout_margin="4dp"
                 android:layout_width="28dp"

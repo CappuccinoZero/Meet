@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/flowLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <pers.lin.linanimations.animations.FlowRect
+        android:id="@+id/testSf"
+        app:flow_asBackground="#fff"
+        app:backgroundColor="#2979FF"
+        app:startColor="#3D5AFE"
+        app:centerColor="#2979FF"
+        app:endColor="#00B0FF"
+        app:colorGradient="true"
+        app:FlowSpeed="5"
+        app:flowRadius="200"
+        app:spaceX ="30dp"
+        app:rectHeight="500dp"
+        app:translationX="30dp"
+        app:spaceY="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <android.support.design.widget.TextInputLayout
+        android:layout_marginTop="120dp"
+        android:id="@+id/login_number_layout"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:inputType="numberSigned"
+            android:id="@+id/login_number_edit"
+            android:hint="账号"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </android.support.design.widget.TextInputLayout>
+    <android.support.design.widget.TextInputLayout
+        android:layout_below="@+id/login_number_layout"
+        android:id="@+id/login_password_layout"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:inputType="textPassword"
+            android:id="@+id/login_password_edit"
+            android:hint="密码"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </android.support.design.widget.TextInputLayout>
+    <Button
+        android:id="@+id/testButton"
+        android:layout_marginTop="50dp"
+        android:layout_below="@+id/login_password_layout"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:text="登录"
+        android:background="@drawable/bg_ripple_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <ImageView
+        android:id="@+id/flowBack"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="25dp"
+        android:clickable="true"
+        android:src="@drawable/line_back"
+        android:background="@drawable/bg_ripple_oval_black"
+        android:padding="1dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp" />
+</RelativeLayout>

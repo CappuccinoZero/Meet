@@ -27,14 +27,12 @@ import com.bumptech.glide.request.RequestOptions;
 import com.lin.meet.IntroductionPage.IntroductionActivity;
 import com.lin.meet.R;
 import com.lin.meet.camera_demo.PhotoBean;
-import com.lin.meet.demo.LoadingHolder;
-import com.lin.meet.demo.SmoothCheckBox;
+import com.lin.meet.override.SmoothCheckBox;
 import com.lin.meet.main.DataBase;
 import com.lin.meet.main.DataBaseModel;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;

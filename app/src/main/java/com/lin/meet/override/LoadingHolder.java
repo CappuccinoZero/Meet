@@ -1,4 +1,4 @@
-package com.lin.meet.demo;
+package com.lin.meet.override;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -7,10 +7,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.lin.meet.R;
-import com.lin.meet.camera_demo.PhotoBean;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public  class  LoadingHolder extends RecyclerView.ViewHolder{
     RelativeLayout layout_1;

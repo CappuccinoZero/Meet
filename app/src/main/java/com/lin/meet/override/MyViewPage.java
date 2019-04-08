@@ -1,17 +1,13 @@
-package com.lin.meet.demo;
+package com.lin.meet.override;
 
 import android.content.Context;
-import android.graphics.Point;
-import android.graphics.PointF;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.lin.meet.R;
-import com.lin.meet.my_util.MyUtil;
 
 public class MyViewPage extends ViewPager {
     private float xDown;

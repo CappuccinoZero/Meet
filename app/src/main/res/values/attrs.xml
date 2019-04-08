@@ -24,4 +24,5 @@
         <attr name="isRect" format="boolean"/>
         <attr name="isTouch" format="boolean"/>
     </declare-styleable>
+
 </resources>

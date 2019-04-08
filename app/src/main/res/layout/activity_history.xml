@@ -46,7 +46,7 @@
                     android:src="@mipmap/back_g"
                     android:layout_width="32dp"
                     android:layout_height="32dp" />
-                <com.lin.meet.demo.SmoothCheckBox
+                <com.lin.meet.override.SmoothCheckBox
                     app:color_checked="@color/Histroy_fb_color_green"
                     android:visibility="gone"
                     android:layout_width="28dp"

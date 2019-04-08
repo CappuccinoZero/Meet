@@ -33,6 +33,7 @@ public class PicturesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public boolean cleaning = false;
     public boolean rolling = false;
     public boolean initLoad = true;
+    public HomeContract.View parentView;
     private boolean firstLoad = true;
     private boolean isLoaded = false;//防止滑动加载过多图片
     private Context context;
@@ -197,19 +198,18 @@ public class PicturesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         Glide.get(context).clearMemory();
     }
 
-    public void start(final Home home){
+    public void start(){
         new Thread(new Runnable() {
             @Override
             public void run() {
                     while (true){
                         try{
                             Thread.sleep(500);
-                            if(true){
                                 initLoad=false;
-                                home.isShowLoad(false);
+                                if(parentView!=null)
+                                    parentView.isShowLoad(false);
                                 refresh(null);
                                 break;
-                            }
                         }catch (Exception e){
                             e.printStackTrace();
                         }

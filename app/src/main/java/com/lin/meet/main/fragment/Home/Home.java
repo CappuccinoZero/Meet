@@ -1,43 +1,31 @@
 package com.lin.meet.main.fragment.Home;
-import android.content.DialogInterface;
-import android.graphics.Color;
+
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.gigamole.navigationtabstrip.NavigationTabStrip;
 import com.lin.meet.R;
-import com.lin.meet.demo.MyRefresh;
-import com.lin.meet.demo.MyViewPage;
 import com.lin.meet.main.MainActivity;
-import com.lin.meet.my_util.MyUtil;
+import com.lin.meet.override.MyRefresh;
+import com.lin.meet.override.MyViewPage;
 import com.xujiaji.happybubble.BubbleDialog;
 import com.xujiaji.happybubble.BubbleLayout;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import cn.jzvd.JZVideoPlayer;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static cn.jzvd.JZVideoPlayer.TAG;
 
 public class Home extends Fragment implements View.OnClickListener,HomeContract.View,MyViewPage.recyclerStopScroll {
     private View mView = null;
@@ -51,6 +39,7 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
     private ImageView release;
     private BubbleDialog dialog;
     private AlertDialog alertDialog;
+    private HomeFragmentAdapter adapter;
     View view_0,view_1,view_2,view_3;
     boolean v1=false,v2=false,v3=false;
     private RecyclerView re_recyclerView;
@@ -61,6 +50,9 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
 
     private RecyclerView top_recyclerView;
     private TopicAdapter top_adapter;
+
+    private RecyclerView video_recyclerView;
+    private VideoAdapter videoAdapter;
 
     private NavigationTabStrip tabStrip;
     @Override
@@ -88,11 +80,6 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
         activity = (MainActivity)getActivity();
         ((LinearLayout)view.findViewById(R.id.home_header_layout)).setOnClickListener(this);
         viewPager = (MyViewPage) view.findViewById(R.id.home_viewPage);
-        view_0 = getLayoutInflater().inflate(R.layout.home_recommend, null);
-        view_1 = getLayoutInflater().inflate(R.layout.home_topic, null);
-        view_2 = getLayoutInflater().inflate(R.layout.intorduce_view, null);
-        view_3 = getLayoutInflater().inflate(R.layout.home_pictures, null);
-
         release.setOnClickListener(this);
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -108,25 +95,25 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
                         refresh.setRefreshing(false);
                         break;
                     case 3:
-                        if(ps_adapter.initLoad){
+                        PictureFragment fragment = (PictureFragment) adapter.list.get(3);
+                        if(fragment.getinitLoadStatus()){
                             refresh.setRefreshing(false);
                             return;
                         }
-                        presenter.doRefresh();
+                        presenter.doRefresh(fragment,3);
                         break;
                 }
             }
-        });
-        List<View> list=new ArrayList<>();
-        list.add(view_0);list.add(view_1);list.add(view_2);list.add(view_3);
-        final HomeViwPageAdapter adapter = new HomeViwPageAdapter(list);
+        });;
+        adapter = new HomeFragmentAdapter(this.getFragmentManager(),this);
         viewPager.setAdapter(adapter);
-        viewPager.setOffscreenPageLimit(4);
+        viewPager.setOffscreenPageLimit(2);
         tabStrip = (NavigationTabStrip)view.findViewById(R.id.home_tabLayout);
         String title[]=new String[]{"推荐","话题","视频","美图"};
         tabStrip.setTitles(title);
         tabStrip.setStripType(NavigationTabStrip.StripType.LINE);
         tabStrip.setViewPager(viewPager);
+        viewPager.setRecyclerStop(this);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i1) {
@@ -137,18 +124,9 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
             public void onPageSelected(int i) {
                 isShowLoad(false);
                 switch (i){
-                    case 0:
-                        break;
-                    case 1:
-                        if(!v1)
-                            initTopic();
-                        break;
-                    case 2:
-                        break;
                     case 3:
-                        if(!v3)
-                            initPictures();
-                        if(ps_adapter.initLoad)
+                        PictureFragment fragment = (PictureFragment) adapter.list.get(i);
+                        if(fragment.getinitLoadStatus())
                             isShowLoad(true);
                         break;
                 }
@@ -159,9 +137,6 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
 
             }
         });
-        initRecommend();
-        ps_adapter = new PicturesAdapter(activity);
-        viewPager.setRecyclerStop(this);
     }
 
     private void showRelaseDialog(){
@@ -181,55 +156,6 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
                 .show();
     }
 
-    private void initRecommend(){
-        re_recyclerView = (RecyclerView)view_0.findViewById(R.id.re_recyclerView);
-        LinearLayoutManager manager = new LinearLayoutManager(activity,LinearLayoutManager.VERTICAL,false);
-        re_recyclerView.setLayoutManager(manager);
-        re_adapter = new RecommendAdapter();
-        re_recyclerView.setAdapter(re_adapter);
-    }
-
-    private void initPictures(){
-        v3 = true;
-        ps_recyclerView = (RecyclerView)view_3.findViewById(R.id.pictures_recyclerView);
-        StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
-        manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE); 
-        ps_recyclerView.setLayoutManager(manager);
-        ps_adapter.start(this);
-        ps_recyclerView.setAdapter(ps_adapter);
-        ps_recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                if(MyUtil.isSlidetoBottom(recyclerView)){//底部
-                    ps_adapter.insertData(activity);
-                }
-                ps_adapter.roll_dy = dy;
-                super.onScrolled(recyclerView, dx, dy);
-            }
-
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                switch (newState){
-                    case RecyclerView.SCROLL_STATE_IDLE:
-                        ps_adapter.setRolling(false);
-                        break;
-                    case RecyclerView.SCROLL_STATE_DRAGGING:
-                        ps_adapter.setRolling(true);
-                        break;
-                }
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-        });
-    }
-
-    private void initTopic(){
-        v1 = true;
-        top_recyclerView = (RecyclerView)view_1.findViewById(R.id.topic_recyclerView);
-        LinearLayoutManager manager = new LinearLayoutManager(activity,LinearLayoutManager.VERTICAL,false);
-        top_recyclerView.setLayoutManager(manager);
-        top_adapter = new TopicAdapter();
-        top_recyclerView.setAdapter(top_adapter);
-    }
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -259,6 +185,7 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
     @Override
     public void onPause() {
         super.onPause();
+        JZVideoPlayer.releaseAllVideos();
     }
 
     @Override
@@ -278,11 +205,11 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
 
 
     @Override
-    public void refreshPictures(){
+    public void refreshPictures(PictureFragment fragment){
         try {
             refresh.setRefreshing(false);
             Thread.sleep(150);
-            ps_adapter.refresh(null);
+            fragment.refreshPictures();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -301,4 +228,5 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
             viewPager.setCurrentItem(nowItem+1);
         }
     }
+
 }

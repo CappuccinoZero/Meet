@@ -30,12 +30,37 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/meet_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".recommend.RecommendActivity"></activity>
+        <activity android:name=".main.JsoupTest" />
+        <activity android:name=".login.NoMaybe" />
+        <activity android:name=".login.RegisterActivity" />
+        <activity android:name=".login.StartActivity" />
+        <activity
+            android:name=".login.LoginActivity"
+            android:hardwareAccelerated="false" />
+        <activity
+            android:name=".personal.PersonalSetting"
+            android:label="个人资料" />
+        <activity android:name=".personal.PersonalActivity" />
+        <activity
+            android:name=".video.VideoActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait" />
+
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote" />
+
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="RoFNCV0ycFV6Qn8T9aMuLXECk7RYLbDZ" />
-        <activity android:name=".main.HelloTest"
-            android:screenOrientation="landscape"/>
+
+        <activity
+            android:name=".main.HelloTest"
+            android:screenOrientation="landscape" />
         <activity android:name=".main.WebActivity" />
         <activity android:name=".encyclopedia.EncyclopediaActivity" />
         <activity android:name=".IntroductionPage.IntroductionActivity" />

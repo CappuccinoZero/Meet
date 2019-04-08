@@ -23,13 +23,12 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.AnimationSet;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lin.meet.R;
 import com.lin.meet.camera_demo.PhotoBean;
-import com.lin.meet.demo.SmoothCheckBox;
+import com.lin.meet.override.SmoothCheckBox;
 import com.lin.meet.main.DataBase;
 import com.lin.meet.main.DataBaseModel;
 import com.lin.meet.my_util.MyUtil;
@@ -89,6 +88,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         select_number = (TextView) findViewById(R.id.history_number);
         home = (ImageView) findViewById(R.id.history_back) ;
 
+
         delete.setOnClickListener(this);
         actionButton.setOnClickListener(this);
         home.setOnClickListener(this);
@@ -106,6 +106,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                 head_image.setTranslationY(x);
             }
         });
+        appbarLayout.getTotalScrollRange();
         select_all.setOnCheckedChangeListener(new SmoothCheckBox.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(SmoothCheckBox checkBox, boolean isChecked) {

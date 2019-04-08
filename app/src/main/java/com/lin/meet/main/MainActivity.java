@@ -7,11 +7,10 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
 import android.support.design.bottomnavigation.LabelVisibilityMode;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
@@ -23,31 +22,34 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-
 import android.view.ViewAnimationUtils;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.AnimationSet;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
-
+import com.bumptech.glide.Glide;
 import com.lin.meet.R;
 import com.lin.meet.camera_demo.CameraActivity;
 import com.lin.meet.main.fragment.Book.Book;
 import com.lin.meet.main.fragment.Find.Find;
 import com.lin.meet.main.fragment.Home.Home;
 import com.lin.meet.main.fragment.Know.Know;
+import com.lin.meet.personal.PersonalActivity;
 
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+import de.hdodenhof.circleimageview.CircleImageView;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener,MainConstract.View {
     private DataBase dataBase;
     private ImageView imageView;
     private BottomNavigationView bv;
@@ -58,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
     private Handler handler;
     private int lastShow;
     private DrawerLayout drawer;
+    private CircleImageView header;
+    private TextView name;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,13 +70,14 @@ public class MainActivity extends AppCompatActivity {
         Window window = getWindow();
         request_permissions();
         handler = new Handler();
+        header = (CircleImageView)findViewById(R.id.user_header);
+        name = (TextView)findViewById(R.id.user_name);
         faButton = (FloatingActionButton)findViewById(R.id.open_camera_activity);
         animator_layout = (FrameLayout)findViewById(R.id.animator_layout);
         ((FloatingActionButton) findViewById(R.id.open_camera_activity)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startCamera();
-                //startActivity(new Intent(MainActivity.this,HelloTest.class));
             }
         });
         initFragment();
@@ -113,7 +118,9 @@ public class MainActivity extends AppCompatActivity {
         });
         drawer = (DrawerLayout) findViewById(R.id.main_drawer);
         nv = (NavigationView) findViewById(R.id.main_nv);
-
+        RelativeLayout headLayout = (RelativeLayout) nv.getHeaderView(0);
+        headLayout.setOnClickListener(this);
+        //startActivity(new Intent(this, RecommendActivity.class));
     }
 
     private static final String TAG = "MainActivity";
@@ -152,7 +159,12 @@ public class MainActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             permissionList.add(Manifest.permission.READ_EXTERNAL_STORAGE);
         }
-
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            permissionList.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            permissionList.add(Manifest.permission.READ_PHONE_STATE);
+        }
         if (!permissionList.isEmpty()) {
             ActivityCompat.requestPermissions(this, permissionList.toArray(new String[permissionList.size()]), 1);
         }
@@ -179,8 +191,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-
-
     }
 
 
@@ -201,7 +211,6 @@ public class MainActivity extends AppCompatActivity {
                 overridePendingTransition(R.anim.anim_in,R.anim.anim_out);
                 faButton.setTranslationY(0);
                 hideStateBar();
-                super.onAnimationEnd(animation);
                 super.onAnimationEnd(animation);
             }
         });
@@ -244,5 +253,31 @@ public class MainActivity extends AppCompatActivity {
 
     public void openDrawer(){
         drawer.openDrawer(GravityCompat.START);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.mainHeadLayout:
+                Intent intent = new Intent(this,PersonalActivity.class);
+                startActivity(intent);
+                break;
+        }
+    }
+
+    @Override
+    public void setHeader(@NotNull String str) {
+        Glide.with(this).asDrawable().load(str).into(header);
+    }
+
+    @Override
+    public void setName(@NotNull String str) {
+        name.setText(str);
+    }
+
+    @NotNull
+    @Override
+    public String getName(@NotNull String str) {
+        return null;
     }
 }
