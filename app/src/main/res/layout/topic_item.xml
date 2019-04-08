@@ -5,6 +5,7 @@
     app:cardElevation="1dp"
     app:cardCornerRadius="15dp"
     android:layout_width="match_parent"
+    android:id="@+id/topic_cardView"
     android:orientation="vertical"
     android:clickable="true"
     android:focusable="true"

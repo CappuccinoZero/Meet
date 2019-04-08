@@ -43,12 +43,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </android.support.v7.widget.RecyclerView>
-    <View
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="40dp"
-        android:background="@color/line_back"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"/>
     <RelativeLayout
         android:background="#fff"
         android:paddingStart="4dp"
@@ -163,4 +157,19 @@
                 android:layout_height="20dp" />
         </RelativeLayout>
     </LinearLayout>
+    <ImageView
+        android:elevation="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="20dp"
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp"
+        android:paddingRight="4dp"
+        android:clickable="true"
+        android:id="@+id/recommend_back"
+        android:background="@drawable/bg_ripple_oval_gray"
+        android:layout_alignParentLeft="true"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@mipmap/back_b"/>
 </android.support.design.widget.CoordinatorLayout>

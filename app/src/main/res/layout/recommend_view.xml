@@ -25,8 +25,8 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
                 android:layout_marginStart="10dp"
-                android:layout_width="54dp"
-                android:layout_height="54dp" />
+                android:layout_width="48dp"
+                android:layout_height="48dp" />
             <TextView
                 android:textColor="@color/text_back_2"
                 android:layout_toRightOf="@id/recommend_view_header"
@@ -34,7 +34,7 @@
                 android:layout_marginTop="30dp"
                 android:id="@+id/recommend_view_author"
                 android:text="作者"
-                android:textSize="@dimen/text_3"
+                android:textSize="@dimen/text_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
@@ -44,7 +44,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="4dp"
                 android:text="时间"
-                android:textSize="@dimen/text_2"
+                android:textSize="@dimen/text_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </RelativeLayout>
@@ -80,19 +80,43 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
     <LinearLayout
+        android:paddingTop="8dp"
+        android:paddingBottom="4dp"
         android:background="@drawable/round_bottom"
         android:id="@+id/recommend_view_layout2_bottom"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <ImageView
+            android:layout_marginStart="30dp"
+            android:src="@drawable/thumb"
+            android:padding="2dp"
+            android:id="@+id/recommend_thumb"
+            android:layout_width="22dp"
+            android:layout_height="22dp" />
         <TextView
-            android:id="@+id/recommend_view_content_bottom"
+            android:id="@+id/recommend_thumb_count"
+            android:layout_marginStart="4dp"
+            android:text="0"
             android:textSize="@dimen/text_2"
-            android:paddingBottom="10dp"
-            android:paddingEnd="20dp"
-            android:paddingStart="20dp"
-            android:text="内容"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+        <ImageView
+            android:layout_marginStart="8dp"
+            android:src="@drawable/reply_img"
+            android:padding="2dp"
+            android:id="@+id/recommend_reply"
+            android:layout_width="22dp"
+            android:layout_height="22dp" />
+        <TextView
+            android:id="@+id/recommend_reply_count"
+            android:layout_marginStart="4dp"
+            android:text="0"
+            android:textSize="@dimen/text_2"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
     </LinearLayout>
     <!--图片-->
     <LinearLayout

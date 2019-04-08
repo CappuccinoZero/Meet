@@ -69,11 +69,9 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.Reco
                     break;
                 case RecommendViewBean.FLAG_CONTENT_BOTTOM:
                     viewHoloder.showLayout(5);
-                    viewHoloder.bottomText.setText(bean.content);
                     break;
                 case RecommendViewBean.FLAG_CONTENT_REPLY:
                     viewHoloder.showLayout(6);
-                    viewHoloder.bottomText.setText(bean.content);
                     break;
             }
         }else {
@@ -93,7 +91,6 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.Reco
         ImageView image;
         TextView text;
         TextView topText;
-        TextView bottomText;
         RelativeLayout layout_1;
         LinearLayout layout_2;
         LinearLayout layout_2_top;
@@ -108,7 +105,6 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.Reco
             image=(ImageView) itemView.findViewById(R.id.recommend_view_image);
             text=(TextView) itemView.findViewById(R.id.recommend_view_content);
             topText=(TextView)itemView.findViewById(R.id.recommend_view_content_top);
-            bottomText=(TextView)itemView.findViewById(R.id.recommend_view_content_bottom);;
             layout_1 = (RelativeLayout)itemView.findViewById(R.id.recommend_view_layout1);
             layout_2 = (LinearLayout)itemView.findViewById(R.id.recommend_view_layout2);
             layout_2_top = (LinearLayout)itemView.findViewById(R.id.recommend_view_layout2_top);
@@ -165,10 +161,7 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.Reco
         for(int i=1;i<max;i++){
             if(bean.getContents().size()-1>i){
                 reBean = new RecommendViewBean();
-                if(i==max-1&&bean.getImgs().size()-1<=i)
-                    reBean.flag = RecommendViewBean.FLAG_CONTENT_BOTTOM;
-                else
-                    reBean.flag = RecommendViewBean.FLAG_CONTENT;
+                reBean.flag = RecommendViewBean.FLAG_CONTENT;
                 reBean.content = bean.getContents().get(i);
                 list.add(reBean);
             }
@@ -179,6 +172,9 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.Reco
                 list.add(reBean);
             }
         }
+        reBean = new RecommendViewBean();
+        reBean.flag = RecommendViewBean.FLAG_CONTENT_BOTTOM;
+        list.add(reBean);
         reBean = new RecommendViewBean();
         reBean.flag = RecommendViewBean.FLAG_CONTENT_REPLY;
         list.add(reBean);

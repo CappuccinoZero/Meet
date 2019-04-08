@@ -61,11 +61,6 @@
         android:layout_above="@+id/video_reply_normal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-    <View
-        android:layout_above="@+id/video_reply_normal"
-        android:background="@color/line_back"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"/>
     <RelativeLayout
         android:paddingStart="4dp"
         android:paddingTop="4dp"

@@ -32,7 +32,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".recommend.RecommendActivity"></activity>
+        <activity android:name=".topic.TopicActivity"
+            android:label=""
+            ></activity>
+        <activity android:name=".recommend.RecommendActivity" />
         <activity android:name=".main.JsoupTest" />
         <activity android:name=".login.NoMaybe" />
         <activity android:name=".login.RegisterActivity" />

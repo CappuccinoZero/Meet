@@ -39,7 +39,6 @@ public class RecommendActivity extends AppCompatActivity implements View.OnClick
             }
         }
     };
-    private boolean showEdit = false;
     private TextView title;
     private AppBarLayout appBarLayout;
     private RecyclerView recyclerView;
@@ -49,6 +48,8 @@ public class RecommendActivity extends AppCompatActivity implements View.OnClick
     private LinearLayout replyWrite;
     private LinearLayout replyLayout;
     private EditText replyEdit;
+    private ImageView back;
+    private boolean showEdit = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +68,9 @@ public class RecommendActivity extends AppCompatActivity implements View.OnClick
         replyWrite = (LinearLayout) findViewById(R.id.video_reply_write);
         replyEdit = (EditText)findViewById(R.id.video_reply_edit);
         replyLayout = (LinearLayout)findViewById(R.id.video_reply_layout);
+        back = (ImageView)findViewById(R.id.recommend_back);
         replyLayout.setOnClickListener(this);
+        back.setOnClickListener(this);
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
@@ -119,6 +122,9 @@ public class RecommendActivity extends AppCompatActivity implements View.OnClick
         switch (v.getId()){
             case R.id.video_reply_layout:
                 showEdit();
+                break;
+            case R.id.recommend_back:
+                finish();
                 break;
         }
     }
