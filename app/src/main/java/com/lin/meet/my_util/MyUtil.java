@@ -3,6 +3,7 @@ package com.lin.meet.my_util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,6 +16,10 @@ import android.view.WindowManager;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MyUtil {
     /**
@@ -117,5 +122,40 @@ public class MyUtil {
 
         return (int) (dpValue * scale +0.5f);
 
+    }
+
+    public static String getMD5String(String mdStr){
+        StringBuffer sb = new StringBuffer();
+        try {
+            MessageDigest digest = MessageDigest.getInstance("md5");
+            byte[] result = digest.digest(mdStr.getBytes());
+            for(byte B:result){
+                int number = B&0xff;
+                String hex = Integer.toHexString(number);
+                if(hex.length()==1)
+                    sb.append(0);
+                sb.append(hex);
+            }
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return sb.toString();
+    }
+
+    public static void saveSharedPreferences(Context context, String key, HashMap<String,String> map){
+        SharedPreferences.Editor editor = context.getSharedPreferences(key,Context.MODE_PRIVATE).edit();
+        for (Map.Entry<String,String> entry:map.entrySet()){
+            editor.putString(entry.getKey(),entry.getValue());
+        }
+        editor.apply();
+    }
+
+    public static SharedPreferences getShardPreferences(Context context,String key){
+        SharedPreferences pre = context.getSharedPreferences(key,Context.MODE_PRIVATE);
+        if(pre==null){
+            SharedPreferences.Editor editor = pre.edit();
+            editor.apply();
+        }
+        return context.getSharedPreferences(key,Context.MODE_PRIVATE);
     }
 }

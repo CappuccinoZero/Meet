@@ -1,33 +1,76 @@
 package com.lin.meet.main;
-import android.support.v7.app.AppCompatActivity;
+
 import android.os.Bundle;
-import com.bumptech.glide.Glide;
+import android.support.v7.app.AppCompatActivity;
+import android.widget.TextView;
+
 import com.lin.meet.R;
-import cn.jzvd.JZVideoPlayer;
-import cn.jzvd.JZVideoPlayerStandard;
+
 public class HelloTest extends AppCompatActivity {
+    private TextView textView ;
+    public static int[] emojis = {
+            0x1F601,
+            0x1F602,
+            0x1F603,
+            0x1F604,
+            0x1F605,
+            0x1F606,
+            0x1F609,
+            0x1F60A,
+            0x1F60B,
+            0x1F60C,
+            0x1F60D,
+            0x1F60E,
+            0x1F60F,
+            0x1F612,
+            0x1F613,
+            0x1F614,
+            0x1F616,
+            0x1F618,
+            0x1F61A,
+            0x1F61C,
+            0x1F61D,
+            0x1F61E,
+            0x1F620,
+            0x1F621,
+            0x1F622,
+            0x1F623,
+            0x1F624,
+            0x1F625,
+            0x1F628,
+            0x1F629,
+            0x1F62A,
+            0x1F62B,
+            0x1F62D,
+            0x1F630,
+            0x1F631,
+            0x1F632,
+            0x1F633,
+            0x1F634,
+            0x1F635,
+            0x1F637,
+            0x1F638,
+            0x1F639,
+            0x1F63A,
+            0x1F63B,
+            0x1F63C,
+            0x1F63D,
+            0x1F63E,
+            0x1F63F,
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hello_test);
-        JZVideoPlayerStandard jzVideoPlayerStandard = (JZVideoPlayerStandard) findViewById(R.id.videoplayer);
-
-        jzVideoPlayerStandard.setUp("http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"
-                , JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL, "饺子闭眼睛");
-
-        Glide.with(this).load("http://p.qpic.cn/videoyun/0/2449_43b6f696980311e59ed467f22794e792_1/640").into(jzVideoPlayerStandard.thumbImageView);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (JZVideoPlayer.backPress()) {
-            return;
+        textView = (TextView)findViewById(R.id.test_emoji);
+        StringBuilder temp = new StringBuilder();
+        for(int i=0;i<emojis.length;i++){
+            temp.append(getEmojiStringByUnicode(emojis[i]));
         }
-        super.onBackPressed();
+        textView.setText(temp);
     }
-    @Override
-    protected void onPause() { //选择适当的声明周期释放
-        super.onPause();
-        JZVideoPlayer.releaseAllVideos();
+    private static String getEmojiStringByUnicode(int unicode) {
+        return new String(Character.toChars(unicode));
     }
+
 }

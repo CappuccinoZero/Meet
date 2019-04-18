@@ -32,10 +32,16 @@ interface PersonalContract {
         fun getAttend():String
         fun setFans(str:String)
         fun getFans():String
+        fun setAge(age:String)
+        fun getAge():String
         fun setHeadBg(uri:String)
+        fun toast(str:String)
+        fun updateImageView(id:Int,path:String)
     }
     interface Model{}
-    interface Presenter{}
+    interface Presenter{
+        fun downloadToCache(uri:String,fileName:String,result:Int)
+    }
     interface Scroll{
         fun onScrollDown(event: MotionEvent)
     }

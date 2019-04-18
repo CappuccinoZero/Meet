@@ -3,10 +3,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:id="@+id/mainHeadLayout"
-    android:layout_height="180dp"
-    android:background="#00BFA5"
-    android:padding="15dp">
+    android:layout_height="180dp">
+    <ImageView
+        android:scaleType="fitXY"
+        android:src="#00BFA5"
+        android:id="@+id/user_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
     <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_marginStart="15dp"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_above="@+id/user_name"
@@ -14,11 +19,11 @@
         android:src="@drawable/temp"
         android:id="@+id/user_header"/>
     <TextView
-        android:layout_marginStart="4dp"
+        android:layout_marginStart="25dp"
         android:layout_alignParentBottom="true"
         android:id="@+id/user_name"
         android:text = "未登录"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="25dp"
         android:textSize="@dimen/text_2"
         android:textColor="#F0F0F0"
         android:layout_width="wrap_content"

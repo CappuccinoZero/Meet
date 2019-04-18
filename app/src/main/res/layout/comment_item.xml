@@ -44,6 +44,16 @@
             android:textSize="10sp"
             android:textColor="@color/text_back_1"
             android:text="2019年3月22日"/>
+        <ImageView
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="20dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="30dp"
+            android:src="@drawable/thumb"
+            android:padding="2dp"
+            android:id="@+id/recommend_thumb"
+            android:layout_width="22dp"
+            android:layout_height="22dp" />
     </RelativeLayout>
     <TextView
         android:layout_marginStart="44dp"
@@ -130,11 +140,11 @@
             android:layout_height="wrap_content" />
         <TextView
             android:paddingTop="4dp"
-            android:textColor="#283593"
+            android:textColor="#4B4B4B"
             android:layout_below="@+id/comment_user_3"
             android:id="@+id/comment_more"
             android:textSize="@dimen/text_0"
-            android:text="查看全部回复"
+            android:text="查看全部回复 >"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </RelativeLayout>

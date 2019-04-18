@@ -1,5 +1,6 @@
 package com.lin.meet.main.fragment.Home;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,19 +16,26 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.gigamole.navigationtabstrip.NavigationTabStrip;
 import com.lin.meet.R;
 import com.lin.meet.main.MainActivity;
+import com.lin.meet.my_util.MyUtil;
 import com.lin.meet.override.MyRefresh;
 import com.lin.meet.override.MyViewPage;
 import com.xujiaji.happybubble.BubbleDialog;
 import com.xujiaji.happybubble.BubbleLayout;
+
+import java.io.File;
 
 import cn.jzvd.JZVideoPlayer;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class Home extends Fragment implements View.OnClickListener,HomeContract.View,MyViewPage.recyclerStopScroll {
+    private RequestOptions options;
     private View mView = null;
     private HomeContract.presenter presenter;
     private CircleImageView header;
@@ -55,6 +63,7 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
     private VideoAdapter videoAdapter;
 
     private NavigationTabStrip tabStrip;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -80,6 +89,9 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
         activity = (MainActivity)getActivity();
         ((LinearLayout)view.findViewById(R.id.home_header_layout)).setOnClickListener(this);
         viewPager = (MyViewPage) view.findViewById(R.id.home_viewPage);
+        options = new RequestOptions();
+        options.diskCacheStrategy(DiskCacheStrategy.NONE);
+        options.skipMemoryCache(true);
         release.setOnClickListener(this);
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -180,6 +192,7 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
         if(ps_adapter!=null)
             ps_adapter.clean();
         super.onResume();
+        updateHeader();
     }
 
     @Override
@@ -216,6 +229,11 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
     }
 
     @Override
+    public void setHeader(String path) {
+        Glide.with(this).asDrawable().apply(options).load(path).into(header);
+    }
+
+    @Override
     public void setViewPageItem(int direction) {
         int nowItem = viewPager.getCurrentItem();
         if(direction == MyViewPage.LEFT){
@@ -229,4 +247,11 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
         }
     }
 
+    public void updateHeader(){
+        SharedPreferences pre = MyUtil.getShardPreferences(getActivity(),"Cache");
+        String path = pre.getString("header","");
+        File file = new File(MainActivity.savePath+path);
+        if (file.exists())
+            setHeader(MainActivity.savePath+path);
+    }
 }

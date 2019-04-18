@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".main.HelloTest">
-    <cn.jzvd.JZVideoPlayerStandard
-        android:id="@+id/videoplayer"
+    <TextView
+        android:id="@+id/test_emoji"
         android:layout_width="match_parent"
-        android:layout_height="200dp"/>
+        android:layout_height="match_parent" />
 </RelativeLayout>

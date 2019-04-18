@@ -44,6 +44,7 @@
         android:layout_height="match_parent">
     </android.support.v7.widget.RecyclerView>
     <RelativeLayout
+        android:elevation="20dp"
         android:background="#fff"
         android:paddingStart="4dp"
         android:paddingTop="4dp"
@@ -107,6 +108,7 @@
         </LinearLayout>
     </RelativeLayout>
     <LinearLayout
+        android:elevation="20dp"
         android:visibility="gone"
         android:background="#F2FFFFFF"
         android:paddingStart="4dp"

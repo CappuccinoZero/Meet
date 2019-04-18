@@ -15,6 +15,16 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.X509TrustManager;
+
 public class JsoupTest extends AppCompatActivity {
 
     Handler handler = new Handler(){
@@ -29,7 +39,7 @@ public class JsoupTest extends AppCompatActivity {
                 case LoveNews.JSOUP_NEWS_MESSAGE:
                     Bundle datas = msg.getData();
                     LoveNewsBean bean = (LoveNewsBean) datas.getSerializable("LoveNews");
-                    Log.d("测试", "handleMessage: "+bean.getTitle());
+                    Log.d("测试", "handleMessage:??? "+bean.getTitle());
             }
 
         }
@@ -41,32 +51,32 @@ public class JsoupTest extends AppCompatActivity {
         setContentView(R.layout.activity_jsoup_test);
         Log.d("测试", "run: "+"start");
         LoveNews news  = new LoveNews();
-        news.updateNews(handler,1);
+        //news.updateNews(handler,1);
         new Thread(new Runnable() {
             @Override
             public void run() {
                 Document document = null;
                 try {
-                    document = Jsoup.connect("http://www.lovehhy.net/News/List/XDWSJ").get();
-                    Elements elements = document.getElementsByClass("post_recommend_new");
+                    document = Jsoup.connect("http://www.aidongwu.net/xinwen")
+                            .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36")
+                            .timeout(30000)
+                            .cookie("auth", "token")
+                            .get();
+                    Elements elements = document.getElementsByClass("item cf");
+                    Log.d("测试", "run: into"+document.toString());
                     for(int i=0;i<elements.size();i++){
+                        Log.d("测试", "run: limian");
                         Element element = elements.get(i);
-                        Elements elements1 = element.select("h3");
-                        Element element1 = elements1.get(0);
-                        Elements elements2 = element1.select("a");
-                        Element element2 = elements2.get(0);
-                        String[] str = element2.text().split("、",2);
-                        Log.d("测试", "run: "+str[1]);
+                        Log.d("测试 "+i, "run: "+element.text());
                     }
+                    Log.d("测试", "run: end");
+
                 } catch (Exception e) {
-                    Log.d("测试", "run: "+"BUG");
                     e.printStackTrace();
                 }finally {
-                    Log.d("测试", "run: "+"final");
                 }
             }
-        });
-        senMsg("我最后一次不会不会不会不喜欢你",handler);
+        }).start();
     }
 
     private void senMsg(final String say,final Handler newHandler){
@@ -87,5 +97,36 @@ public class JsoupTest extends AppCompatActivity {
                 }
             }
         }).start();
+    }
+
+
+    public static void checkQuietly() {
+        try {
+            HttpsURLConnection
+                    .setDefaultHostnameVerifier(new HostnameVerifier() {
+                        public boolean verify(String hostname,
+                                              SSLSession session) {
+                            return true;
+                        }
+                    });
+            SSLContext context = SSLContext.getInstance("TLS");
+            context.init(null, new X509TrustManager[] { new X509TrustManager() {
+                public void checkClientTrusted(X509Certificate[] chain,
+                                               String authType) throws CertificateException {
+                }
+
+                public void checkServerTrusted(X509Certificate[] chain,
+                                               String authType) throws CertificateException {
+                }
+
+                public X509Certificate[] getAcceptedIssuers() {
+                    return new X509Certificate[0];
+                }
+            } }, new SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(context
+                    .getSocketFactory());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="#FFFFFF"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:layout_marginTop="50dp"
+        android:layout_gravity="center"
+        android:layout_centerInParent="true"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        style="@style/SpinKitView.FadingCircle"
+        app:SpinKit_Color="#A7FFEB"
+        />
+    <TextView
+        android:id="@+id/text_upload"
+        android:layout_marginTop="30dp"
+        android:textColor="#1DE9B6"
+        android:textSize="@dimen/text_2"
+        android:layout_gravity="center"
+        android:text="正在上传中,请稍等..."
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/cancel_upload"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:background="@drawable/bg_ripple_rrect_teal"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="20dp"
+        android:textColor="#00BFA5"
+        android:textSize="14sp"
+        android:layout_gravity="center"
+        android:text="取消上传"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</LinearLayout>

@@ -4,20 +4,55 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
+import android.widget.Toast
+import cn.bmob.v3.BmobUser
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.lin.meet.R
+import com.lin.meet.bean.User
+import com.lin.meet.main.MainActivity
+import com.lin.meet.my_util.MyUtil
 import kotlinx.android.synthetic.main.activity_personal.*
 import kotlinx.android.synthetic.main.personal_view.*
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
 
 class PersonalActivity : AppCompatActivity(), View.OnClickListener,PersonalContract.View {
+    override fun setAge(age: String) {
+        perAge.setText(age+"岁")
+    }
+
+    override fun getAge(): String {
+        return perAge.text.toString()
+    }
+
+
+    override fun toast(str: String) {
+            Toast.makeText(this,str, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun updateImageView(id: Int,path:String) {
+        when(id){
+            1->{
+                setHeader(path)
+            }
+            2->{
+                setHeadBg(path)
+            }
+        }
+    }
+
     override fun setHeadBg(uri: String) {
-        Glide.with(this).asDrawable().load(uri).into(perImage)
+        Glide.with(this).asDrawable().apply(option!!).load(uri).into(perImage)
     }
 
     override fun setNumber(str: String) {
@@ -56,8 +91,11 @@ class PersonalActivity : AppCompatActivity(), View.OnClickListener,PersonalContr
     }
 
     override fun setBirthday(str: String) {
-        perBirthday.text = str
-        perAge.text = "0"+"岁"
+        var birth = str.split("/")
+        if(birth.size>=3){
+            var str_2 = birth.get(0)+"年"+birth.get(1)+"月"+birth.get(2)+"日"
+            perBirthday.text = str_2
+        }
     }
 
     override fun getBirthday(): String {
@@ -106,7 +144,7 @@ class PersonalActivity : AppCompatActivity(), View.OnClickListener,PersonalContr
     }
 
     override fun setHeader(uri: String) {
-        Glide.with(this).asDrawable().load(uri).into(perHeader)
+        Glide.with(this).asDrawable().load(uri).apply(option!!).into(perHeader)
     }
 
     override fun setAttend(str: String) {
@@ -125,6 +163,10 @@ class PersonalActivity : AppCompatActivity(), View.OnClickListener,PersonalContr
         return perFan.text.toString()
     }
 
+    private var isChange = false
+    private val format = SimpleDateFormat("yyyy/MM/dd")
+    private var presenter:PersonalContract.Presenter?=null
+    private var option: RequestOptions?= null
     private var isFirst:Boolean = true
     private var isDefault:Boolean = true
     private var lastY:Int = 0
@@ -164,7 +206,7 @@ class PersonalActivity : AppCompatActivity(), View.OnClickListener,PersonalContr
 
             }
             R.id.perEdit->{//编辑
-                startActivity(Intent(this,PersonalSetting::class.java))
+                startActivityForResult(Intent(this,PersonalSetting::class.java),1)
             }
         }
     }
@@ -173,6 +215,7 @@ class PersonalActivity : AppCompatActivity(), View.OnClickListener,PersonalContr
         setContentView(R.layout.activity_personal)
         initCalcul()
         initView()
+        initLoadView()
     }
 
     private fun initCalcul(){
@@ -198,6 +241,11 @@ class PersonalActivity : AppCompatActivity(), View.OnClickListener,PersonalContr
     }
 
     private fun initView(){
+        presenter = PersonalPresenter(this)
+        option = RequestOptions()
+        option!!.diskCacheStrategy(DiskCacheStrategy.NONE)
+        option!!.skipMemoryCache(true)
+
         perAttentionHe.setOnClickListener(this)
         perAttentioned.setOnClickListener(this)
         perEdit.setOnClickListener(this)
@@ -285,6 +333,129 @@ class PersonalActivity : AppCompatActivity(), View.OnClickListener,PersonalContr
             }
         })
         anmiSet.start()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if(resultCode==1){
+            initLoadView()
+            isChange = true
+        }
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    private fun initLoadView(){
+        var user: User? = null
+        if(User.isLogin()){
+            user = BmobUser.getCurrentUser(User::class.java)
+        }
+        else{
+            toast("用户未登录")
+            return
+        }
+
+        var cachePre: SharedPreferences = MyUtil.getShardPreferences(this,"Cache")
+
+        var fileName:String = cachePre.getString("background","[null]");
+        var cache: File = File(MainActivity.savePath+fileName)
+        if(cache.exists())
+            setHeadBg(MainActivity.savePath+fileName)
+        else if ("[null]" != fileName)
+            presenter!!.downloadToCache(user.backgroundUri,fileName,2)
+
+        fileName = cachePre.getString("header","[null]");
+        cache = File(MainActivity.savePath+fileName)
+        if(cache.exists())
+            setHeader(MainActivity.savePath+fileName)
+        else if ("[null]" != fileName)
+            presenter!!.downloadToCache(user.headerUri,fileName,1)
+
+        setNumber(user.uid.toString())
+        setName(user.nickName)
+        setSex(user.sex)
+        setWork(user.work)
+        setBirthday(user.brith)
+        setEmail(user.e_mail)
+        setFrom(user.area)
+        setSignature(user.signature)
+        setIntroduce(user.introduce)
+        setAge(calculAge(user.brith))
+        setConstellation(calculConstellation(user.brith) )
+    }
+
+    private fun calculAge(birth:String):String{
+        var dates = birth.split("/")
+        if(dates.size<3) return "0"
+        var year = dates[0].toInt()
+        var month = dates[1].toInt()
+        var day = dates[2].toInt()
+
+        var date = Date(System.currentTimeMillis())
+        var nowTime = format.format(date)
+
+        var nowDates = nowTime.split("/")
+        var now_year = nowDates[0].toInt()
+        var now_month = nowDates[1].toInt()
+        var now_day = nowDates[2].toInt()
+
+        var age = now_year - year -1
+        if(now_month>month)
+            return (age+1).toString()
+        if(now_month==month&&now_day>day)
+            return (age+1).toString()
+        return age.toString()
+    }
+
+    override fun finish() {
+        if(isChange)
+            setResult(1)
+        super.finish()
+    }
+
+    private fun calculConstellation(birth:String):String{
+        var dates = birth.split("/")
+        if(dates.size<3) return "0"
+        var month = dates[1].toInt()
+        var day = dates[2].toInt()
+        var calcul:Float = month.toFloat() + day.toFloat()/100
+        when(calcul){
+            in 1.20..2.18->{
+               return "水瓶座"
+            }
+            in 2.19..3.20->{
+                return "双鱼座"
+            }
+            in 3.21..4.19->{
+                return "白羊座"
+            }
+            in 4.20..5.20->{
+                return "金牛座"
+            }
+            in 5.21..6.21->{
+                return "双子座"
+            }
+            in 6.22..7.22->{
+                return "巨蟹座"
+            }
+            in 7.23..8.22->{
+                return "狮子座"
+            }
+            in 8.23..9.22->{
+                return "处女座"
+            }
+            in 9.23..10.23->{
+                return "天秤座"
+            }
+            in 10.24..11.22->{
+                return "天蝎座"
+            }
+            in 11.23..12.21->{
+                return "射手座"
+            }
+            in 12.22..1.19->{
+                return "摩羯座"
+            }
+        }
+        return ""
     }
 }
 

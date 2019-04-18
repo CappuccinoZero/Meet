@@ -16,6 +16,7 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
@@ -92,6 +93,10 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
+        </provider>
+        <provider
+            android:name="cn.bmob.v3.util.BmobContentProvider"
+            android:authorities="com.lin.meet.BmobContentProvider">
         </provider>
     </application>
 

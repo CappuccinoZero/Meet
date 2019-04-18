@@ -2,6 +2,7 @@ package com.lin.meet.login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
@@ -13,7 +14,7 @@ import com.lin.meet.R;
 
 import pers.lin.linanimations.animations.RippleView;
 
-public class StartActivity extends AppCompatActivity implements View.OnClickListener {
+public class  StartActivity extends AppCompatActivity implements View.OnClickListener {
     private RelativeLayout rippleLayout;
     private Button checkLogin;
     private TextView checkRegister;
@@ -42,11 +43,28 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
             case R.id.check_login:
                 startActivity(new Intent(this,LoginActivity.class));
                 overridePendingTransition(R.anim.anim_in,R.anim.anim_out);
+                finish();
                 break;
             case R.id.check_register:
                 startActivity(new Intent(this,RegisterActivity.class));
                 overridePendingTransition(R.anim.anim_in,R.anim.anim_out);
+                finish();
                 break;
         }
+    }
+
+    private void onLogin(){
+        /**
+         * 登录成功的操作
+         */
+
+        finish();
+        overridePendingTransition(R.anim.anim_in,R.anim.anim_out);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
     }
 }

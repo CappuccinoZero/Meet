@@ -62,6 +62,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
     <RelativeLayout
+        android:elevation="20dp"
         android:paddingStart="4dp"
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
@@ -124,6 +125,7 @@
         </LinearLayout>
     </RelativeLayout>
     <LinearLayout
+        android:elevation="20dp"
         android:visibility="gone"
         android:background="#F2FFFFFF"
         android:paddingStart="4dp"
