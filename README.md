@@ -1,4 +1,4 @@
-# <Android>基于图像识别的面向动物的科普平台
+# <Android>Meet
 ### 独立开发
 ### 未完成
 ### Create by 2019.3
