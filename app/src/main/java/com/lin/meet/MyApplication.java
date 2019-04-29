@@ -14,6 +14,7 @@ public class MyApplication extends LitePalApplication {
         super.onCreate();
         Bmob.initialize(this, "c6ba1e71088c7736254c53f1db9cd625");
         SDKInitializer.initialize(this);
+        SDKInitializer.setHttpsEnable(true);
         SDKInitializer.setCoordType(CoordType.BD09LL);
     }
 }

@@ -3,10 +3,16 @@ package com.lin.meet.IntroductionPage;
 import android.app.Activity;
 import android.content.Context;
 
+import com.lin.meet.bean.Baike;
 import com.lin.meet.encyclopedia.EncyclopediaActivity;
 import com.lin.meet.my_util.TFLiteUtil;
 
+import java.util.List;
 import java.util.Random;
+
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 
 public class IntroductionPresenter implements IntorductionContract.Presenter {
     IntorductionContract.View view;
@@ -25,9 +31,10 @@ public class IntroductionPresenter implements IntorductionContract.Presenter {
     }
 
     @Override
-    public void intoEncy(Activity activity, int id) {
+    public void intoEncy(Activity activity, int id,String uri,String type) {
         EncyclopediaActivity.openEncyclopedia(activity,EncyclopediaActivity.getDatas
-                (tflite.myUrl[id*3-2],tflite.myUrl[id*3-1],tflite.myUrl[id*3],tflite.mylabel[id],tflite.elabel[id],"https://baike.baidu.com/"));
+                (tflite.myUrl[id*3-2],tflite.myUrl[id*3-1],tflite.myUrl[id*3],tflite.mylabel[id],tflite.elabel[id],"https://baike.baidu.com/")
+        ,uri,type);
     }
 
     @Override
@@ -111,5 +118,29 @@ public class IntroductionPresenter implements IntorductionContract.Presenter {
             view.setProbability_3(tempMaybe);
             view.setImageView_3(tempUrl);
         }
+    }
+
+    @Override
+    public void updateBaike(int id,int position) {
+        BmobQuery<Baike> query = new BmobQuery<>();
+        query.addWhereEqualTo("flag",id);
+        query.findObjects(new FindListener<Baike>() {
+            @Override
+            public void done(List<Baike> list, BmobException e) {
+                if(e == null&&list.size()>0){
+                    if(position==1){
+                        view.setUri1(list.get(0).getUri(),list.get(0).getType());
+                        view.setContent(list.get(0).getBrief(),1);
+                    }
+                    else if(position==2){
+                        view.setUri2(list.get(0).getUri(),list.get(0).getType());
+                        view.setContent(list.get(0).getBrief(),2);
+                    }else if(position==3){
+                        view.setUri3(list.get(0).getUri(),list.get(0).getType());
+                        view.setContent(list.get(0).getBrief(),3);
+                    }
+                }
+            }
+        });
     }
 }

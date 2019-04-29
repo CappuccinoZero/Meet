@@ -3,6 +3,8 @@ package com.lin.meet.encyclopedia;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.lin.meet.jsoup.BaikeBean;
+
 public interface EncyclopediaContract {
     public interface View{
         void openHorn(ImageView horn);
@@ -10,14 +12,13 @@ public interface EncyclopediaContract {
         void setTitleName(String str);
         void setChineseTitle(String str);
         void setEnglishTitle(String str);
-        void setContent_0(String str);
-        void setContent_1(String str);
-        void setContent_2(String str);
-        void setContent_3(String str);
-        void setContent_4(String str);
-        void setContent_5(String str);
         void setImageHead(String path);
-        void setImage_1(String path);
-        void setImage_2(String path);
+
+        void setSummary(String str);
+        void setBaike(int flag,String title,String content,String image);
+        void setImage(int flag,String img);
+    }
+    interface Presenter{
+        void initBaike(BaikeBean bean);
     }
 }

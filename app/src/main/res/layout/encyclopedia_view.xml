@@ -85,76 +85,86 @@
             android:layout_marginBottom="20dp"
             android:layout_width="match_parent"
             android:layout_height="1.5dp"
-            android:background="@drawable/bg_dash_line"
-            android:layout_below="@+id/introduction_content"
+            android:background="@drawable/bg_dash_line"/>
+        <TextView
+            android:layout_gravity="center"
+            android:textSize="@dimen/text_3"
+            android:textColor="@color/text_back_2"
+            android:text="物种概述"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/baike_summary"
+            android:layout_marginTop="10dp"
+            android:textSize="@dimen/text_1"
+            android:textColor="@color/text_back_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <include
+            android:id="@+id/baike1"
+            layout="@layout/baike_content_layout"
+            android:visibility="gone" />
+        <include layout="@layout/baike_content_layout"
+            android:id="@+id/baike2"
+            android:visibility="gone"
             />
-        <TextView
-            android:textColor="@color/text_back_1"
-            android:visibility="visible"
-            android:layout_marginTop="20dp"
-            android:textSize="@dimen/text_2"
-            android:text="@string/test"
-            android:id="@+id/ency_content_0"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:id="@+id/ency_ima_1"
+        <include layout="@layout/baike_content_layout"
+            android:id="@+id/baike3"
+            android:visibility="gone"
             />
-        <TextView
-            android:textColor="@color/text_back_1"
+        <include layout="@layout/baike_content_layout"
+            android:id="@+id/baike4"
             android:visibility="gone"
-            android:layout_marginTop="20dp"
-            android:textSize="@dimen/text_2"
-            android:text="@string/test"
-            android:id="@+id/ency_content_1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:textColor="@color/text_back_1"
-            android:visibility="gone"
-            android:layout_marginTop="20dp"
-            android:textSize="@dimen/text_2"
-            android:text="@string/test"
-            android:id="@+id/ency_content_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:textColor="@color/text_back_1"
-            android:visibility="gone"
-            android:layout_marginTop="20dp"
-            android:textSize="@dimen/text_2"
-            android:text="@string/test"
-            android:id="@+id/ency_content_3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:textColor="@color/text_back_1"
-            android:visibility="gone"
-            android:layout_marginTop="20dp"
-            android:textSize="@dimen/text_2"
-            android:text="@string/test"
-            android:id="@+id/ency_content_4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <ImageView
-            android:textColor="@color/text_back_1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:id="@+id/ency_ima_2"
             />
-        <TextView
-            android:textColor="@color/text_back_1"
+        <include layout="@layout/baike_content_layout"
+            android:id="@+id/baike5"
             android:visibility="gone"
-            android:layout_marginTop="20dp"
-            android:textSize="@dimen/text_2"
-            android:text="@string/test"
-            android:id="@+id/ency_content_5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            />
+        <include layout="@layout/baike_content_layout"
+            android:id="@+id/baike6"
+            android:visibility="gone"
+            />
+        <include layout="@layout/baike_content_layout"
+            android:id="@+id/baike7"
+            android:visibility="gone"
+            />
+        <include layout="@layout/baike_content_layout"
+            android:id="@+id/baike8"
+            android:visibility="gone"
+            />
+        <include layout="@layout/baike_content_layout"
+            android:id="@+id/baike9"
+            android:visibility="gone"
+            />
+        <include layout="@layout/baike_content_layout"
+            android:id="@+id/baike10"
+            android:visibility="gone"
+            />
+        <include layout="@layout/baike_content_layout"
+            android:id="@+id/baike11"
+            android:visibility="gone"
+            />
+        <include layout="@layout/baike_content_layout"
+            android:id="@+id/baike12"
+            android:visibility="gone"
+            />
+        <include layout="@layout/baike_content_layout"
+            android:id="@+id/baike13"
+            android:visibility="gone"
+            />
+        <include layout="@layout/baike_content_layout"
+            android:id="@+id/baike14"
+            android:visibility="gone"
+            />
+        <include layout="@layout/baike_content_layout"
+            android:id="@+id/baike15"
+            android:visibility="gone"
+            />
+        <include layout="@layout/baike_content_layout"
+            android:id="@+id/baike16"
+            android:visibility="gone"
+            />
     </LinearLayout>
     <View
         android:layout_marginTop="15dp"
@@ -162,21 +172,17 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"/>
     <LinearLayout
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="30dp">
-        <ImageView
-            android:layout_marginStart="4dp"
-            android:layout_gravity="center_vertical"
-            android:src="@mipmap/baidu"
-            android:layout_width="18dp"
-            android:layout_height="18dp"/>
+        android:layout_height="wrap_content">
         <TextView
+            android:layout_margin="4dp"
             android:clickable="true"
             android:padding="1dp"
             android:background="@drawable/bg_ripple_rrect_gray"
             android:layout_marginStart="4dp"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="center"
+            android:textColor="#00C853"
             android:textSize="@dimen/text_1"
             android:id="@+id/baidu"
             android:text="@string/baidu"

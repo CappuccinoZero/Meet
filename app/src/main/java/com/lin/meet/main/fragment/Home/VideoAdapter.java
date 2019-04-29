@@ -1,6 +1,5 @@
 package com.lin.meet.main.fragment.Home;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -9,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -18,74 +18,87 @@ import com.lin.meet.video.VideoActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+import de.hdodenhof.circleimageview.CircleImageView;
+
+public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> {
     private Context context;
     private RequestOptions options;
-    private List<VideoBean> list;
+    private List<VideoBean> videos;
+
+    @Override
+    public int getItemCount() {
+        return videos.size();
+    }
+
+    static class ViewHolder extends RecyclerView.ViewHolder{
+        ImageView video_image;
+        ImageView play_video;
+        CircleImageView header;
+        TextView nickName;
+        TextView title;
+        ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            video_image = (ImageView) itemView.findViewById(R.id.video_image);
+            play_video  = (ImageView) itemView.findViewById(R.id.play_video);
+            header = (CircleImageView)itemView.findViewById(R.id.video_header);
+            nickName = (TextView)itemView.findViewById(R.id.video_nickName);
+            title = (TextView)itemView.findViewById(R.id.video_title);
+        }
+
+        void setVideoImage(Context context,String uri){
+            Glide.with(context).asDrawable().load(uri).into(video_image);
+        }
+
+        void setHeader(Context context,String uri){
+            Glide.with(context).load(uri).into(header);
+        }
+    }
+
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        if(context==null)
-            context=viewGroup.getContext();
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        if(context == null)
+            context = viewGroup.getContext();
         View view = LayoutInflater.from(context).inflate(R.layout.video_item,viewGroup,false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-        if(viewHolder instanceof ViewHolder){
-            VideoBean bean = list.get(i);
-            Glide.with(context).asDrawable().load(bean.getUrl()).into(((ViewHolder) viewHolder).video);
-            setListener((ViewHolder) viewHolder,i);
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+        viewHolder.title.setText(videos.get(i).getBean().getTltle());
+        viewHolder.nickName.setText(videos.get(i).getNickName());
+        viewHolder.setHeader(context,videos.get(i).getHeaderUri());
+        viewHolder.setVideoImage(context,videos.get(i).getBean().getUri());
+        viewHolder.video_image.setOnClickListener(v-> startPlayVideo(videos.get(i).getBean().getId()));
+        viewHolder.play_video.setOnClickListener(v-> startPlayVideo(videos.get(i).getBean().getId()));
+    }
+
+    private void startPlayVideo(String id){
+        Intent intent = new Intent(context, VideoActivity.class);
+        intent.putExtra("VIDEO",id);
+        context.startActivity(intent);
+    }
+
+    public void initVideos(){
+        if(videos!=null){
+            videos.clear();
+            videos = null;
         }
+        videos = new ArrayList<>();
     }
 
-    @Override
-    public int getItemCount() {
-        return list.size();
+    public void insertVideo(VideoBean bean){
+        if(videos==null)
+            return;
+        videos.add(bean);
+        notifyDataSetChanged();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder{
-        ImageView video;
-        ImageView video_start;
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            video = (ImageView) itemView.findViewById(R.id.jz_video);
-            video_start  = (ImageView) itemView.findViewById(R.id.start_video);
-        }
+    public void insertVideo(int position,VideoBean bean){
+        if(videos==null||position<0)
+            return;
+        videos.add(position,bean);
+        notifyDataSetChanged();
     }
 
-    private void setListener(final ViewHolder holder,int i){
-        holder.video.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                holder.video_start.performClick();
-            }
-        });
-        holder.video_start.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((Activity)context).startActivity(new Intent((Activity)context, VideoActivity.class));
-            }
-        });
-    }
-
-    public VideoAdapter(){
-        list = new ArrayList<>();
-    }
-
-    public VideoAdapter(List<VideoBean> list){
-        this.list=list;
-    }
-
-
-
-    public void insertData(VideoBean[] beans){
-        for(int i =0;i<beans.length;i++)
-            insertData(beans[i]);
-    }
-
-    public void insertData(VideoBean bean){
-            list.add(bean);
-    }
 }

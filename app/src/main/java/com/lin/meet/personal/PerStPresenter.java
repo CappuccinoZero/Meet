@@ -150,7 +150,7 @@ public class PerStPresenter implements PerStContract.Presenter {
         HashMap<String,String> map = new HashMap<>();
         String fileName = String.valueOf(System.currentTimeMillis());
         map.put(key,fileName);
-        MyUtil.saveSharedPreferences(context,"Cache",map);
+        MyUtil.saveSharedPreferences(context,"Cache"+BmobUser.getCurrentUser(User.class).getUid(),map);
         copyFile(path,fileName);
         return fileName;
     }

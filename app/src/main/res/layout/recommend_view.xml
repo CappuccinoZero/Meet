@@ -11,9 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <RelativeLayout
-            android:layout_marginTop="6dp"
-            android:layout_marginBottom="6dp"
-            android:background="@drawable/round_all"
+            android:paddingBottom="10dp"
+            android:background="#fff"
             android:id="@+id/recommend_view_layout1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -22,7 +21,6 @@
                 app:civ_border_color="#4D000000"
                 android:src="@drawable/temp"
                 android:id="@+id/recommend_view_header"
-                android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
                 android:layout_marginStart="10dp"
                 android:layout_width="48dp"
@@ -31,7 +29,7 @@
                 android:textColor="@color/text_back_2"
                 android:layout_toRightOf="@id/recommend_view_header"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="10dp"
                 android:id="@+id/recommend_view_author"
                 android:text="作者"
                 android:textSize="@dimen/text_2"
@@ -51,21 +49,6 @@
     </LinearLayout>
     <!--文字-->
     <LinearLayout
-        android:background="@drawable/round_top"
-        android:id="@+id/recommend_view_layout2_top"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <TextView
-            android:id="@+id/recommend_view_content_top"
-            android:textSize="@dimen/text_2"
-            android:paddingTop="10dp"
-            android:paddingEnd="20dp"
-            android:paddingStart="20dp"
-            android:text="内容"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-    <LinearLayout
         android:background="#fff"
         android:id="@+id/recommend_view_layout2"
         android:layout_width="match_parent"
@@ -81,7 +64,7 @@
     </LinearLayout>
     <LinearLayout
         android:paddingTop="8dp"
-        android:paddingBottom="4dp"
+        android:paddingBottom="10dp"
         android:background="@drawable/round_bottom"
         android:id="@+id/recommend_view_layout2_bottom"
         android:orientation="horizontal"
@@ -130,6 +113,7 @@
             android:layout_marginEnd="25dp"
             android:layout_marginStart="25dp"
             app:cardCornerRadius="8dp"
+            app:cardElevation="0dp"
             android:background="#fff"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">

@@ -3,13 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:id="@+id/mainHeadLayout"
-    android:layout_height="180dp">
+    android:layout_height="210dp">
     <ImageView
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         android:src="#00BFA5"
         android:id="@+id/user_background"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="210dp" />
     <de.hdodenhof.circleimageview.CircleImageView
         android:layout_marginStart="15dp"
         android:layout_width="70dp"
@@ -28,5 +28,11 @@
         android:textColor="#F0F0F0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-
+    <View
+        android:clickable="true"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/round_top"
+        android:layout_marginTop="385dp"
+        android:layout_width="match_parent"
+        android:layout_height="15dp"/>
 </RelativeLayout>

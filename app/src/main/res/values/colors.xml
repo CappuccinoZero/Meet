@@ -6,8 +6,8 @@
     <color name="colorAccent">#1DE9B6</color>
     <color name="release_bg">#191919</color>
     <color name="pink_A700">#C51162</color>
-    <color name="camera_setting_color">#00BFA5</color>
-    <color name="camera_setting_box">#009688</color>
+    <color name="camera_setting_color">#1DE9B6</color>
+    <color name="camera_setting_box">#1DE9B6</color>
     <color name="camera_setting_line">#FF4081</color>
     <color name="Histroy_fb_color_red">#FF5252</color>
     <color name="Histroy_fb_color_green">#00BFA5</color>
@@ -22,4 +22,6 @@
     <color name="text_white_2">#FFFFFF</color>
     <color name="line_white">#1FFFFFFF</color>
     <color name="line_back">#1F000000</color>
+    <color name="onclick">#2979FF</color>
+    <color name="video_default">#787878</color>
 </resources>

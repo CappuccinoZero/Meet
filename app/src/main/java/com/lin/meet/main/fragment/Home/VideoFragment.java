@@ -1,6 +1,8 @@
 package com.lin.meet.main.fragment.Home;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,16 +13,20 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.lin.meet.R;
+import com.lin.meet.my_util.MyUtil;
 
-public class VideoFragment extends Fragment {
+public class VideoFragment extends Fragment implements HomeConstract.VideoView {
     private View mView;
     private RecyclerView mRecyclerView;
     private VideoAdapter mAdapter;
+    private HomeConstract.VideoPresenter presenter;
+    private Handler handler;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = getLayoutInflater().inflate(R.layout.home_video,container,false);
         initVideo();
+        presenter.onInitVideos(0);
         return mView;
     }
 
@@ -34,8 +40,48 @@ public class VideoFragment extends Fragment {
         LinearLayoutManager manager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
         mRecyclerView.setLayoutManager(manager);
         mAdapter = new VideoAdapter();
-        for(int i=0;i<10;i++)
-            mAdapter.insertData(new VideoBean("http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"));
         mRecyclerView.setAdapter(mAdapter);
+        presenter = new VideoPresenter(this);
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if(MyUtil.isSlidetoBottom(recyclerView)){
+                    presenter.onInsertVideos();
+                }
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
+    }
+
+    @Override
+    public void refreshVideos() {
+        mAdapter.initVideos();
+    }
+
+    @Override
+    public void insertVideo(int position, VideoBean bean) {
+        mAdapter.insertVideo(position,bean);
+    }
+
+    @Override
+    public void insertVideo(VideoBean bean) {
+        mAdapter.insertVideo(bean);
+    }
+
+    @Override
+    public void endRefresh() {
+        Message msg = new Message();
+        msg.what = Home.END_REFRESH;
+        handler.sendMessage(msg);
+    }
+
+    public void refresh(Handler handler){
+        this.handler = handler;
+        presenter.onInitVideos(2);
+    }
+
+
+    public void insertVideo(String id){
+        //presenter.onInsertVideo(id);
     }
 }

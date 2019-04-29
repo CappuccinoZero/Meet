@@ -1,6 +1,7 @@
 package com.lin.meet.personal
 
 import android.app.DatePickerDialog
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
@@ -8,9 +9,11 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
 import cn.bmob.v3.BmobUser
@@ -33,6 +36,14 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class PersonalSetting : AppCompatActivity(), View.OnClickListener,PerStContract.View {
+    private fun hideInputMethod() {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val v = window.peekDecorView()
+        if (null != v) {
+            imm.hideSoftInputFromWindow(v.windowToken, 0)
+        }
+    }
+
     override fun setUID(str: String) {
         perStUIDText.text = str
     }
@@ -100,6 +111,7 @@ class PersonalSetting : AppCompatActivity(), View.OnClickListener,PerStContract.
         Toast.makeText(this,str,Toast.LENGTH_SHORT).show()
     }
 
+    private var toolbar: Toolbar?= null
     private var checkSave:Int = -1
     private var constellationList:ArrayList<String> = ArrayList()
     private var picker:CityPickerView = CityPickerView()
@@ -257,7 +269,9 @@ class PersonalSetting : AppCompatActivity(), View.OnClickListener,PerStContract.
     }
 
     private fun initView(){
-        setSupportActionBar(perStToolbar)
+        toolbar = findViewById(R.id.perStToolbar)
+        setSupportActionBar(toolbar!!)
+        supportActionBar!!.title = "我的资料"
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setHomeAsUpIndicator(R.mipmap.back_x)
         persenter = PerStPresenter(this)
@@ -291,8 +305,10 @@ class PersonalSetting : AppCompatActivity(), View.OnClickListener,PerStContract.
             return
         }
 
-        var cachePre:SharedPreferences = MyUtil.getShardPreferences(this,"Cache")
+        var cachePre:SharedPreferences = MyUtil.getShardPreferences(this,"Cache"+BmobUser.getCurrentUser(User::class.java).getUid())
 
+        if(cachePre==null)
+            return
         var fileName:String = cachePre.getString("background","[null]");
         var cache:File = File(MainActivity.savePath+fileName)
         if(cache.exists())
@@ -367,6 +383,7 @@ class PersonalSetting : AppCompatActivity(), View.OnClickListener,PerStContract.
         perStSave.visibility = View.GONE
         stLongEdit.visibility = View.GONE
         stShortEdit.visibility = View.GONE
+        hideInputMethod()
     }
 
     private fun openPhoto(requestCode:Int){
@@ -403,7 +420,8 @@ class PersonalSetting : AppCompatActivity(), View.OnClickListener,PerStContract.
         var calendar:Calendar = Calendar.getInstance()
         DatePickerDialog(this,
                 DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
-                    var birth:String = year.toString() + "/" + month + "/" +dayOfMonth;
+                    var m:Int = month.toInt()+1
+                    var birth:String = year.toString() + "/" + m + "/" +dayOfMonth;
                     persenter!!.onSettingBirth(birth)
                 },
                 calendar.get(Calendar.YEAR),

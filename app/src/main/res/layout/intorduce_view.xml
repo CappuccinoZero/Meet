@@ -96,7 +96,7 @@
                 android:orientation="vertical"
                 android:textSize="@dimen/text_2"
                 android:textColor="#00897B"
-                android:text="默认有很多很多的字吧,大概"
+                android:text=""
                 android:layout_above="@+id/introduction_more"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

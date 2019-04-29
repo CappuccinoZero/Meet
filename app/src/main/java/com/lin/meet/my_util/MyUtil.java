@@ -158,4 +158,34 @@ public class MyUtil {
         }
         return context.getSharedPreferences(key,Context.MODE_PRIVATE);
     }
+
+    public static boolean checkVideo(String uri){
+        String uris[] = new String[]{"avi","wmv","mpeg","mp4","mov","mkv","flv","f4v","m4v","rmvb","rm","3gp","dat","ts","mts","vob"};
+        StringBuilder builder = new StringBuilder();
+        int start = 0;
+        for(int i=uri.length()-1;i>=0;i--){
+            if(uri.charAt(i)=='.'){
+                start = i+1;
+                break;
+            }
+        }
+        for(int i=start;i<uri.length();i++){
+            if(uri.charAt(i) == ' ')
+                continue;
+            builder.append(uri.charAt(i));
+        }
+        uri = builder.toString();
+        for (String uris1 : uris) {
+            if (equals(uri, uris1)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean equals(String uri1,String uri2){
+        if(uri1.length()!=uri2.length())
+            return false;
+        return uri1.toLowerCase().equals(uri2.toLowerCase());
+    }
 }

@@ -29,7 +29,7 @@ import java.util.TimerTask;
 public class PicturesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private RequestOptions options = new RequestOptions();
     public static int LOAD_COUNT = 6;//一次加载的数目
-    public static int INIT_COUNT = 9;//首次加载的数目
+    public static int INIT_COUNT = 12;//首次加载的数目
     public boolean cleaning = false;
     public boolean rolling = false;
     public boolean initLoad = true;

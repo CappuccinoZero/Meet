@@ -12,7 +12,6 @@ import com.lin.meet.jsoup.LoveNewsBean;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.security.SecureRandom;
@@ -57,19 +56,13 @@ public class JsoupTest extends AppCompatActivity {
             public void run() {
                 Document document = null;
                 try {
-                    document = Jsoup.connect("http://www.aidongwu.net/xinwen")
+                    document = Jsoup.connect("http://www.boqii.com/pet-all/dog/")
                             .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36")
                             .timeout(30000)
                             .cookie("auth", "token")
                             .get();
                     Elements elements = document.getElementsByClass("item cf");
                     Log.d("测试", "run: into"+document.toString());
-                    for(int i=0;i<elements.size();i++){
-                        Log.d("测试", "run: limian");
-                        Element element = elements.get(i);
-                        Log.d("测试 "+i, "run: "+element.text());
-                    }
-                    Log.d("测试", "run: end");
 
                 } catch (Exception e) {
                     e.printStackTrace();

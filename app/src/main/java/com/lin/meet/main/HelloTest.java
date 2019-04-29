@@ -1,76 +1,79 @@
 package com.lin.meet.main;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.TextView;
+import android.util.Log;
+import android.widget.ImageView;
 
 import com.lin.meet.R;
+import com.lin.meet.bean.Baike;
 
-public class HelloTest extends AppCompatActivity {
-    private TextView textView ;
-    public static int[] emojis = {
-            0x1F601,
-            0x1F602,
-            0x1F603,
-            0x1F604,
-            0x1F605,
-            0x1F606,
-            0x1F609,
-            0x1F60A,
-            0x1F60B,
-            0x1F60C,
-            0x1F60D,
-            0x1F60E,
-            0x1F60F,
-            0x1F612,
-            0x1F613,
-            0x1F614,
-            0x1F616,
-            0x1F618,
-            0x1F61A,
-            0x1F61C,
-            0x1F61D,
-            0x1F61E,
-            0x1F620,
-            0x1F621,
-            0x1F622,
-            0x1F623,
-            0x1F624,
-            0x1F625,
-            0x1F628,
-            0x1F629,
-            0x1F62A,
-            0x1F62B,
-            0x1F62D,
-            0x1F630,
-            0x1F631,
-            0x1F632,
-            0x1F633,
-            0x1F634,
-            0x1F635,
-            0x1F637,
-            0x1F638,
-            0x1F639,
-            0x1F63A,
-            0x1F63B,
-            0x1F63C,
-            0x1F63D,
-            0x1F63E,
-            0x1F63F,
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import cn.bmob.v3.BmobBatch;
+import cn.bmob.v3.BmobObject;
+import cn.bmob.v3.datatype.BatchResult;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.QueryListListener;
+
+public class HelloTest extends AppCompatActivity{
+    private String regEx1 = "[\\u4e00-\\u9fa5]";
+    private ImageView imageView;
+    private List<BmobObject> bmobs = new ArrayList<>();
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if(msg.what == 1111){
+                Baike baike = new Baike();
+                Bundle data = msg.getData();
+                String name = data.getString("name");
+                String img = data.getString("img");
+                String url = data.getString("url");
+                int id = data.getInt("id");
+                baike.setUri(url);
+                baike.setImageUri(img);
+                baike.setId(id);
+                baike.setCnName(name);
+                baike.setEnName("");
+                baike.setBrief("");
+                baike.setType("Chong_Wu");
+                bmobs.add(baike);
+            }
+            if(msg.what == 2222){
+                new BmobBatch().insertBatch(bmobs).doBatch(new QueryListListener<BatchResult>() {
+                    @Override
+                    public void done(List<BatchResult> list, BmobException e) {
+                        if(e==null){
+                            Log.d("测试成功", "done: "+list.size());
+                        }else {
+                            Log.d("测试失败", "done: ");
+                        }
+                    }
+                });
+            }
+        }
     };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hello_test);
-        textView = (TextView)findViewById(R.id.test_emoji);
-        StringBuilder temp = new StringBuilder();
-        for(int i=0;i<emojis.length;i++){
-            temp.append(getEmojiStringByUnicode(emojis[i]));
-        }
-        textView.setText(temp);
-    }
-    private static String getEmojiStringByUnicode(int unicode) {
-        return new String(Character.toChars(unicode));
     }
 
+    public static String matchResult(Pattern p, String str)
+    {
+        StringBuilder sb = new StringBuilder();
+        Matcher m = p.matcher(str);
+        while (m.find())
+            for (int i = 0; i <= m.groupCount(); i++)
+            {
+                sb.append(m.group());
+            }
+        return sb.toString();
+    }
 }

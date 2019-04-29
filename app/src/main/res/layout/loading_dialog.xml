@@ -10,6 +10,6 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         style="@style/SpinKitView.CubeGrid"
-        app:SpinKit_Color="#FF4081"
+        app:SpinKit_Color="#1DE9B6"
         />
 </RelativeLayout>

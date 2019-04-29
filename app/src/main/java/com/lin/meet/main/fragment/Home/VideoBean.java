@@ -1,42 +1,33 @@
 package com.lin.meet.main.fragment.Home;
 
+import com.lin.meet.bean.video_main;
+
 public class VideoBean {
-    private String url;
-    private String authorName;
-    private String headerImage;
-    private int authorId;
+    private video_main bean;
+    private String nickName;
+    private String headerUri;
 
-    public VideoBean(){}
-    public VideoBean(String url){setUrl(url);}
-    public int getAuthorId() {
-        return authorId;
+    public VideoBean(video_main bean){
+        this.bean = bean;
     }
 
-    public String getAuthorName() {
-        return authorName;
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
-    public String getHeaderImage() {
-        return headerImage;
+    public video_main getBean() {
+        return bean;
     }
 
-    public String getUrl() {
-        return url;
+    public void setHeaderUri(String headerUri) {
+        this.headerUri = headerUri;
     }
 
-    public void setAuthorId(int authorId) {
-        this.authorId = authorId;
+    public String getNickName() {
+        return nickName;
     }
 
-    public void setAuthorName(String authorName) {
-        this.authorName = authorName;
-    }
-
-    public void setHeaderImage(String headerImage) {
-        this.headerImage = headerImage;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
+    public String getHeaderUri() {
+        return headerUri;
     }
 }

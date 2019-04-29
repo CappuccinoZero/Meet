@@ -8,6 +8,7 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
@@ -287,6 +288,11 @@ class PersonalActivity : AppCompatActivity(), View.OnClickListener,PersonalContr
                     perImage.scaleY = 1+scaleY
                     perImage.scaleX = 1+scaleY
                     perUserLayout.translationY=0f
+                    Log.d("测试","UP？")
+                    if(perUserLayout.alpha!=1f||perBlackBg.alpha!=1f){
+                        perUserLayout.alpha = 1f
+                        perBlackBg.alpha = 0f
+                    }
                 }else{
                     perImage.scaleY = 1f
                     perImage.scaleX = 1f
@@ -314,8 +320,18 @@ class PersonalActivity : AppCompatActivity(), View.OnClickListener,PersonalContr
         var animTrans = ObjectAnimator.ofFloat(perContent,"translationY",perContent.translationY,distance_default)
         var animScaleX = ObjectAnimator.ofFloat(perImage,"ScaleX",perImage.scaleX,1f)
         var animScaleY = ObjectAnimator.ofFloat(perImage,"ScaleY",perImage.scaleY,1f)
-        anmiSet.play(animTrans).with(animScaleX).with(animScaleY)
-        anmiSet.duration = 300
+        animTrans.duration = 300
+        animScaleX.duration = 300
+        animScaleY.duration = 300
+        var transYFloat = distance_default*0.01f
+        var animTransBack = ObjectAnimator.ofFloat(perContent,"TranslationY",distance_default,distance_default*0.99f,distance_default)
+        var animUserTransBack = ObjectAnimator.ofFloat(perUserLayout,"TranslationY",perUserLayout.translationY,perUserLayout.translationY-transYFloat,perUserLayout.translationY)
+        animTransBack.duration = 200
+        animUserTransBack.duration = 200
+        if(perContent.translationY > distance_max /2+ distance_default/2)
+            anmiSet.play(animTrans).with(animScaleX).with(animScaleY).before(animTransBack).before(animUserTransBack)
+        else
+            anmiSet.play(animTrans).with(animScaleX).with(animScaleY)
         anmiSet.addListener(object : AnimatorListenerAdapter(){
             override fun onAnimationEnd(animation: Animator?) {
                 super.onAnimationEnd(animation)
@@ -353,8 +369,10 @@ class PersonalActivity : AppCompatActivity(), View.OnClickListener,PersonalContr
             return
         }
 
-        var cachePre: SharedPreferences = MyUtil.getShardPreferences(this,"Cache")
+        var cachePre: SharedPreferences = MyUtil.getShardPreferences(this,"Cache"+BmobUser.getCurrentUser(User::class.java).getUid())
 
+        if(cachePre == null)
+            return
         var fileName:String = cachePre.getString("background","[null]");
         var cache: File = File(MainActivity.savePath+fileName)
         if(cache.exists())

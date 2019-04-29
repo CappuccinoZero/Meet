@@ -5,7 +5,7 @@
         android:icon="@drawable/item_icon_home"
         android:id="@+id/item_home"/>
     <item
-        android:title="科普"
+        android:title="百科"
         android:icon="@drawable/item_icon_book"
         android:id="@+id/item_book"/>
     <item
@@ -18,7 +18,7 @@
         android:icon="@drawable/item_icon_find"
         android:id="@+id/item_find"/>
     <item
-        android:title="鉴别"
+        android:title="提问"
         android:icon="@drawable/item_icon_know"
         android:id="@+id/item_know"/>
 

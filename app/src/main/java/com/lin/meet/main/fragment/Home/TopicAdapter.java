@@ -1,6 +1,5 @@
 package com.lin.meet.main.fragment.Home;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -10,73 +9,164 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.lin.meet.R;
+import com.lin.meet.bean.topic_main;
+import com.lin.meet.override.ScaleAnim;
 import com.lin.meet.topic.TopicActivity;
-import com.ufreedom.floatingview.Floating;
-import com.ufreedom.floatingview.FloatingBuilder;
-import com.ufreedom.floatingview.FloatingElement;
 
-public class TopicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+import java.util.ArrayList;
+import java.util.List;
+
+public class  TopicAdapter extends RecyclerView.Adapter<TopicAdapter.ViewHolder> {
 
     private Context context;
+    private RequestOptions options;
+    private List<TopicBean> topics;
+    private TopicCallback callback;
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         if(context==null)
             context=viewGroup.getContext();
-        View view = null;
-        view = LayoutInflater.from(context).inflate(R.layout.topic_item,viewGroup,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.topic_item,viewGroup,false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-        setListener((ViewHolder) viewHolder);
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+        viewHolder.setHeader(context,topics.get(i).header);
+        viewHolder.setImageView(context,topics.get(i).bean.getOne_uri());
+        viewHolder.nickName.setText(topics.get(i).nickName);
+        viewHolder.time.setText(topics.get(i).bean.getCreatedAt());
+        viewHolder.type.setText(topics.get(i).bean.getType());
+        viewHolder.title.setText(topics.get(i).bean.getTitle());
+        viewHolder.content.setText(topics.get(i).bean.getContent());
+        viewHolder.setThumb(topics.get(i).like);
+        viewHolder.item.setOnClickListener(v->{
+            Intent intent = new Intent(context, TopicActivity.class);
+            intent.putExtra("ID",topics.get(i).bean.getId());
+            context.startActivity(intent);
+        });
+        viewHolder.thumb.setOnClickListener(v->{
+            topics.get(i).like = !topics.get(i).like;
+            callback.onClickLike(i,topics.get(i).bean.getId());
+            viewHolder.onThumbClick(topics.get(i).like);
+        });
     }
 
     @Override
     public int getItemCount() {
-        return 20;
+        if(topics!=null)
+            return topics.size();
+        else
+            return 0;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder{
-        boolean awesomeStatus;
-        ImageView awesome;
-        CardView cardView;
-        public ViewHolder(@NonNull View itemView) {
+        CardView card;
+        CardView item;
+        TextView nickName;
+        TextView time;
+        TextView title;
+        TextView content;
+        TextView type;
+        ImageView header;
+        ImageView image;
+        ImageView thumb;
+        ImageView comment;
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
-            awesomeStatus = false;
-            awesome = (ImageView)itemView.findViewById(R.id.awesome);
-            cardView = (CardView)itemView.findViewById(R.id.topic_cardView);
+            item = (CardView)itemView.findViewById(R.id.topic_cardView);
+            card = (CardView)itemView.findViewById(R.id.imageLayout);
+            nickName = (TextView)itemView.findViewById(R.id.nickName);
+            time = (TextView)itemView.findViewById(R.id.time);
+            title = (TextView)itemView.findViewById(R.id.title);
+            content = (TextView)itemView.findViewById(R.id.content);
+            type = (TextView)itemView.findViewById(R.id.type);
+            image = (ImageView)itemView.findViewById(R.id.topic_image);
+            header = (ImageView)itemView.findViewById(R.id.topic_header);
+            comment = (ImageView)itemView.findViewById(R.id.comment);
+            thumb = (ImageView)itemView.findViewById(R.id.thumb);
+        }
+
+        void setImageView(Context context,String uri){
+            if("@null".equals(uri)){
+                card.setVisibility(View.GONE);
+            }else {
+                card.setVisibility(View.VISIBLE);
+                Glide.with(context).load(uri).into(image);
+            }
+        }
+
+        void onThumbClick(boolean like){
+            if(like){
+                ScaleAnim.startAnim(thumb,R.drawable.thumb_red);
+            }
+            else {
+                ScaleAnim.startAnim(thumb,R.drawable.thumb);
+            }
+        }
+
+        void setThumb(boolean like){
+            if(like){
+                thumb.setImageResource(R.drawable.thumb_red);
+            }else {
+                thumb.setImageResource(R.drawable.thumb);
+            }
+        }
+
+        void setHeader(Context context,String uri){
+            Glide.with(context).load(uri).into(header);
         }
     }
 
-    private void setListener(final ViewHolder viewHolder){
-        viewHolder.awesome.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!viewHolder.awesomeStatus){
-                    viewHolder.awesomeStatus = true;
-                    viewHolder.awesome.setImageResource(R.drawable.thumb_red);
-                    FloatingElement element = new FloatingBuilder()
-                            .anchorView(viewHolder.awesome)
-                            .targetView(R.layout.aswsome_view)
-                            .build();
-                    Floating floating=new Floating((Activity) context);
-                    floating.startFloating(element);
-                }else {
-                    viewHolder.awesomeStatus = false;
-                    viewHolder.awesome.setImageResource(R.drawable.thumb);
-                }
-            }
-        });
-        viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, TopicActivity.class);
-                context.startActivity(intent);
-            }
-        });
+    static class TopicBean{
+        topic_main bean;
+        String header;
+        String nickName;
+        boolean like = false;
+        public TopicBean(topic_main bean){
+            this.bean = bean;
+        }
+    }
+
+    TopicAdapter(TopicCallback callback){
+        this.callback = callback;
+        options = new RequestOptions();
+    }
+
+    void initTopics(){
+        if(topics != null){
+            topics.clear();
+            topics = null;
+        }
+        topics = new ArrayList<>();
+        notifyDataSetChanged();
+    }
+
+    int insertTopics(TopicBean bean){
+        topics.add(bean);
+        notifyDataSetChanged();
+        return topics.size()-1;
+    }
+
+    int insertTopics(int position,TopicBean bean){
+        topics.add(position,bean);
+        notifyDataSetChanged();
+        return 0;
+    }
+
+    public void setLike(int position,boolean like){
+        topics.get(position).like = like;
+        notifyDataSetChanged();
+    }
+
+
+    interface TopicCallback{
+        void onClickLike(int position,String id);
     }
 }

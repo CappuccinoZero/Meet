@@ -7,7 +7,7 @@
         android:layout_marginBottom="10dp"
         android:text="个人信息"
         android:textSize="@dimen/text_3"
-        android:textColor="#C51162"
+        android:textColor="#00BFA5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <LinearLayout
@@ -166,7 +166,7 @@
         android:layout_marginTop="20dp"
         android:text="个性签名"
         android:textSize="@dimen/text_3"
-        android:textColor="#C51162"
+        android:textColor="#00BFA5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <TextView
@@ -182,7 +182,7 @@
         android:layout_marginTop="20dp"
         android:text="自我介绍"
         android:textSize="@dimen/text_3"
-        android:textColor="#C51162"
+        android:textColor="#00BFA5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <TextView

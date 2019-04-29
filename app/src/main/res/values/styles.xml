@@ -8,5 +8,17 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColorPrimary">@android:color/black</item>
     </style>
+    <style name="translationStatusTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:statusBarColor">@color/transparent</item>
+    </style>
+
+    <style name="MyDefaulyTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/text_white_2</item>
+        <item name="colorPrimaryDark">@color/text_white_2</item>
+        <item name="android:textColorPrimary">@color/text_back_2</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/text_white_2</item>
+    </style>
+
 
 </resources>

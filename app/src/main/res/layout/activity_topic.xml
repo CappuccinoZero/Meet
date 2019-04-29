@@ -28,15 +28,15 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"/>
     <RelativeLayout
-        android:elevation="20dp"
+        android:background="@drawable/round_top_util"
         android:paddingStart="4dp"
-        android:paddingTop="4dp"
+        android:paddingTop="6dp"
         android:paddingBottom="4dp"
         android:layout_alignParentBottom="true"
         android:id="@+id/video_reply_normal"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="40dp">
+        android:layout_height="42dp">
         <LinearLayout
             android:id="@+id/video_reply_layout"
             android:layout_toLeftOf="@id/video_bottom_right"
@@ -71,12 +71,14 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent">
             <ImageView
+                android:id="@+id/thumb"
                 android:layout_marginEnd="10dp"
                 android:padding="1dp"
                 android:src="@drawable/thumb"
                 android:layout_width="24dp"
                 android:layout_height="24dp" />
             <ImageView
+                android:id="@+id/star"
                 android:layout_marginEnd="10dp"
                 android:padding="1dp"
                 android:src="@drawable/star_0"
@@ -91,26 +93,26 @@
         </LinearLayout>
     </RelativeLayout>
     <LinearLayout
-        android:elevation="20dp"
+        android:clickable="true"
         android:visibility="gone"
-        android:background="#F2FFFFFF"
-        android:paddingStart="4dp"
+        android:background="@drawable/round_top_util"
         android:paddingTop="4dp"
-        android:paddingBottom="4dp"
         android:layout_alignParentBottom="true"
         android:id="@+id/video_reply_write"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <RelativeLayout
+            android:paddingStart="4dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <EditText
+                android:hint="写下你的评论吧 ~"
                 android:maxLines="3"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
                 android:paddingTop="2dp"
                 android:paddingBottom="2dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
                 android:layout_marginBottom="4dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginStart="8dp"
@@ -121,6 +123,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
             <TextView
+                android:clickable="true"
                 android:layout_marginEnd="10dp"
                 android:layout_alignParentEnd="true"
                 android:textSize="@dimen/text_2"
@@ -130,16 +133,28 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </RelativeLayout>
-        <RelativeLayout
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <ImageView
-                android:layout_alignParentEnd="true"
+                android:id="@+id/use_emoji"
+                android:layout_gravity="end"
                 android:layout_marginEnd="15dp"
                 android:padding="1dp"
                 android:src="@drawable/emoj"
-                android:layout_width="20dp"
-                android:layout_height="20dp" />
-        </RelativeLayout>
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginBottom="4dp"
+                />
+            <GridView
+                android:padding="4dp"
+                android:visibility="gone"
+                android:numColumns="10"
+                android:stretchMode="columnWidth"
+                android:id="@+id/emoji_View"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

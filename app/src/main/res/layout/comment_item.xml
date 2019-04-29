@@ -17,17 +17,17 @@
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
-            android:id="@+id/topic_header"
+            android:id="@+id/comment_header"
             android:layout_gravity="center"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/temp"
             />
         <TextView
-            android:id="@+id/comment_name"
+            android:id="@+id/comment_nickName"
             android:layout_marginStart="5dp"
             android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/topic_header"
+            android:layout_toRightOf="@+id/comment_header"
             android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -35,29 +35,43 @@
             android:textColor="#00BFA5"
             android:text="用户"/>
         <TextView
+            android:id="@+id/comment_time"
             android:layout_marginStart="5dp"
-            android:layout_below="@+id/comment_name"
-            android:layout_toRightOf="@+id/topic_header"
+            android:layout_below="@id/comment_nickName"
+            android:layout_toRightOf="@+id/comment_header"
             android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="10sp"
             android:textColor="@color/text_back_1"
             android:text="2019年3月22日"/>
-        <ImageView
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="20dp"
+        <LinearLayout
+            android:padding="1dp"
+            android:id="@+id/comment_like"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="30dp"
-            android:src="@drawable/thumb"
-            android:padding="2dp"
-            android:id="@+id/recommend_thumb"
-            android:layout_width="22dp"
-            android:layout_height="22dp" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_gravity="center"
+                android:src="@drawable/thumb"
+                android:padding="2dp"
+                android:id="@+id/comment_thumb"
+                android:layout_width="22dp"
+                android:layout_height="22dp" />
+            <TextView
+                android:layout_gravity="center"
+                android:textSize="@dimen/text_0"
+                android:id="@+id/thumb_count"
+                android:gravity="center"
+                android:layout_marginEnd="20dp"
+                android:text="点赞"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
     </RelativeLayout>
     <TextView
         android:layout_marginStart="44dp"
-        android:text="@string/test2"
+        android:textColor="@color/text_back_2"
         android:layout_marginEnd="15dp"
         android:paddingTop="2dp"
         android:paddingBottom="2dp"
@@ -76,7 +90,7 @@
             android:paddingStart="6dp"
             android:paddingEnd="6dp"
             android:background="@drawable/reply_shape"
-            android:text="3回复"
+            android:text="回复"
             android:textColor="@color/text_back_1"
             android:textSize="10sp"
             android:id="@+id/comment_reply"
@@ -84,6 +98,7 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
     <RelativeLayout
+        android:clickable="true"
         android:padding="8dp"
         android:layout_marginBottom="4dp"
         android:background="@drawable/round_all_gray"
@@ -123,26 +138,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
         <TextView
-            android:layout_below="@+id/comment_user_2"
-            android:id="@+id/comment_user_3"
-            android:textSize="@dimen/text_0"
-            android:textColor="#283593"
-            android:text="用户B："
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:layout_below="@+id/comment_user_2"
-            android:layout_toRightOf="@id/comment_user_3"
-            android:id="@+id/comment_user_3_reply"
-            android:textSize="@dimen/text_0"
-            android:text="用户B留下的回复"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-        <TextView
+            android:id="@+id/comment_more"
             android:paddingTop="4dp"
             android:textColor="#4B4B4B"
-            android:layout_below="@+id/comment_user_3"
-            android:id="@+id/comment_more"
+            android:layout_below="@id/comment_user_2"
             android:textSize="@dimen/text_0"
             android:text="查看全部回复 >"
             android:layout_width="match_parent"

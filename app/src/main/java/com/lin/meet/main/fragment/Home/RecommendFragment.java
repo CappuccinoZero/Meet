@@ -17,6 +17,8 @@ import com.lin.meet.jsoup.LoveNews;
 import com.lin.meet.jsoup.LoveNewsBean;
 import com.lin.meet.my_util.MyUtil;
 
+import java.util.Random;
+
 public class RecommendFragment extends Fragment {
     private Handler handler = new Handler(){
         @Override
@@ -28,13 +30,20 @@ public class RecommendFragment extends Fragment {
                         Bundle data = msg.getData();
                         LoveNewsBean bean = (LoveNewsBean) data.getSerializable("LoveNews");
                         mAdapter.addRecomds(bean);
+                        if(pHandler!=null){
+                            Message msg2 = new Message();
+                            msg2.what = Home.END_REFRESH;
+                            pHandler.sendMessage(msg2);
+                            pHandler = null;
+                        }
                     }
                     break;
             }
         }
     };
-    private long time ;
-    private int lovePage = 2;
+    private Handler pHandler;
+    private int lovePage;
+    private int paged = 1;
     private View mView;
     private RecyclerView mRecyclerView;
     private RecommendAdapter mAdapter;
@@ -43,7 +52,9 @@ public class RecommendFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = getLayoutInflater().inflate(R.layout.home_recommend, container,false);
         initRecommend();
-        LoveNews.updateNews(handler,1);
+        Random random = new Random();
+        lovePage = 1 + random.nextInt(3);
+        LoveNews.updateNews(handler,lovePage);
         return mView;
     }
 
@@ -63,13 +74,25 @@ public class RecommendFragment extends Fragment {
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if(MyUtil.isSlidetoBottom(recyclerView)){
-                    if(lovePage<=3&&System.currentTimeMillis()-time>=3*1000){
-                        time = System.currentTimeMillis();
-                        LoveNews.updateNews(handler,lovePage);
+                    if(paged<=3){
                         lovePage++;
+                        paged++;
+                        int temp = lovePage%3;
+                        if(temp==0)
+                            temp = 3;
+                        LoveNews.updateNews(handler,temp);
                     }
                 }
             }
         });
+    }
+
+    public void refresh(Handler handler){
+        pHandler = handler;
+        mAdapter.refresh();
+        paged = 1;
+        Random random = new Random();
+        lovePage = 1 + random.nextInt(3);
+        LoveNews.updateNews(this.handler,lovePage);
     }
 }

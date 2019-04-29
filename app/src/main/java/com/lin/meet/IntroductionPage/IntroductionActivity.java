@@ -4,16 +4,13 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.media.Image;
 import android.net.Uri;
-import android.support.annotation.NonNull;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
 import android.view.View;
@@ -27,9 +24,9 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.lin.meet.R;
-import com.lin.meet.camera_demo.PhotoBean;
 import com.lin.meet.my_util.MyUtil;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,6 +52,8 @@ public class IntroductionActivity extends AppCompatActivity implements View.OnCl
     private ImageView back,photo;
     private String image_path;
     private int id1,id2,id3;
+    private String type1="@null",type2="@null",type3="@null";
+    private String uri1 = "@null",uri2 = "@null",uri3 = "@null";
     private long timeId = 0;
     private IntorductionContract.Presenter presenter;
     private RelativeLayout result_1,result_2,result_3;
@@ -112,7 +111,7 @@ public class IntroductionActivity extends AppCompatActivity implements View.OnCl
         more_1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                presenter.intoEncy(IntroductionActivity.this,id1);
+                presenter.intoEncy(IntroductionActivity.this,id1,uri1,type1);
             }
         });
         text11 = (TextView)view_1.findViewById(R.id.introduction_text_left1);
@@ -143,7 +142,7 @@ public class IntroductionActivity extends AppCompatActivity implements View.OnCl
         more_2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                presenter.intoEncy(IntroductionActivity.this,id2);
+                presenter.intoEncy(IntroductionActivity.this,id2,uri2,type2);
             }
         });
         text21 = (TextView)view_2.findViewById(R.id.introduction_text_left1);
@@ -174,7 +173,7 @@ public class IntroductionActivity extends AppCompatActivity implements View.OnCl
         more_3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                presenter.intoEncy(IntroductionActivity.this,id3);
+                presenter.intoEncy(IntroductionActivity.this,id3,uri3,type3);
             }
         });
         text31 = (TextView)view_3.findViewById(R.id.introduction_text_left1);
@@ -304,6 +303,9 @@ public class IntroductionActivity extends AppCompatActivity implements View.OnCl
         id1=a;
         id2=b;
         id3=c;
+        presenter.updateBaike(id1,1);
+        presenter.updateBaike(id2,2);
+        presenter.updateBaike(id3,3);
     }
 
     @Override
@@ -362,6 +364,39 @@ public class IntroductionActivity extends AppCompatActivity implements View.OnCl
     }
 
     @Override
+    public void setUri1(String uri,String type) {
+        uri1 = uri;
+        type1 = type;
+    }
+
+    @Override
+    public void setUri2(String uri,String type) {
+        uri2 = uri;
+        type2 = type;
+    }
+
+    @Override
+    public void setUri3(String uri,String type) {
+        uri3 = uri;
+        type3 = type;
+    }
+
+    @Override
+    public void setContent(String content, int position) {
+        if(content==null)
+            return;
+        if(content.isEmpty())
+            return;
+        if(position==1){
+            ((TextView)view_1.findViewById(R.id.introduction_content)).setText(content);
+        }else if(position==2){
+            ((TextView)view_2.findViewById(R.id.introduction_content)).setText(content);
+        }else if(position==3){
+            ((TextView)view_3.findViewById(R.id.introduction_content)).setText(content);
+        }
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode){
@@ -383,6 +418,10 @@ public class IntroductionActivity extends AppCompatActivity implements View.OnCl
                 Uri uri=data.getData();
                 setImageView(uri);
                 image_path= MyUtil.get_path_from_url(this,uri);
+                if(!new File(image_path).exists()){
+                    Toast.makeText(this,"错误！图片不存在",Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 timeId=presenter.doIdentification(image_path);
                 break;
 

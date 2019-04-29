@@ -96,4 +96,9 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         list.add(bean);
         notifyDataSetChanged();
     }
+
+    public void refresh(){
+        list.clear();
+        notifyDataSetChanged();
+    }
 }

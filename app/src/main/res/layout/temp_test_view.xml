@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="32dp"
+    android:layout_height="32dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <de.hdodenhof.circleimageview.CircleImageView
+        app:civ_border_width="1dp"
+        app:civ_border_color="#1DE9B6"
+        android:id="@+id/flag_image"
         android:src="@drawable/temp"
-        app:civ_border_color="#FF9E80"
-        app:civ_border_width="2dp"
-        android:padding="1dp"
-        android:layout_width="24dp"
-        android:layout_height="24dp" />
+        android:layout_width="32dp"
+        android:layout_height="32dp" />
 </LinearLayout>

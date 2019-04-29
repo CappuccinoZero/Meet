@@ -1,15 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.lin.meet.main.fragment.Book.Book">
-
-    <TextView
-        android:textSize="30sp"
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="百科" />
-
-</FrameLayout>
+    <LinearLayout
+        android:background="#fff"
+        android:layout_width="match_parent"
+        android:layout_height="64dp">
+        <LinearLayout
+            android:elevation="4dp"
+            android:id="@+id/baike_search"
+            android:layout_toLeftOf="@id/home_release"
+            android:orientation="horizontal"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_toRightOf="@id/home_header_layout"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/bg_search_baike"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:src="@drawable/search"
+                android:layout_marginStart="10dp"
+                android:layout_gravity="center_vertical"
+                android:padding="1dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp" />
+            <TextView
+                android:textColor="@color/text_back_0"
+                android:textSize="@dimen/text_1"
+                android:text="搜“梅花鹿”试试"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/baike_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <android.support.v7.widget.RecyclerView
+            android:background="#fff"
+            android:id="@+id/baike_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
+</LinearLayout>

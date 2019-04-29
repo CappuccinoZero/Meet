@@ -71,7 +71,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
-            android:src="@drawable/thumb_big"
+            android:src="@drawable/thumb_red"
             android:layout_marginTop="30dp"
             android:layout_gravity="center"
             android:layout_width="50dp"

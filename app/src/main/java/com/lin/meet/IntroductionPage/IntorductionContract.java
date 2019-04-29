@@ -22,16 +22,21 @@ public interface IntorductionContract {
         void setId(int a,int b ,int c);
         void openPhoto(int requestCode);
         void showMapDialog(int id);
+        void setUri1(String uri,String type);
+        void setUri2(String uri,String type);
+        void setUri3(String uri,String type);
+        void setContent(String uri,int position);
     }
 
     public interface Presenter{
         void openPhoto();
-        void intoEncy(Activity activity, int id);
+        void intoEncy(Activity activity, int id,String uri,String type);
         long doIdentification(String path);
         void doIdentification(int id[],float maybe[]);
         void doIdentification(int id[],float maybe[],int swap);
         void updateResult(long time,String newName);
         void swapCard(int item,int id[],float[] maybe,int random);
+        void updateBaike(int id,int position);
     }
 
     public interface Model{

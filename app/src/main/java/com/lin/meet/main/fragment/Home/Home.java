@@ -1,7 +1,10 @@
 package com.lin.meet.main.fragment.Home;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -21,20 +24,25 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.gigamole.navigationtabstrip.NavigationTabStrip;
 import com.lin.meet.R;
+import com.lin.meet.bean.User;
 import com.lin.meet.main.MainActivity;
 import com.lin.meet.my_util.MyUtil;
 import com.lin.meet.override.MyRefresh;
 import com.lin.meet.override.MyViewPage;
+import com.lin.meet.topic.SendTopic;
+import com.lin.meet.video.SendVideo;
 import com.xujiaji.happybubble.BubbleDialog;
 import com.xujiaji.happybubble.BubbleLayout;
 
 import java.io.File;
 
+import cn.bmob.v3.BmobUser;
 import cn.jzvd.JZVideoPlayer;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class Home extends Fragment implements View.OnClickListener,HomeContract.View,MyViewPage.recyclerStopScroll {
+    public static final int END_REFRESH = 100;
     private RequestOptions options;
     private View mView = null;
     private HomeContract.presenter presenter;
@@ -58,11 +66,21 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
 
     private RecyclerView top_recyclerView;
     private TopicAdapter top_adapter;
-
     private RecyclerView video_recyclerView;
     private VideoAdapter videoAdapter;
-
     private NavigationTabStrip tabStrip;
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case END_REFRESH:
+                    refresh.setRefreshing(false);
+                    break;
+            }
+        }
+    };
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -98,13 +116,13 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
             public void onRefresh() {
                 switch (viewPager.getCurrentItem()){
                     case 0:
-                        refresh.setRefreshing(false);
+                        ((RecommendFragment) adapter.list.get(0)).refresh(handler);
                         break;
                     case 1:
-                        refresh.setRefreshing(false);
+                        ((TopicFragment) adapter.list.get(1)).refresh(handler);
                         break;
                     case 2:
-                        refresh.setRefreshing(false);
+                        ((VideoFragment) adapter.list.get(2)).refresh(handler);
                         break;
                     case 3:
                         PictureFragment fragment = (PictureFragment) adapter.list.get(3);
@@ -121,7 +139,7 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(2);
         tabStrip = (NavigationTabStrip)view.findViewById(R.id.home_tabLayout);
-        String title[]=new String[]{"推荐","话题","视频","美图"};
+        String title[]=new String[]{"推荐","话题","视频","壁纸"};
         tabStrip.setTitles(title);
         tabStrip.setStripType(NavigationTabStrip.StripType.LINE);
         tabStrip.setViewPager(viewPager);
@@ -158,6 +176,7 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
         View view = LayoutInflater.from(activity).inflate(R.layout.release,null);
         ((LinearLayout)view.findViewById(R.id.release_1)).setOnClickListener(this);
         ((LinearLayout)view.findViewById(R.id.release_2)).setOnClickListener(this);
+        ((LinearLayout)view.findViewById(R.id.release_3)).setOnClickListener(this);
         dialog=new BubbleDialog(activity);
         dialog.addContentView(view)
                 .setClickedView(release)
@@ -178,10 +197,14 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
                 showRelaseDialog();
                 break;
             case R.id.release_1:
-                //dialog.dismiss();
+                startActivityForResult(new Intent(getActivity(), SendTopic.class),10);
+                dialog.dismiss();
                 break;
             case R.id.release_2:
-                //dialog.dismiss();
+                startActivityForResult(new Intent(getActivity(), SendVideo.class),11);
+                dialog.dismiss();
+                break;
+            case R.id.release_3:
                 break;
 
         }
@@ -248,10 +271,25 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
     }
 
     public void updateHeader(){
-        SharedPreferences pre = MyUtil.getShardPreferences(getActivity(),"Cache");
+        if(!BmobUser.isLogin())
+            return;
+        SharedPreferences pre = MyUtil.getShardPreferences(getActivity(),"Cache"+BmobUser.getCurrentUser(User.class).getUid());
+        if(pre==null)
+            return;
         String path = pre.getString("header","");
         File file = new File(MainActivity.savePath+path);
-        if (file.exists())
+        if (file.exists()&& BmobUser.isLogin())
             setHeader(MainActivity.savePath+path);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode,resultCode,data);
+        if(requestCode == 10 && resultCode == 11){
+            ((TopicFragment) adapter.list.get(1)).insertTopic(data.getStringExtra("ID"));
+        }
+        else if(requestCode == 11 && resultCode == 12){
+            ((VideoFragment) adapter.list.get(2)).insertVideo(data.getStringExtra("VIDEO"));
+        }
     }
 }

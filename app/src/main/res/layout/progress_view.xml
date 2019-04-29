@@ -32,7 +32,7 @@
         android:background="@drawable/bg_ripple_rrect_teal"
         android:layout_marginTop="15dp"
         android:layout_marginBottom="20dp"
-        android:textColor="#00BFA5"
+        android:textColor="#00B0FF"
         android:textSize="14sp"
         android:layout_gravity="center"
         android:text="取消上传"

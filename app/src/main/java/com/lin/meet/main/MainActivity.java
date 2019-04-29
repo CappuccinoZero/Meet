@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private MainConstract.Presenter presenter;
     private RelativeLayout headLayout;
     private ImageView headBackground;
+    private TextView exit;
     private Book book = new Book();
     private Find find = new Find();
     private Home home = new Home();
@@ -90,7 +91,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         initView();
         initLoadUserView();
-        startActivity(new Intent(this,HelloTest.class));
+
+        //startActivity(new Intent(this, KnowActivity.class));
     }
 
     private void initView(){
@@ -142,6 +144,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return true;
             }
         });
+        exit = (TextView) findViewById(R.id.exit);
         drawer = (DrawerLayout) findViewById(R.id.main_drawer);
         nv = (NavigationView) findViewById(R.id.main_nv);
         headLayout = (RelativeLayout) nv.getHeaderView(0);
@@ -149,13 +152,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         header = (CircleImageView)headLayout.findViewById(R.id.user_header);
         name = (TextView)headLayout.findViewById(R.id.user_name);
         headLayout.setOnClickListener(this);
+        exit.setOnClickListener(this);
         checkCacheFile();
     }
 
-    private void initLoginData(){
-        SharedPreferences preferences = MyUtil.getShardPreferences(this,"LoginToken");
-
-    }
 
     private static final String TAG = "MainActivity";
 
@@ -225,6 +225,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode,resultCode,data);
         if(resultCode==1){
             initLoadUserView();
         }
@@ -306,12 +307,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.open_camera_activity:
                 startCamera();
                 break;
+            case R.id.exit:
+                finish();
+                BmobUser.logOut();
+                break;
         }
     }
 
     @Override
     public void setHeader(@NotNull String str) {
-        Glide.with(this).asDrawable().load(str).apply(options).into(header);
+        Glide.with(this).load(str).apply(options).into(header);
     }
 
     @Override
@@ -339,7 +344,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
 
-        SharedPreferences cachePre = MyUtil.getShardPreferences(this,"Cache");
+        SharedPreferences cachePre = MyUtil.getShardPreferences(this,"Cache"+BmobUser.getCurrentUser(User.class).getUid());
+        if(cachePre==null)
+            return;
         String fileName = cachePre.getString("header","[null]");
         File file = new File(savePath+fileName);
         if(file.exists()){

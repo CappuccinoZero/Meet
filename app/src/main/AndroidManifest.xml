@@ -16,7 +16,6 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
@@ -33,10 +32,23 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".topic.TopicActivity"
-            android:label=""
-            ></activity>
-        <activity android:name=".recommend.RecommendActivity" />
+        <activity android:name=".Know.SendKnowActivity"></activity>
+        <activity
+            android:name=".Know.KnowActivity"
+            android:theme="@style/translationStatusTheme" />
+        <activity
+            android:name=".main.fragment.Book.BaikeSearch"
+            android:windowSoftInputMode="stateAlwaysVisible" />
+        <activity android:name=".video.SendVideo" />
+        <activity
+            android:name=".topic.SendTopic"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".topic.TopicActivity"
+            android:label="" />
+        <activity
+            android:name=".recommend.RecommendActivity"
+            android:theme="@style/translationStatusTheme" />
         <activity android:name=".main.JsoupTest" />
         <activity android:name=".login.NoMaybe" />
         <activity android:name=".login.RegisterActivity" />
@@ -62,15 +74,16 @@
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="RoFNCV0ycFV6Qn8T9aMuLXECk7RYLbDZ" />
 
-        <activity
-            android:name=".main.HelloTest"
-            android:screenOrientation="landscape" />
+        <activity android:name=".main.HelloTest" />
         <activity android:name=".main.WebActivity" />
         <activity android:name=".encyclopedia.EncyclopediaActivity" />
         <activity android:name=".IntroductionPage.IntroductionActivity" />
         <activity
             android:name=".history.HistoryActivity"
             android:label="" />
+        <service android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote"/>
         <activity
             android:name=".setting.CameraSetting"
             android:label="设定" />
@@ -96,8 +109,7 @@
         </provider>
         <provider
             android:name="cn.bmob.v3.util.BmobContentProvider"
-            android:authorities="com.lin.meet.BmobContentProvider">
-        </provider>
+            android:authorities="com.lin.meet.BmobContentProvider" />
     </application>
 
 </manifest>
