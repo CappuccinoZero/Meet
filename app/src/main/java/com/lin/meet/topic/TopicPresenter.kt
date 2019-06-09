@@ -270,7 +270,7 @@ class TopicPresenter(view:TopicConstract.View):TopicConstract.Presenter {
             override fun done(p0: MutableList<topic_main>?, p1: BmobException?) {
                 if(p1==null&&p0!!.size>0){
                     var bean = TopicMain(p0[0])
-                    checkAuthor(bean)
+                    selectComment(bean)
                 }
                 else{
                     view.initResult(-1,null)
@@ -292,24 +292,6 @@ class TopicPresenter(view:TopicConstract.View):TopicConstract.Presenter {
         }
     }
 
-    //获得用户信息更新赞数
-    private fun checkAuthor(bean:TopicMain){
-        var query:BmobQuery<User> = BmobQuery()
-        query.addWhereEqualTo("uid",bean.bean.uid)
-        query.findObjects(object :FindListener<User>(){
-            override fun done(p0: MutableList<User>?, p1: BmobException?) {
-                if(p1==null&&p0!!.size>0){
-                    bean.nickName = p0[0].nickName
-                    bean.headerUri = p0[0].headerUri
-                    selectComment(bean)
-                }else{
-                    view.initResult(-1,null)
-                }
-            }
-        })
-
-        updateLike()
-    }
 
     private fun updateLike(){
         val query:BmobQuery<topic_islike> = BmobQuery()

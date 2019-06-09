@@ -18,11 +18,9 @@ import android.widget.TextView
 import android.widget.Toast
 import cn.bmob.v3.BmobUser
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.lin.meet.R
 import com.lin.meet.bean.User
-import com.lin.meet.main.MainActivity
 import com.lin.meet.my_util.MyUtil
 import com.lljjcoder.Interface.OnCityItemClickListener
 import com.lljjcoder.bean.CityBean
@@ -31,7 +29,6 @@ import com.lljjcoder.bean.ProvinceBean
 import com.lljjcoder.citywheel.CityConfig
 import com.lljjcoder.style.citypickerview.CityPickerView
 import kotlinx.android.synthetic.main.activity_persetting.*
-import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -290,8 +287,6 @@ class PersonalSetting : AppCompatActivity(), View.OnClickListener,PerStContract.
 
         initAreaPickDialog()
         option = RequestOptions()
-        option!!.diskCacheStrategy(DiskCacheStrategy.NONE)
-        option!!.skipMemoryCache(true)
         initLoadCache()
     }
 
@@ -304,25 +299,8 @@ class PersonalSetting : AppCompatActivity(), View.OnClickListener,PerStContract.
             toast("用户未登录")
             return
         }
-
-        var cachePre:SharedPreferences = MyUtil.getShardPreferences(this,"Cache"+BmobUser.getCurrentUser(User::class.java).getUid())
-
-        if(cachePre==null)
-            return
-        var fileName:String = cachePre.getString("background","[null]");
-        var cache:File = File(MainActivity.savePath+fileName)
-        if(cache.exists())
-            setBackground(MainActivity.savePath+fileName)
-        else if ("[null]" != fileName)
-            persenter!!.downloadToCache(user.backgroundUri,fileName,2)
-
-        fileName = cachePre.getString("header","[null]");
-        cache = File(MainActivity.savePath+fileName)
-        if(cache.exists())
-            setHeader(MainActivity.savePath+fileName)
-        else if ("[null]" != fileName)
-            persenter!!.downloadToCache(user.headerUri,fileName,1)
-
+        setBackground(user.backgroundUri)
+        setHeader(user.headerUri)
         setName(user.nickName)
         setSex(user.sex)
         setBirth(user.brith)

@@ -16,6 +16,7 @@
         android:layout_width="125dp"
         android:layout_height="match_parent">
         <ImageView
+            android:transitionName="baike_img"
             android:scaleType="centerCrop"
             android:id="@+id/baike_img"
             android:layout_width="match_parent"
@@ -30,12 +31,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <TextView
+            android:transitionName="baike_cnName"
             android:id="@+id/baike_cnName"
             android:textColor="@color/text_back_2"
             android:text="中文名"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView
+            android:transitionName="baike_enName"
             android:id="@+id/baike_enName"
             android:textColor="@color/text_back_2"
             android:text="English Name"

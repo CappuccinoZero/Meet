@@ -40,7 +40,6 @@ interface PersonalContract {
     }
     interface Model{}
     interface Presenter{
-        fun downloadToCache(uri:String,fileName:String,result:Int)
     }
     interface Scroll{
         fun onScrollDown(event: MotionEvent)

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".recommend.RecommendActivity"
+    android:background="#fff"
     android:fitsSystemWindows="true">
     <android.support.design.widget.AppBarLayout
         android:theme="@style/MyDefaulyTheme"
@@ -13,6 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="400dp">
         <android.support.design.widget.CollapsingToolbarLayout
+            android:background="#fff"
             android:fitsSystemWindows="true"
             android:id="@+id/recommend_coll_layout"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
@@ -44,7 +46,7 @@
     <android.support.v7.widget.RecyclerView
         android:layout_marginBottom="40dp"
         android:fitsSystemWindows="true"
-        android:background="#F5F5F5"
+        android:background="#FFF"
         android:id="@+id/recommend_recyclerView"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"

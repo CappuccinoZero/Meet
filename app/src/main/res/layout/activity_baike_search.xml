@@ -47,14 +47,14 @@
         <EditText
             android:maxLines="1"
             android:id="@+id/search"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="30dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="30dp"
             android:background="@null"
             android:hint="你想了解什么动物？"
             android:textSize="@dimen/text_4"
             android:textStyle="bold"
-            android:layout_marginEnd="30dp"
-            android:layout_marginStart="30dp"
+            android:paddingEnd="30dp"
+            android:paddingStart="30dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>

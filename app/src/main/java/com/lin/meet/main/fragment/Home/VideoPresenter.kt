@@ -9,7 +9,7 @@ import com.lin.meet.bean.video_main
 class VideoPresenter(view:HomeConstract.VideoView):HomeConstract.VideoPresenter {
     private var allPage = 0//已经加载数量
     private val page = 10//每次加载的数量
-
+    private var loading = false
     override fun onInitVideos(flag: Int) {//0,default 1,id,2,refresh
         allPage = 0
         view.refreshVideos()
@@ -29,8 +29,11 @@ class VideoPresenter(view:HomeConstract.VideoView):HomeConstract.VideoPresenter 
     val view = view
 
     private fun onLoadVideos(flag: Int) {
+        if (loading)return
+        loading = true
         val query = BmobQuery<video_main>()
         query.order("-updatedAt")
+        query.addWhereEqualTo("isPicture",false)
         query.setLimit(page)
         query.setSkip(allPage)
         query.findObjects(object :FindListener<video_main>(){
@@ -44,6 +47,7 @@ class VideoPresenter(view:HomeConstract.VideoView):HomeConstract.VideoPresenter 
                     if (flag == 2)
                         view.endRefresh()
                 }
+                loading = false
             }
         })
     }

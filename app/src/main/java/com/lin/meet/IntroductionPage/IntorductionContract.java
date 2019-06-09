@@ -2,6 +2,7 @@ package com.lin.meet.IntroductionPage;
 
 import android.app.Activity;
 import android.net.Uri;
+import android.support.v4.app.ActivityOptionsCompat;
 
 public interface IntorductionContract {
     public interface View{
@@ -26,11 +27,13 @@ public interface IntorductionContract {
         void setUri2(String uri,String type);
         void setUri3(String uri,String type);
         void setContent(String uri,int position);
+        void updateFromNetwork();
+        void swap(int flag);
     }
 
     public interface Presenter{
         void openPhoto();
-        void intoEncy(Activity activity, int id,String uri,String type);
+        void intoEncy(Activity activity, int id, String uri, String type, ActivityOptionsCompat compat);
         long doIdentification(String path);
         void doIdentification(int id[],float maybe[]);
         void doIdentification(int id[],float maybe[],int swap);

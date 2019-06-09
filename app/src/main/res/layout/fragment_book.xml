@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="64dp">
         <LinearLayout
+            android:transitionName="baike_search"
             android:elevation="4dp"
             android:id="@+id/baike_search"
             android:layout_toLeftOf="@id/home_release"

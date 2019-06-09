@@ -1,7 +1,6 @@
 package com.lin.meet.main.fragment.Home;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -20,21 +19,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.gigamole.navigationtabstrip.NavigationTabStrip;
 import com.lin.meet.R;
 import com.lin.meet.bean.User;
 import com.lin.meet.main.MainActivity;
-import com.lin.meet.my_util.MyUtil;
 import com.lin.meet.override.MyRefresh;
 import com.lin.meet.override.MyViewPage;
 import com.lin.meet.topic.SendTopic;
 import com.lin.meet.video.SendVideo;
 import com.xujiaji.happybubble.BubbleDialog;
 import com.xujiaji.happybubble.BubbleLayout;
-
-import java.io.File;
 
 import cn.bmob.v3.BmobUser;
 import cn.jzvd.JZVideoPlayer;
@@ -45,7 +40,6 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
     public static final int END_REFRESH = 100;
     private RequestOptions options;
     private View mView = null;
-    private HomeContract.presenter presenter;
     private CircleImageView header;
     private Toolbar toolbar;
     private MainActivity activity;
@@ -62,7 +56,6 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
     private RecommendAdapter re_adapter;
 
     private RecyclerView ps_recyclerView;
-    private PicturesAdapter ps_adapter;
 
     private RecyclerView top_recyclerView;
     private TopicAdapter top_adapter;
@@ -96,7 +89,6 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
     }
 
     private void initView(View view){
-        presenter = new HomePresenter(this);
         release = (ImageView)view.findViewById(R.id.home_release);
         refresh = (MyRefresh) view.findViewById(R.id.home_refresh);
         refresh.setColorSchemeResources(R.color.teal_A400);
@@ -108,8 +100,6 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
         ((LinearLayout)view.findViewById(R.id.home_header_layout)).setOnClickListener(this);
         viewPager = (MyViewPage) view.findViewById(R.id.home_viewPage);
         options = new RequestOptions();
-        options.diskCacheStrategy(DiskCacheStrategy.NONE);
-        options.skipMemoryCache(true);
         release.setOnClickListener(this);
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -126,11 +116,7 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
                         break;
                     case 3:
                         PictureFragment fragment = (PictureFragment) adapter.list.get(3);
-                        if(fragment.getinitLoadStatus()){
-                            refresh.setRefreshing(false);
-                            return;
-                        }
-                        presenter.doRefresh(fragment,3);
+                        fragment.doRefresh(handler);
                         break;
                 }
             }
@@ -156,8 +142,6 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
                 switch (i){
                     case 3:
                         PictureFragment fragment = (PictureFragment) adapter.list.get(i);
-                        if(fragment.getinitLoadStatus())
-                            isShowLoad(true);
                         break;
                 }
             }
@@ -212,8 +196,6 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
 
     @Override
     public void onResume() {
-        if(ps_adapter!=null)
-            ps_adapter.clean();
         super.onResume();
         updateHeader();
     }
@@ -238,19 +220,6 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
     }
 
 
-
-
-    @Override
-    public void refreshPictures(PictureFragment fragment){
-        try {
-            refresh.setRefreshing(false);
-            Thread.sleep(150);
-            fragment.refreshPictures();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
     @Override
     public void setHeader(String path) {
         Glide.with(this).asDrawable().apply(options).load(path).into(header);
@@ -273,13 +242,7 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
     public void updateHeader(){
         if(!BmobUser.isLogin())
             return;
-        SharedPreferences pre = MyUtil.getShardPreferences(getActivity(),"Cache"+BmobUser.getCurrentUser(User.class).getUid());
-        if(pre==null)
-            return;
-        String path = pre.getString("header","");
-        File file = new File(MainActivity.savePath+path);
-        if (file.exists()&& BmobUser.isLogin())
-            setHeader(MainActivity.savePath+path);
+        setHeader(BmobUser.getCurrentUser(User.class).getHeaderUri());
     }
 
     @Override

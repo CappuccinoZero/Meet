@@ -1,5 +1,6 @@
 package com.lin.meet.Know
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
@@ -7,12 +8,17 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
+import android.transition.ChangeBounds
+import android.transition.ChangeImageTransform
+import android.transition.ChangeTransform
+import android.transition.TransitionSet
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.bumptech.glide.Glide
+import com.hw.ycshareelement.transition.ChangeTextTransition
 import com.lin.meet.R
 import com.lin.meet.bean.KnowBean
 import kotlinx.android.synthetic.main.activity_know.*
@@ -33,6 +39,12 @@ class KnowActivity : AppCompatActivity(), View.OnClickListener,Constarct.View, K
                 .setNeutralButton("取消",null)
                 .create()
                 .show()
+    }
+
+    @SuppressLint("RestrictedApi")
+    override fun onBackPressed() {
+        open_edit.visibility = View.GONE
+        super.onBackPressed()
     }
 
     override fun updateAgree(position: Int) {
@@ -103,6 +115,18 @@ class KnowActivity : AppCompatActivity(), View.OnClickListener,Constarct.View, K
         setContentView(R.layout.activity_know)
         initView()
         presenter!!.onInitData(intent.getStringExtra("id"),intent.getStringExtra("uid"))
+        initTransitionAnimation()
+    }
+
+    private fun initTransitionAnimation(){
+        val set = TransitionSet()
+        set.addTransition(ChangeTransform())
+        set.addTransition(ChangeImageTransform())
+        set.addTransition(ChangeTextTransition())
+        set.addTransition(ChangeBounds())
+        set.addTarget(know_img)
+        window.sharedElementExitTransition = set
+        window.sharedElementEnterTransition = set
     }
 
     private fun initView(){
@@ -132,7 +156,7 @@ class KnowActivity : AppCompatActivity(), View.OnClickListener,Constarct.View, K
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if(item!!.itemId == android.R.id.home){
-            finish()
+            onBackPressed()
             return true
         }
         return super.onOptionsItemSelected(item)
@@ -168,4 +192,6 @@ class KnowActivity : AppCompatActivity(), View.OnClickListener,Constarct.View, K
     private fun loadHeadImage(uri:String){
         Glide.with(this).load(uri).into(know_img)
     }
+
+
 }

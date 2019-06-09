@@ -14,16 +14,17 @@ class EncyPresenter(view:EncyclopediaContract.View):EncyclopediaContract.Present
         for(index in 0 until lenth){
             if(index < bean.images.size||index == position||flag >= 0){
                 var img = ""
-                if(index == position && index > bean.images.size){
+                if(index == position && index < bean.images.size){
                     flag = index
                     img = bean.flavus
                 }
                 else if(index == position){
                     img = bean.flavus
                 }
-                else if(flag>0 && index >= bean.images.size ){
-                    flag = -1
+                else if(flag>0 && index > bean.images.size ){
+                    //Log.d("测",index)
                     img = bean.images[flag]
+                    flag = -1
                 }
                 else{
                     img = bean.images[index]

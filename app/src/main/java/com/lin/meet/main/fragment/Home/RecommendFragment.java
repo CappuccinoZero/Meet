@@ -5,7 +5,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,7 +18,7 @@ import com.lin.meet.my_util.MyUtil;
 
 import java.util.Random;
 
-public class RecommendFragment extends Fragment {
+public class RecommendFragment extends HomeBaseFragment {
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -51,10 +50,6 @@ public class RecommendFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = getLayoutInflater().inflate(R.layout.home_recommend, container,false);
-        initRecommend();
-        Random random = new Random();
-        lovePage = 1 + random.nextInt(3);
-        LoveNews.updateNews(handler,lovePage);
         return mView;
     }
 
@@ -67,7 +62,7 @@ public class RecommendFragment extends Fragment {
         mRecyclerView = (RecyclerView)mView.findViewById(R.id.re_recyclerView);
         LinearLayoutManager manager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
         mRecyclerView.setLayoutManager(manager);
-        mAdapter = new RecommendAdapter();
+        mAdapter = new RecommendAdapter(getActivity());
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -94,5 +89,13 @@ public class RecommendFragment extends Fragment {
         Random random = new Random();
         lovePage = 1 + random.nextInt(3);
         LoveNews.updateNews(this.handler,lovePage);
+    }
+
+    @Override
+    protected void loadData() {
+        initRecommend();
+        Random random = new Random();
+        lovePage = 1 + random.nextInt(3);
+        LoveNews.updateNews(handler,lovePage);
     }
 }

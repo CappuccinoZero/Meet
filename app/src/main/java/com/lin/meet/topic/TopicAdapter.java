@@ -273,7 +273,10 @@ public class TopicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         reBean = new RecommendViewBean();
         reBean.flag = RecommendViewBean.FLAG_CONTENT_REPLY;
         list.add(reBean);
+        notifyDataSetChanged();
+    }
 
+    void initThumbCount(TopicMain bean){
         thumbCount = bean.getLikeCount();
         notifyDataSetChanged();
     }

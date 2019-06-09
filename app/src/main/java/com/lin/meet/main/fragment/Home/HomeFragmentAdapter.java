@@ -15,7 +15,6 @@ public class HomeFragmentAdapter extends FragmentPagerAdapter {
         TopicFragment fragment_2 = new TopicFragment();
         VideoFragment fragment_3 = new VideoFragment();
         PictureFragment fragment_4 = new PictureFragment();
-        fragment_4.setParentView(view);
         list.add(fragment_1);
         list.add(fragment_2);
         list.add(fragment_3);

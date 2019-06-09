@@ -6,7 +6,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
@@ -18,15 +17,19 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.transition.Fade;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -35,7 +38,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.lin.meet.R;
 import com.lin.meet.bean.User;
@@ -45,7 +47,6 @@ import com.lin.meet.main.fragment.Book.Book;
 import com.lin.meet.main.fragment.Find.Find;
 import com.lin.meet.main.fragment.Home.Home;
 import com.lin.meet.main.fragment.Know.Know;
-import com.lin.meet.my_util.MyUtil;
 import com.lin.meet.personal.PersonalActivity;
 
 import org.jetbrains.annotations.NotNull;
@@ -79,6 +80,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private RelativeLayout headLayout;
     private ImageView headBackground;
     private TextView exit;
+    private View roundView;
+    private RelativeLayout itemLayout;
     private Book book = new Book();
     private Find find = new Find();
     private Home home = new Home();
@@ -86,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -104,8 +108,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         actionButton = (FloatingActionButton)findViewById(R.id.open_camera_activity);
         actionButton.setOnClickListener(this);
         options = new RequestOptions();
-        options.skipMemoryCache(true);
-        options.diskCacheStrategy(DiskCacheStrategy.NONE);
         options.error(R.color.bank_FF6C6C6C);
 
         initFragment();
@@ -144,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return true;
             }
         });
+        itemLayout = (RelativeLayout)findViewById(R.id.draw_item_layout);
         exit = (TextView) findViewById(R.id.exit);
         drawer = (DrawerLayout) findViewById(R.id.main_drawer);
         nv = (NavigationView) findViewById(R.id.main_nv);
@@ -151,6 +154,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         headBackground = (ImageView) headLayout.findViewById(R.id.user_background);
         header = (CircleImageView)headLayout.findViewById(R.id.user_header);
         name = (TextView)headLayout.findViewById(R.id.user_name);
+        roundView = (View)headLayout.findViewById(R.id.user_view);
         headLayout.setOnClickListener(this);
         exit.setOnClickListener(this);
         checkCacheFile();
@@ -298,8 +302,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()){
             case R.id.mainHeadLayout:
                 if(BmobUser.isLogin()){
+                    getWindow().setExitTransition(new Fade());
                     Intent intent = new Intent(this, PersonalActivity.class);
-                    startActivityForResult(intent,1);
+                    Pair<View,String> pair1 = new Pair<>(headBackground,headBackground.getTransitionName());
+                    Pair<View,String> pair2 = new Pair<>(header,header.getTransitionName());
+                    Pair<View,String> pair3 = new Pair<>(name,name.getTransitionName());
+                    Pair<View,String> pair4 = new Pair<>(roundView,roundView.getTransitionName());
+                    Pair<View,String> pair5 = new Pair<>(itemLayout,itemLayout.getTransitionName());
+                    ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation(this,pair1,pair2,pair3,pair4,pair5);
+                    ActivityCompat.startActivityForResult(this,intent,1,compat.toBundle());
                 }else {
                     startActivity(new Intent(this, StartActivity.class));
                 }
@@ -343,26 +354,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }else{
             return;
         }
-
-        SharedPreferences cachePre = MyUtil.getShardPreferences(this,"Cache"+BmobUser.getCurrentUser(User.class).getUid());
-        if(cachePre==null)
-            return;
-        String fileName = cachePre.getString("header","[null]");
-        File file = new File(savePath+fileName);
-        if(file.exists()){
-            setHeader(savePath+fileName);
-        }else if(!"[null]".equals(fileName)){
-            presenter.downloadToCache(user.getHeaderUri(),fileName,1);
-        }
-
-        fileName = cachePre.getString("background","");
-        file = new File(savePath+fileName);
-        if(file.exists()){
-            setHeaderBackground(savePath+fileName);
-        }else if(!"[null]".equals(fileName)){
-            presenter.downloadToCache(user.getBackgroundUri(),fileName,2);
-        }
-
+        setHeader(user.getHeaderUri());
+        setHeaderBackground(user.getBackgroundUri());
         setName(user.getNickName());
     }
 

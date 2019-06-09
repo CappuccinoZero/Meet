@@ -1,17 +1,24 @@
 package com.lin.meet.main.fragment.Book
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.support.v4.app.ActivityCompat
+import android.support.v4.app.ActivityOptionsCompat
+import android.support.v4.util.Pair
+import android.support.v4.view.ViewCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.lin.meet.R
 import com.lin.meet.bean.Baike
 import com.lin.meet.encyclopedia.EncyclopediaActivity
 
-class BaikeAdapter: RecyclerView.Adapter<BaikeViewHolder>() {
+class BaikeAdapter(activity: Activity): RecyclerView.Adapter<BaikeViewHolder>() {
     private var baikes:ArrayList<Baike> ?= null
     private var context: Context ?= null
+    private val activity = activity
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): BaikeViewHolder {
         if(context==null)
             context = p0.context
@@ -31,6 +38,7 @@ class BaikeAdapter: RecyclerView.Adapter<BaikeViewHolder>() {
         viewHolder.introduce.text = baikes!![i].brief
         viewHolder.setImage(context!!,baikes!![i].imageUri)
         viewHolder.view.setOnClickListener {
+            //activity.window.exitTransition = Explode()
             val intent = Intent (context,EncyclopediaActivity::class.java)
             intent.putExtra("Baike",true)
             intent.putExtra("cnName",baikes!![i].cnName)
@@ -38,7 +46,12 @@ class BaikeAdapter: RecyclerView.Adapter<BaikeViewHolder>() {
             intent.putExtra("imageUri",baikes!![i].imageUri)
             intent.putExtra("url",baikes!![i].uri)
             intent.putExtra("type",baikes!![i].type)
-            context!!.startActivity(intent)
+            val pair1:Pair<View,String> = Pair(viewHolder.image,ViewCompat.getTransitionName(viewHolder.image))
+            val pair2:Pair<View,String> = Pair(viewHolder.cnName,ViewCompat.getTransitionName(viewHolder.cnName))
+            val pair3:Pair<View,String> = Pair(viewHolder.enName,ViewCompat.getTransitionName(viewHolder.enName))
+            val pair4:Pair<View,String> = Pair(viewHolder.cnName,"cnTitle")
+            val compact = ActivityOptionsCompat.makeSceneTransitionAnimation(activity,pair1,pair2,pair3,pair4)
+            ActivityCompat.startActivity(activity,intent,compact.toBundle())
         }
     }
 

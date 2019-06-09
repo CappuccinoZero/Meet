@@ -10,7 +10,7 @@ import com.bumptech.glide.Glide
 import com.lin.meet.R
 
 class BaikeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    private val image = itemView.findViewById<ImageView>(R.id.baike_img)
+    val image = itemView.findViewById<ImageView>(R.id.baike_img)
     val view = itemView.findViewById<LinearLayout>(R.id.baike_view)
     val cnName = itemView.findViewById<TextView>(R.id.baike_cnName)
     val enName = itemView.findViewById<TextView>(R.id.baike_enName)

@@ -42,6 +42,7 @@ class SendVideoPresenter(view:VideoContract.SendView):VideoContract.SendPresente
         video.uid = getUser().uid
         video.tltle = title
         video.uri = uri
+        video.isPicture = false
         video.save(object :SaveListener<String>(){
             override fun done(p0: String?, p1: BmobException?) {
                 if(p1==null){

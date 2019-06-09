@@ -1,10 +1,16 @@
 package com.lin.meet.main.fragment.Home;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.transition.Explode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,9 +30,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class RecommendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<LoveNewsBean> list;
     private Context context;
+    private Activity activity;
 
-    RecommendAdapter(){
+    RecommendAdapter(Activity activity){
         list = new ArrayList<>();
+        this.activity = activity;
     }
     @NonNull
     @Override
@@ -54,9 +62,15 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                activity.getWindow().setExitTransition(new Explode());
+                viewHolder.roundView.setVisibility(View.VISIBLE);
                 Intent intent = new Intent(context, RecommendActivity.class);
                 intent.putExtra("LoveNewsBean",bean);
-                context.startActivity(intent);
+                Pair<View,String> pair1 = new Pair<>((View)viewHolder.img, ViewCompat.getTransitionName(viewHolder.img));
+                Pair<View,String> pair2 = new Pair<>((View)viewHolder.title, ViewCompat.getTransitionName(viewHolder.title));
+                Pair<View,String> pair3 = new Pair<>((View)viewHolder.roundView, ViewCompat.getTransitionName(viewHolder.roundView));
+                ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation(activity,pair1,pair2,pair3);
+                ActivityCompat.startActivity(activity,intent,compat.toBundle());
             }
         });
     }
@@ -73,6 +87,7 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         TextView author;
         ImageView img;
         CircleImageView header;
+        View roundView;
         public RecommendViewHolder(@NonNull View itemView) {
             super(itemView);
             cardView = itemView.findViewById(R.id.recommend_card);
@@ -81,6 +96,7 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             author = itemView.findViewById(R.id.recommend_item_author);
             img = itemView.findViewById(R.id.recommend_item_img);
             header = itemView.findViewById(R.id.recommend_item_header);
+            roundView = itemView.findViewById(R.id.roundView);
         }
 
         public void setImageUrl(Context context,String url){
@@ -101,4 +117,5 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         list.clear();
         notifyDataSetChanged();
     }
+
 }

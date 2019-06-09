@@ -20,7 +20,6 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.DownloadFileListener;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
@@ -122,29 +121,6 @@ public class PerStPresenter implements PerStContract.Presenter {
             uploadFile = null;
         }
     }
-
-
-    @Override
-    public void downloadToCache(String uri,String fileName,int id) {
-        File file = new File(savePath,fileName);
-        BmobFile bmobFile = new BmobFile(fileName,"",uri);
-        bmobFile.download(file,new DownloadFileListener() {
-            @Override
-            public void done(String s, BmobException e) {
-                if(e==null){
-                    view.updateImageView(id,s);
-                }else {
-
-                }
-            }
-
-            @Override
-            public void onProgress(Integer integer, long l) {
-
-            }
-        });
-    }
-
 
     private String saveFile(String key,String path){
         HashMap<String,String> map = new HashMap<>();

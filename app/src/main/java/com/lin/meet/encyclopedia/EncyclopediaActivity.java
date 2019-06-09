@@ -1,7 +1,6 @@
 package com.lin.meet.encyclopedia;
 
 import android.app.Activity;
-import android.app.ActivityOptions;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -11,13 +10,17 @@ import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
-import android.transition.Transition;
-import android.transition.TransitionInflater;
+import android.transition.ChangeBounds;
+import android.transition.ChangeImageTransform;
+import android.transition.ChangeTransform;
+import android.transition.TransitionSet;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebView;
 import android.widget.ImageView;
@@ -25,6 +28,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.hw.ycshareelement.transition.ChangeTextTransition;
 import com.lin.meet.R;
 import com.lin.meet.jsoup.AnimalBaike;
 import com.lin.meet.jsoup.BaikeBean;
@@ -75,17 +79,34 @@ public class EncyclopediaActivity extends AppCompatActivity implements View.OnCl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
-        Transition explode = TransitionInflater.from(this).inflateTransition(android.R.transition.explode);
-        getWindow().setEnterTransition(explode);
         setContentView(R.layout.activity_encyclopedia);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         initView();
         initData();
+        initTransitionAnimation();
     }
 
-    public static void openEncyclopedia(Activity activity, String datas[],String newurl,String type){
+    private void initTransitionAnimation(){
+        ViewCompat.setTransitionName(img,"baike_img");
+        ViewCompat.setTransitionName(title_c,"baike_cnName");
+        ViewCompat.setTransitionName(title_e,"baike_enName");
+        ViewCompat.setTransitionName(title_name,"cnTitle");
+
+        TransitionSet set = new TransitionSet();
+        set.addTransition(new ChangeBounds());
+        set.addTransition(new ChangeImageTransform());
+        set.addTransition(new ChangeTransform());
+        set.addTransition(new ChangeTextTransition());
+        set.addTarget(img);
+        set.addTarget(title_c);
+        set.addTarget(title_e);
+        set.addTarget(title_name);
+        getWindow().setSharedElementEnterTransition(set);
+        getWindow().setSharedElementExitTransition(set);
+    }
+
+    public static void openEncyclopedia(Activity activity, String datas[], String newurl, String type, ActivityOptionsCompat compat){
         Intent intent = new Intent(activity, EncyclopediaActivity.class);
         intent.putExtra("Baike",true);
         intent.putExtra("cnName",datas[3]);
@@ -93,7 +114,7 @@ public class EncyclopediaActivity extends AppCompatActivity implements View.OnCl
         intent.putExtra("imageUri",datas[0]);
         intent.putExtra("url",newurl);
         intent.putExtra("type",type);
-        activity.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
+        ActivityCompat.startActivity(activity,intent,compat.toBundle());
     }
 
 
@@ -347,7 +368,7 @@ public class EncyclopediaActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.ency_back:
-                finish();
+                onBackPressed();
                 break;
             case R.id.ency_horn_0:
                 speackText(title_c,horn_c);

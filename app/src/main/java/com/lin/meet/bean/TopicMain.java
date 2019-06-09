@@ -1,6 +1,8 @@
 package com.lin.meet.bean;
 
-public class TopicMain {
+import java.io.Serializable;
+
+public class TopicMain implements Serializable {
     private String nickName;
     private String headerUri;
     public String images[] = new String[6];

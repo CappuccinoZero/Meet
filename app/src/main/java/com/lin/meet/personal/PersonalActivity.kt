@@ -4,10 +4,14 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Intent
-import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
+import android.support.v4.view.ViewCompat
 import android.support.v7.app.AppCompatActivity
+import android.transition.ChangeBounds
+import android.transition.ChangeImageTransform
+import android.transition.ChangeTransform
+import android.transition.TransitionSet
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
@@ -15,15 +19,12 @@ import android.view.WindowManager
 import android.widget.Toast
 import cn.bmob.v3.BmobUser
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
+import com.hw.ycshareelement.transition.ChangeTextTransition
 import com.lin.meet.R
 import com.lin.meet.bean.User
-import com.lin.meet.main.MainActivity
-import com.lin.meet.my_util.MyUtil
 import kotlinx.android.synthetic.main.activity_personal.*
 import kotlinx.android.synthetic.main.personal_view.*
-import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -199,7 +200,7 @@ class PersonalActivity : AppCompatActivity(), View.OnClickListener,PersonalContr
 
     override fun onClick(v: View?) {
         when(v?.id){
-            R.id.perBack->finish()
+            R.id.perBack->onBackPressed()
             R.id.perAttentioned->{//取消关注
 
             }
@@ -211,12 +212,35 @@ class PersonalActivity : AppCompatActivity(), View.OnClickListener,PersonalContr
             }
         }
     }
+
+    private fun initTransitionAnimation() {
+        ViewCompat.setTransitionName(perImage, "main_bg")
+        ViewCompat.setTransitionName(perHeader, "main_header")
+        ViewCompat.setTransitionName(perUserName2, "main_text")
+        ViewCompat.setTransitionName(perLayoutTop,"main_view")
+        ViewCompat.setTransitionName(perContentView,"main_item_layout")
+
+        val set = TransitionSet()
+        set.addTransition(ChangeBounds())
+        set.addTransition(ChangeImageTransform())
+        set.addTransition(ChangeTransform())
+        set.addTransition(ChangeTextTransition())
+        set.addTarget(perImage)
+        set.addTarget(perHeader)
+        set.addTarget(perUserName2)
+        set.addTarget(perLayoutTop)
+        set.addTarget(perContentView)
+        window.sharedElementEnterTransition = set
+        window.sharedElementEnterTransition = set
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_personal)
         initCalcul()
         initView()
         initLoadView()
+        initTransitionAnimation()
     }
 
     private fun initCalcul(){
@@ -244,8 +268,6 @@ class PersonalActivity : AppCompatActivity(), View.OnClickListener,PersonalContr
     private fun initView(){
         presenter = PersonalPresenter(this)
         option = RequestOptions()
-        option!!.diskCacheStrategy(DiskCacheStrategy.NONE)
-        option!!.skipMemoryCache(true)
 
         perAttentionHe.setOnClickListener(this)
         perAttentioned.setOnClickListener(this)
@@ -369,24 +391,8 @@ class PersonalActivity : AppCompatActivity(), View.OnClickListener,PersonalContr
             return
         }
 
-        var cachePre: SharedPreferences = MyUtil.getShardPreferences(this,"Cache"+BmobUser.getCurrentUser(User::class.java).getUid())
-
-        if(cachePre == null)
-            return
-        var fileName:String = cachePre.getString("background","[null]");
-        var cache: File = File(MainActivity.savePath+fileName)
-        if(cache.exists())
-            setHeadBg(MainActivity.savePath+fileName)
-        else if ("[null]" != fileName)
-            presenter!!.downloadToCache(user.backgroundUri,fileName,2)
-
-        fileName = cachePre.getString("header","[null]");
-        cache = File(MainActivity.savePath+fileName)
-        if(cache.exists())
-            setHeader(MainActivity.savePath+fileName)
-        else if ("[null]" != fileName)
-            presenter!!.downloadToCache(user.headerUri,fileName,1)
-
+        setHeadBg(user.backgroundUri)
+        setHeader(user.headerUri)
         setNumber(user.uid.toString())
         setName(user.nickName)
         setSex(user.sex)

@@ -32,7 +32,6 @@ interface PerStContract {
     interface Presenter{
         fun updateBackground(phone:String,token:String,path:String)
         fun canelUpload()
-        fun downloadToCache(uri:String,fileName:String,result:Int)
         fun updateHeader(phone:String,token:String,path:String)
         fun onSettingNickName(name:String)
         fun onSettingSex(name:String)

@@ -6,10 +6,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.AppBarLayout;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.transition.ChangeBounds;
+import android.transition.ChangeImageTransform;
+import android.transition.ChangeTransform;
+import android.transition.TransitionSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -22,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.hw.ycshareelement.transition.ChangeTextTransition;
 import com.lin.meet.R;
 import com.lin.meet.bean.ReplyBean;
 import com.lin.meet.bean.User;
@@ -89,6 +95,25 @@ public class RecommendActivity extends AppCompatActivity implements View.OnClick
         Intent dataIntent = getIntent();
         LoveNewsBean bean = (LoveNewsBean) dataIntent.getSerializableExtra("LoveNewsBean");
         init(bean);
+        initTransitionAnimation();
+    }
+
+    private void initTransitionAnimation(){
+        ViewCompat.setTransitionName(headImage,"recommend_img");
+        ViewCompat.setTransitionName(title,"recommend_text");
+        ViewCompat.setTransitionName(roundView,"recommend_view");
+
+        TransitionSet set = new TransitionSet();
+        set.addTransition(new ChangeBounds());
+        set.addTransition(new ChangeImageTransform());
+        set.addTransition(new ChangeTransform());
+        set.addTransition(new ChangeTextTransition());
+        set.addTarget(headImage);
+        set.addTarget(title);
+        set.addTarget(roundView);
+
+        getWindow().setSharedElementEnterTransition(set);
+        getWindow().setSharedElementEnterTransition(set);
     }
 
     private void init(LoveNewsBean bean){
@@ -125,17 +150,16 @@ public class RecommendActivity extends AppCompatActivity implements View.OnClick
         adapter = new RecommendAdapter(this);
         LoveNews.updateNewsContent(handler,bean);
         presenter.checkNet(bean.getContentUri());
-
         emojiAdapter = new EmojiAdapter(this);
         emojiView.setAdapter(emojiAdapter);
+        Glide.with(this).asDrawable().load(bean.getImg()).into(headImage);
+        title.setText(bean.getTitle());
         closeEmoji();
     }
 
     private void initContent(LoveNewsBean bean){
         adapter.initAdapter(bean);
         manager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
-        Glide.with(this).asDrawable().load(bean.getImgs().get(0)).into(headImage);
-        title.setText(bean.getTitle());
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);
     }
@@ -190,6 +214,12 @@ public class RecommendActivity extends AppCompatActivity implements View.OnClick
     }
 
     @Override
+    public void onBackPressed() {
+        setResult(0);
+        super.onBackPressed();
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.video_reply_layout:
@@ -197,7 +227,7 @@ public class RecommendActivity extends AppCompatActivity implements View.OnClick
                 showEdit(0);
                 break;
             case R.id.recommend_back:
-                finish();
+                onBackPressed();
                 break;
             case R.id.use_emoji:
                 emojiClick();

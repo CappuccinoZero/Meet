@@ -40,12 +40,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.lin.meet.IntroductionPage.IntroductionActivity;
 import com.lin.meet.R;
-import com.lin.meet.encyclopedia.EncyclopediaActivity;
 import com.lin.meet.history.HistoryActivity;
 import com.lin.meet.main.DataBase;
 import com.lin.meet.main.DataBaseModel;
-import com.lin.meet.setting.CameraSetting;
 import com.lin.meet.my_util.TFLiteUtil;
+import com.lin.meet.setting.CameraSetting;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -59,6 +58,8 @@ public class CameraActivity extends Activity implements View.OnClickListener, Vi
 
     public final static int REQUEST_CODE = 0x01;
 
+    private boolean touching = false;
+    private boolean isPause = false;
     private boolean isLife;
     private DataBase dataBase= new DataBaseModel();
     private CameraView cameraView;
@@ -284,6 +285,7 @@ public class CameraActivity extends Activity implements View.OnClickListener, Vi
                                 bitmap.recycle();
                             }
 
+                            if(isPause)return;
                             camera.startPreview();
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -314,6 +316,7 @@ public class CameraActivity extends Activity implements View.OnClickListener, Vi
                                 }
                             });
                         }
+                        touching = false;
                         isAutoFocus = true;
                         isFocusing = false;
                     }
@@ -327,6 +330,7 @@ public class CameraActivity extends Activity implements View.OnClickListener, Vi
         super.onResume();
         closeDialog();
         isLife=true;
+        isPause = false;
         accListener=new AccListener(this);
         gravityListener=new GravityListener(this);
         sensorManager.registerListener(gravityListener, sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY), SensorManager.SENSOR_DELAY_NORMAL);
@@ -336,6 +340,7 @@ public class CameraActivity extends Activity implements View.OnClickListener, Vi
     @Override
     protected void onPause() {
         super.onPause();
+        isPause = true;
         sensorManager.unregisterListener(accListener);
         sensorManager.unregisterListener(gravityListener);
     }
@@ -513,6 +518,8 @@ public class CameraActivity extends Activity implements View.OnClickListener, Vi
                 if(isDialogShow)
                     closeDialog();
                 else{
+                    if(touching)return super.onTouchEvent(event);
+                    touching = true;
                     if(setting_onTouchCamera)
                         cameraView.focus(true);
                     else

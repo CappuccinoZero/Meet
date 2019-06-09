@@ -8,6 +8,9 @@ public class video_main extends BmobObject {
     private String uri;
     private String tltle;
 
+    private boolean isPicture = false;
+    private String content;
+
     public String getId() {
         return id;
     }
@@ -43,6 +46,24 @@ public class video_main extends BmobObject {
 
     public video_main setUri(String uri) {
         this.uri = uri;
+        return this;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public video_main setContent(String content) {
+        this.content = content;
+        return this;
+    }
+
+    public boolean isPicture() {
+        return isPicture;
+    }
+
+    public video_main setPicture(boolean picture) {
+        isPicture = picture;
         return this;
     }
 }

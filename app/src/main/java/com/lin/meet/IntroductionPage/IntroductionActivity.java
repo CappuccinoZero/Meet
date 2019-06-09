@@ -8,6 +8,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -111,7 +114,10 @@ public class IntroductionActivity extends AppCompatActivity implements View.OnCl
         more_1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                presenter.intoEncy(IntroductionActivity.this,id1,uri1,type1);
+                Pair<View,String> pair1 = new Pair<>(animal_1, ViewCompat.getTransitionName(animal_1));
+                Pair<View,String> pair2 = new Pair<>(imageView_1, ViewCompat.getTransitionName(imageView_1));
+                ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation(IntroductionActivity.this,pair1,pair2);
+                presenter.intoEncy(IntroductionActivity.this,id1,uri1,type1,compat);
             }
         });
         text11 = (TextView)view_1.findViewById(R.id.introduction_text_left1);
@@ -142,7 +148,10 @@ public class IntroductionActivity extends AppCompatActivity implements View.OnCl
         more_2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                presenter.intoEncy(IntroductionActivity.this,id2,uri2,type2);
+                Pair<View,String> pair1 = new Pair<>(animal_2, ViewCompat.getTransitionName(animal_2));
+                Pair<View,String> pair2 = new Pair<>(imageView_2, ViewCompat.getTransitionName(imageView_2));
+                ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation(IntroductionActivity.this,pair1,pair2);
+                presenter.intoEncy(IntroductionActivity.this,id2,uri2,type2,compat);
             }
         });
         text21 = (TextView)view_2.findViewById(R.id.introduction_text_left1);
@@ -173,7 +182,10 @@ public class IntroductionActivity extends AppCompatActivity implements View.OnCl
         more_3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                presenter.intoEncy(IntroductionActivity.this,id3,uri3,type3);
+                Pair<View,String> pair1 = new Pair<>(animal_3, ViewCompat.getTransitionName(animal_3));
+                Pair<View,String> pair2 = new Pair<>(imageView_3, ViewCompat.getTransitionName(imageView_3));
+                ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation(IntroductionActivity.this,pair1,pair2);
+                presenter.intoEncy(IntroductionActivity.this,id3,uri3,type3,compat);
             }
         });
         text31 = (TextView)view_3.findViewById(R.id.introduction_text_left1);
@@ -303,9 +315,6 @@ public class IntroductionActivity extends AppCompatActivity implements View.OnCl
         id1=a;
         id2=b;
         id3=c;
-        presenter.updateBaike(id1,1);
-        presenter.updateBaike(id2,2);
-        presenter.updateBaike(id3,3);
     }
 
     @Override
@@ -393,6 +402,39 @@ public class IntroductionActivity extends AppCompatActivity implements View.OnCl
             ((TextView)view_2.findViewById(R.id.introduction_content)).setText(content);
         }else if(position==3){
             ((TextView)view_3.findViewById(R.id.introduction_content)).setText(content);
+        }
+    }
+
+    @Override
+    public void updateFromNetwork() {
+        presenter.updateBaike(id1,1);
+        presenter.updateBaike(id2,2);
+        presenter.updateBaike(id3,3);
+    }
+
+    @Override
+    public void swap(int flag) {
+        int temp = id1;
+        String tempStr;
+        if(flag==1) {
+            id1 = id2;
+            id2 = temp;
+            tempStr = uri1;
+            uri1 = uri2;
+            uri2 = tempStr;
+            tempStr = type1;
+            type1 = type2;
+            type2 = tempStr;
+        }
+        else {
+            id1 = id3;
+            id3 = temp;
+            tempStr = uri1;
+            uri1 = uri3;
+            uri3 = tempStr;
+            tempStr = type1;
+            type1 = type3;
+            type3 = tempStr;
         }
     }
 

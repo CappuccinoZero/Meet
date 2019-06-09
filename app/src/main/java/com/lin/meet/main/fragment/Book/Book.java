@@ -4,10 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.Pair;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.transition.Slide;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +34,6 @@ public class Book extends Fragment implements BaikeConstract.View{
     private BaikeAdapter adapter;
     private SwipeRefreshLayout refresh;
     private boolean stopLoad = false;
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -50,7 +55,7 @@ public class Book extends Fragment implements BaikeConstract.View{
         search = (LinearLayout)view.findViewById(R.id.baike_search);
         manager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(manager);
-        adapter = new BaikeAdapter();
+        adapter = new BaikeAdapter(getActivity());
         recyclerView.setAdapter(adapter);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -67,7 +72,10 @@ public class Book extends Fragment implements BaikeConstract.View{
         });
 
         search.setOnClickListener((v)->{
-            startActivityForResult(new Intent(getActivity(),BaikeSearch.class),1001);
+            getActivity().getWindow().setExitTransition(new Slide(Gravity.BOTTOM));
+            Pair<View,String> pair = new Pair<>(search, ViewCompat.getTransitionName(search));
+            ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),pair);
+            ActivityCompat.startActivityForResult(getActivity(),new Intent(getActivity(),BaikeSearch.class),1001,compat.toBundle());
         });
     }
 

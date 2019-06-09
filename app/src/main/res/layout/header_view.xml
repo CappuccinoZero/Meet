@@ -5,12 +5,14 @@
     android:id="@+id/mainHeadLayout"
     android:layout_height="210dp">
     <ImageView
+        android:transitionName="main_bg"
         android:scaleType="centerCrop"
         android:src="#00BFA5"
         android:id="@+id/user_background"
         android:layout_width="match_parent"
         android:layout_height="210dp" />
     <de.hdodenhof.circleimageview.CircleImageView
+        android:transitionName="main_header"
         android:layout_marginStart="15dp"
         android:layout_width="70dp"
         android:layout_height="70dp"
@@ -19,6 +21,7 @@
         android:src="@drawable/temp"
         android:id="@+id/user_header"/>
     <TextView
+        android:transitionName="main_text"
         android:layout_marginStart="25dp"
         android:layout_alignParentBottom="true"
         android:id="@+id/user_name"
@@ -29,10 +32,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <View
+        android:layout_marginTop="195dp"
+        android:transitionName="main_view"
+        android:id="@+id/user_view"
         android:clickable="true"
-        android:layout_alignParentBottom="true"
         android:background="@drawable/round_top"
-        android:layout_marginTop="385dp"
         android:layout_width="match_parent"
-        android:layout_height="15dp"/>
+        android:layout_height="150dp"/>
 </RelativeLayout>

@@ -5,7 +5,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,7 +14,7 @@ import android.view.ViewGroup;
 import com.lin.meet.R;
 import com.lin.meet.my_util.MyUtil;
 
-public class VideoFragment extends Fragment implements HomeConstract.VideoView {
+public class VideoFragment extends HomeBaseFragment implements HomeConstract.VideoView {
     private View mView;
     private RecyclerView mRecyclerView;
     private VideoAdapter mAdapter;
@@ -25,8 +24,6 @@ public class VideoFragment extends Fragment implements HomeConstract.VideoView {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = getLayoutInflater().inflate(R.layout.home_video,container,false);
-        initVideo();
-        presenter.onInitVideos(0);
         return mView;
     }
 
@@ -83,5 +80,11 @@ public class VideoFragment extends Fragment implements HomeConstract.VideoView {
 
     public void insertVideo(String id){
         //presenter.onInsertVideo(id);
+    }
+
+    @Override
+    protected void loadData() {
+        initVideo();
+        presenter.onInitVideos(0);
     }
 }

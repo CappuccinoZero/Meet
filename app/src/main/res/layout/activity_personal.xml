@@ -201,16 +201,19 @@
             android:layout_height="wrap_content" />
     </RelativeLayout>
     <LinearLayout
-        android:paddingTop="30dp"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp"
-        android:paddingBottom="30dp"
         android:id="@+id/perContent"
         android:layout_marginTop="70dp"
         android:orientation="vertical"
-        android:background="@drawable/personal_shape"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <include layout="@layout/personal_view"/>
+        <View
+            android:id="@+id/perLayoutTop"
+            android:background="@drawable/personal_shape"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"/>
+        <include
+            android:id="@+id/perContentView"
+            layout="@layout/personal_view"
+            />
     </LinearLayout>
 </RelativeLayout>

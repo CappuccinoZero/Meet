@@ -5,7 +5,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,7 +14,7 @@ import android.view.ViewGroup;
 import com.lin.meet.R;
 import com.lin.meet.my_util.MyUtil;
 
-public class TopicFragment extends Fragment implements HomeConstract.TopicView,TopicAdapter.TopicCallback{
+public class TopicFragment extends HomeBaseFragment implements HomeConstract.TopicView,TopicAdapter.TopicCallback{
     private View mView;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager manager;
@@ -26,8 +25,6 @@ public class TopicFragment extends Fragment implements HomeConstract.TopicView,T
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = getLayoutInflater().inflate(R.layout.home_topic,container,false);
-        initTopic();
-        presenter.onInitTopics(0);
         return mView;
     }
 
@@ -100,5 +97,11 @@ public class TopicFragment extends Fragment implements HomeConstract.TopicView,T
     @Override
     public void onClickLike(int position, String id) {
         presenter.onClickLike(position,id);
+    }
+
+    @Override
+    protected void loadData() {
+        initTopic();
+        presenter.onInitTopics(0);
     }
 }

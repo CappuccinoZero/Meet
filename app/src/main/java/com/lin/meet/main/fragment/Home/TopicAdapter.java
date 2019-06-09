@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.lin.meet.R;
+import com.lin.meet.bean.TopicMain;
 import com.lin.meet.bean.topic_main;
 import com.lin.meet.override.ScaleAnim;
 import com.lin.meet.topic.TopicActivity;
@@ -47,8 +48,11 @@ public class  TopicAdapter extends RecyclerView.Adapter<TopicAdapter.ViewHolder>
         viewHolder.content.setText(topics.get(i).bean.getContent());
         viewHolder.setThumb(topics.get(i).like);
         viewHolder.item.setOnClickListener(v->{
+            TopicMain bean = new TopicMain(topics.get(i).bean);
+            bean.setHeaderUri(topics.get(i).header);
+            bean.setNickName(topics.get(i).nickName);
             Intent intent = new Intent(context, TopicActivity.class);
-            intent.putExtra("ID",topics.get(i).bean.getId());
+            intent.putExtra("bean",bean);
             context.startActivity(intent);
         });
         viewHolder.thumb.setOnClickListener(v->{

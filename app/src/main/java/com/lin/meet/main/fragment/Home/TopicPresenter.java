@@ -17,6 +17,7 @@ public class TopicPresenter implements HomeConstract.TopicPresenter{
     private int allPage = 0;//已经加载数量
     private int page = 10;//每次加载的数量
     private HomeConstract.TopicView view;
+    private boolean loading = false;
     private final int FLAG_INIT = 0,FLAG_INSERT = 1;
     TopicPresenter(HomeConstract.TopicView view){
         this.view = view;
@@ -74,6 +75,8 @@ public class TopicPresenter implements HomeConstract.TopicPresenter{
     }
 
     private void onLoadTopics(int flag){
+        if(loading)return;
+        loading = true;
         BmobQuery<topic_main> query = new BmobQuery<>();
         query.order("-updatedAt");
         query.setLimit(page);
@@ -90,6 +93,7 @@ public class TopicPresenter implements HomeConstract.TopicPresenter{
                     if(flag == 2)
                         view.endRefresh();
                 }
+                loading = false;
             }
         });
     }
