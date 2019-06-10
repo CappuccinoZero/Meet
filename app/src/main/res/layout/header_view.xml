@@ -3,14 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:id="@+id/mainHeadLayout"
-    android:layout_height="210dp">
+    android:layout_height="230dp">
     <ImageView
         android:transitionName="main_bg"
         android:scaleType="centerCrop"
         android:src="#00BFA5"
         android:id="@+id/user_background"
         android:layout_width="match_parent"
-        android:layout_height="210dp" />
+        android:layout_height="230dp" />
     <de.hdodenhof.circleimageview.CircleImageView
         android:transitionName="main_header"
         android:layout_marginStart="15dp"
@@ -32,7 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <View
-        android:layout_marginTop="195dp"
+        android:layout_marginTop="215dp"
         android:transitionName="main_view"
         android:id="@+id/user_view"
         android:clickable="true"

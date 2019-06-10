@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/main_drawer"
+    android:fitsSystemWindows="true"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".main.MainActivity">
     <android.support.design.widget.CoordinatorLayout
@@ -79,7 +80,7 @@
         <RelativeLayout
             android:transitionName="main_item_layout"
             android:id="@+id/draw_item_layout"
-            android:layout_marginTop="210dp"
+            android:layout_marginTop="230dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <include layout="@layout/main_item"

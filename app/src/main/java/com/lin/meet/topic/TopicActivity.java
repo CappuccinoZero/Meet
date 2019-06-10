@@ -62,10 +62,16 @@ public class TopicActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_topic);
         TopicMain bean = (TopicMain) getIntent().getSerializableExtra("bean");
-        id = bean.bean.getId();
         init();
-        presenter.initData(id);
         adapter.initAdapter(bean);
+        if(bean!=null){
+            id = bean.bean.getId();
+            presenter.initData(id,false);
+        }
+        else{
+            id = getIntent().getStringExtra("ID");
+            presenter.initData(id,true);
+        }
     }
 
     private void init(){
@@ -245,6 +251,10 @@ public class TopicActivity extends AppCompatActivity implements View.OnClickList
             case 0:
                 break;
             case 1:
+                adapter.initThumbCount(bean);
+                break;
+            case 2:
+                adapter.initAdapter(bean);
                 adapter.initThumbCount(bean);
                 break;
         }

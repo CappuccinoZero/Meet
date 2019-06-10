@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
@@ -13,6 +12,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.transition.Slide;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 
 import com.lin.meet.R;
 import com.lin.meet.bean.Baike;
+import com.lin.meet.bean.TopSmoothScroller;
 import com.lin.meet.my_util.MyUtil;
 
 import org.jetbrains.annotations.NotNull;
@@ -34,6 +35,7 @@ public class Book extends Fragment implements BaikeConstract.View{
     private BaikeAdapter adapter;
     private SwipeRefreshLayout refresh;
     private boolean stopLoad = false;
+    private boolean returnTop = false;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -63,6 +65,10 @@ public class Book extends Fragment implements BaikeConstract.View{
                 if(MyUtil.isSlidetoBottom(recyclerView)&&!stopLoad){
                     presenter.onInsertBaike();
                 }
+                if(returnTop&&manager.findFirstVisibleItemPosition()==0){
+                    returnTop = false;
+                    presenter.onInsertBaikeToTop();
+                }
                 super.onScrolled(recyclerView, dx, dy);
             }
         });
@@ -75,7 +81,7 @@ public class Book extends Fragment implements BaikeConstract.View{
             getActivity().getWindow().setExitTransition(new Slide(Gravity.BOTTOM));
             Pair<View,String> pair = new Pair<>(search, ViewCompat.getTransitionName(search));
             ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),pair);
-            ActivityCompat.startActivityForResult(getActivity(),new Intent(getActivity(),BaikeSearch.class),1001,compat.toBundle());
+            startActivityForResult(new Intent(getActivity(),BaikeSearch.class),1001,compat.toBundle());
         });
     }
 
@@ -100,7 +106,34 @@ public class Book extends Fragment implements BaikeConstract.View{
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode==1001&&resultCode==1001){
             presenter.onSearch(data.getStringExtra("Search"));
+            Log.d("测试", "onActivityResult: 返回成功");
         }
+        Log.d("测试", "onActivityResult: guoqu");
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void scrollAndRefresh(){
+        if(refresh.isRefreshing())return;
+        TopSmoothScroller scroller = new TopSmoothScroller(getActivity());
+        scroller.setTargetPosition(0);
+        manager.startSmoothScroll(scroller);
+        refresh.setRefreshing(true);
+        if(manager.findFirstVisibleItemPosition()<4){
+            new Thread(()->{
+                try {
+                    Thread.sleep(600);
+                    getActivity().runOnUiThread(()->{presenter.onInsertBaikeToTop();});
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        }else {
+            returnTop = true;
+        }
+    }
+
+    @Override
+    public void insertBaikeToTop(@NotNull int position,Baike baike) {
+        adapter.insertBaikeToTop(position,baike);
     }
 }

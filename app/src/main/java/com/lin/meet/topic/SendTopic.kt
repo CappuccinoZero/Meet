@@ -24,6 +24,7 @@ import com.lin.meet.override.EmojiAdapter
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
+import com.luck.picture.lib.tools.PictureFileUtils
 import kotlinx.android.synthetic.main.activity_send_topic.*
 
 class SendTopic : AppCompatActivity(), View.OnClickListener,MyLocationListener.locationCallback,SendTopicConstract.View, TextWatcher,EmojiAdapter.EmojiCallback {
@@ -38,8 +39,10 @@ class SendTopic : AppCompatActivity(), View.OnClickListener,MyLocationListener.l
                 val data = Intent()
                 intent.putExtra("ID",id)
                 data.putExtra("ID",id)
+                Log.d("让人恶心的BUG", "insertTopic: $id")
                 setResult(11,data)
                 startActivityForResult(intent,0)
+                PictureFileUtils.deleteCacheDirFile(this)
                 finish()
             }
             0->{
@@ -348,6 +351,10 @@ class SendTopic : AppCompatActivity(), View.OnClickListener,MyLocationListener.l
                 .openGallery(PictureMimeType.ofImage())
                 .maxSelectNum(6)
                 .minSelectNum(1)
+                .isGif(false)
+                .openClickSound(true)
+                .compress(true)
+                .minimumCompressSize(100)
                 .forResult(PictureConfig.CHOOSE_REQUEST)
     }
 
@@ -356,6 +363,10 @@ class SendTopic : AppCompatActivity(), View.OnClickListener,MyLocationListener.l
                 .openGallery(PictureMimeType.ofImage())
                 .maxSelectNum(1)
                 .minSelectNum(1)
+                .isGif(false)
+                .openClickSound(true)
+                .compress(true)
+                .minimumCompressSize(150)
                 .forResult(index)
     }
 
@@ -364,14 +375,22 @@ class SendTopic : AppCompatActivity(), View.OnClickListener,MyLocationListener.l
         if(resultCode == RESULT_OK){
             when(requestCode){
                 PictureConfig.CHOOSE_REQUEST->{
-                    var selectList = PictureSelector.obtainMultipleResult(data)
+                    val selectList = PictureSelector.obtainMultipleResult(data)
                     for(index in 0 until selectList.size){
-                        presenter!!.insertPicture(selectList[index].path)
+                        val media = selectList[index]
+                        if(media.isCompressed)
+                            presenter!!.insertPicture(media.compressPath)
+                        else
+                            presenter!!.insertPicture(media.path)
                     }
                 }
                 in 0 until 6->{
-                    var selectList = PictureSelector.obtainMultipleResult(data)
-                    presenter!!.insertPicture(selectList[requestCode].path)
+                    val selectList = PictureSelector.obtainMultipleResult(data)
+                    val media = selectList[requestCode]
+                    if(media.isCompressed)
+                        presenter!!.insertPicture(media.compressPath)
+                    else
+                        presenter!!.insertPicture(media.path)
                 }
             }
         }

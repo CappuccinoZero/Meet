@@ -15,9 +15,12 @@ import android.widget.TextView;
 
 import com.lin.meet.Know.SendKnowActivity;
 import com.lin.meet.R;
+import com.lin.meet.bean.TopSmoothScroller;
 import com.lin.meet.my_util.MyUtil;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 public class Know extends Fragment implements View.OnClickListener,KnowConstarct.View {
     private View mView = null;
@@ -27,6 +30,8 @@ public class Know extends Fragment implements View.OnClickListener,KnowConstarct
     private SwipeRefreshLayout refresh;
     private TextView know;
     private KnowConstarct.Presenter presenter;
+    private boolean returnTop = false;
+    private boolean refreshing = false;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -62,6 +67,12 @@ public class Know extends Fragment implements View.OnClickListener,KnowConstarct
                 if(MyUtil.isSlidetoBottom(recyclerView)){
                     presenter.insetKnow();
                 }
+                int positions[] = null;
+                positions = manager.findFirstVisibleItemPositions(positions);
+                if(returnTop&&positions!=null&&positions[0]==0){
+                    returnTop = false;
+                    presenter.onInsertKnowToTop();
+                }
                 super.onScrolled(recyclerView, dx, dy);
             }
         });
@@ -90,6 +101,7 @@ public class Know extends Fragment implements View.OnClickListener,KnowConstarct
     public void endRefresh() {
         if(refresh.isRefreshing()){
             refresh.setRefreshing(false);
+            refreshing = false;
         }
     }
 
@@ -110,5 +122,28 @@ public class Know extends Fragment implements View.OnClickListener,KnowConstarct
             presenter.insertKnow(id);
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void scrollAndRefresh(){
+        if (refreshing)return;
+        refreshing = true;
+        TopSmoothScroller scroller = new TopSmoothScroller(getActivity());
+        scroller.setTargetPosition(0);
+        manager.startSmoothScroll(scroller);
+        refresh.setRefreshing(true);
+        int positions[] = null;
+        positions = manager.findFirstVisibleItemPositions(positions);
+        if(positions!=null&&positions[0]<=4){
+            new Thread(()->{
+                try {
+                    Thread.sleep(800);
+                    Objects.requireNonNull(getActivity()).runOnUiThread(()-> presenter.onInsertKnowToTop());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        }else {
+            returnTop = true;
+        }
     }
 }

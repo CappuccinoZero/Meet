@@ -40,6 +40,7 @@ import java.util.TimerTask;
 
 public class EncyclopediaActivity extends AppCompatActivity implements View.OnClickListener,EncyclopediaContract.View {
     private int x=0;
+    private boolean isLife = true;
     private boolean useCloseAnimation = false;
     private WebView webView;
     private TextToSpeech texttospeech;
@@ -104,6 +105,12 @@ public class EncyclopediaActivity extends AppCompatActivity implements View.OnCl
         set.addTarget(title_name);
         getWindow().setSharedElementEnterTransition(set);
         getWindow().setSharedElementExitTransition(set);
+    }
+
+    @Override
+    protected void onDestroy() {
+        isLife = false;
+        super.onDestroy();
     }
 
     public static void openEncyclopedia(Activity activity, String datas[], String newurl, String type, ActivityOptionsCompat compat){
@@ -423,11 +430,15 @@ public class EncyclopediaActivity extends AppCompatActivity implements View.OnCl
             CardView imgLayout = (CardView)view.findViewById(R.id.baike_image_layout);
             imgLayout.setVisibility(View.VISIBLE);
             ImageView imgView = (ImageView)view.findViewById(R.id.baike_image);
-            Glide.with(this).load(img).into(imgView);
+            if(imgView!=null&&isLife)
+                Glide.with(this).load(img).into(imgView);
         }
     }
 
     private void initBaike(String img,View view){
+        if(view==null){
+            return;
+        }
         view.setVisibility(View.VISIBLE);
         TextView baikeTitle = (TextView)view.findViewById(R.id.baike_title);
         TextView baikeContent = (TextView)view.findViewById(R.id.baike_content);

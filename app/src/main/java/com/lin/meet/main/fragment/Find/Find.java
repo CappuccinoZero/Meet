@@ -81,6 +81,7 @@ public class Find extends Fragment implements FindContract.View, View.OnClickLis
     private TextView map_name;
     private TextView map_content;
     private ImageView getLocation;
+    private ImageView refreshMap;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -119,6 +120,9 @@ public class Find extends Fragment implements FindContract.View, View.OnClickLis
                 break;
             case R.id.map_location:
                 getLocation();
+                break;
+            case R .id.map_refresh:
+                refreshMap();
                 break;
         }
     }
@@ -186,6 +190,8 @@ public class Find extends Fragment implements FindContract.View, View.OnClickLis
         mapView = (MapView)view.findViewById(R.id.baiduView);
         mapSend = (LinearLayout)view.findViewById(R.id.map_send);
         getLocation = (ImageView)view.findViewById(R.id.map_location);
+        refreshMap = (ImageView)view.findViewById(R.id.map_refresh);
+        refreshMap.setOnClickListener(this);
         getLocation.setOnClickListener(this);
         mapSend.setOnClickListener(this);
     }
@@ -201,7 +207,7 @@ public class Find extends Fragment implements FindContract.View, View.OnClickLis
         locationClient.setLocOption(option);
         locationClient.registerLocationListener(new MylocationListener());
         MapStatus.Builder builder = new MapStatus.Builder();
-        builder.zoom(18f);
+        builder.zoom(19f);
         map.setMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
         locationClient.start();
 
@@ -260,6 +266,17 @@ public class Find extends Fragment implements FindContract.View, View.OnClickLis
                 .draggable(true)
                 .extraInfo(data);
         map.addOverlay(option);
+    }
+
+    public void refreshMap(){
+        map.clear();
+        MapStatus.Builder builder = new MapStatus.Builder();
+        builder.zoom(19f);
+        map.setMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
+        LatLng lng = new LatLng(latitude,longitude);
+        MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(lng);
+        map.animateMapStatus(update);
+        presenter.refreshMark();
     }
 
     private void openDialog(){

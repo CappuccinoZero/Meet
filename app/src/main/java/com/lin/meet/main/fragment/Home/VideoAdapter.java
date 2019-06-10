@@ -85,6 +85,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
             videos = null;
         }
         videos = new ArrayList<>();
+        notifyDataSetChanged();
     }
 
     public void insertVideo(VideoBean bean){

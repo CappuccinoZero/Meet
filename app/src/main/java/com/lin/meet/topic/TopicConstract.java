@@ -20,7 +20,7 @@ public interface TopicConstract  {
         void onStartResult(int resultCode,boolean star);
     }
     interface Presenter{
-        void initData(String id);
+        void initData(String id,boolean isSender);
         void senComment(String msg);
         void onSendOnMessage(int floor,String msg,int postion);
         void onClickLike();

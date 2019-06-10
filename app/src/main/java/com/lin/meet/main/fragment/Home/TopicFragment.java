@@ -12,7 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.lin.meet.R;
+import com.lin.meet.bean.TopSmoothScroller;
 import com.lin.meet.my_util.MyUtil;
+
+import java.util.Objects;
 
 public class TopicFragment extends HomeBaseFragment implements HomeConstract.TopicView,TopicAdapter.TopicCallback{
     private View mView;
@@ -21,6 +24,8 @@ public class TopicFragment extends HomeBaseFragment implements HomeConstract.Top
     private TopicAdapter adapter;
     private HomeConstract.TopicPresenter presenter;
     private Handler handler;
+    private boolean returnTop = false;
+    RecommendFragment.ReRefreshCallback doRefresh;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -45,6 +50,10 @@ public class TopicFragment extends HomeBaseFragment implements HomeConstract.Top
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 if(MyUtil.isSlidetoBottom(recyclerView)){
                     presenter.onInsertTopics();
+                }
+                if(returnTop&&manager.findFirstVisibleItemPosition()==0){
+                    returnTop = false;
+                    presenter.onInsertToTop();
                 }
                 super.onScrolled(recyclerView, dx, dy);
             }
@@ -71,6 +80,7 @@ public class TopicFragment extends HomeBaseFragment implements HomeConstract.Top
         Message msg = new Message();
         msg.what = Home.END_REFRESH;
         handler.sendMessage(msg);
+        handler = null;
     }
 
     @Override
@@ -86,7 +96,8 @@ public class TopicFragment extends HomeBaseFragment implements HomeConstract.Top
     }
 
     public void insertTopic(String id){
-        presenter.onInsertTopic(id);
+        if(presenter!=null)
+            presenter.onInsertTopic(id);
     }
 
     public void refresh(Handler handler){
@@ -103,5 +114,30 @@ public class TopicFragment extends HomeBaseFragment implements HomeConstract.Top
     protected void loadData() {
         initTopic();
         presenter.onInitTopics(0);
+    }
+
+    public void scrollAndRefresh(Handler handler, RecommendFragment.ReRefreshCallback doRefresh){
+        if (this.handler!=null) return;
+        this.handler = handler;
+        doRecyclerScroll();
+        if(manager.findFirstVisibleItemPosition()<=4){
+            doRefresh.doRefresh();
+            new Thread(()->{
+                try {
+                    Thread.sleep(600);
+                    Objects.requireNonNull(getActivity()).runOnUiThread(()->presenter.onInsertToTop());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        }else {
+            this.doRefresh = doRefresh;
+            returnTop = true;
+        }
+    }
+    public void doRecyclerScroll(){
+        TopSmoothScroller scroller = new TopSmoothScroller(getActivity());
+        scroller.setTargetPosition(0);
+        manager.startSmoothScroll(scroller);
     }
 }

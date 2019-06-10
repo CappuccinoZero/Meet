@@ -12,5 +12,6 @@ interface KnowConstarct {
         fun refreshKnows()
         fun insetKnow()
         fun insertKnow(id:String)
+        fun onInsertKnowToTop()
     }
 }

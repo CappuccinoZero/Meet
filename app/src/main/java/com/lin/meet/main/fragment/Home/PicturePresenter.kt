@@ -1,21 +1,24 @@
 package com.lin.meet.main.fragment.Home
-import android.util.Log
 import cn.bmob.v3.BmobQuery
 import cn.bmob.v3.exception.BmobException
 import cn.bmob.v3.listener.FindListener
 import com.lin.meet.bean.video_main
 
 class PicturePresenter(mView:PictureContract.View):PictureContract.Presenter {
+    override fun insertToTop() {
+        insetPictures(initLimit,true,true)
+    }
+
     override fun insertPictures() {
-        insetPictures(limit,false)
+        insetPictures(limit,false,false)
     }
 
     override fun insertPictures(isRefresh: Boolean) {
-        insetPictures(initLimit,isRefresh)
+        insetPictures(initLimit,isRefresh,false)
     }
 
     @Synchronized
-    private fun insetPictures(limit:Int,isRefresh:Boolean){
+    private fun insetPictures(limit:Int,isRefresh:Boolean,top:Boolean){
         if (loading)return
         loading = true
         val query:BmobQuery<video_main> = BmobQuery()
@@ -31,8 +34,10 @@ class PicturePresenter(mView:PictureContract.View):PictureContract.Presenter {
                 skip += list.size
                 list.shuffle()
                 for (index in 0 until list.size){
-                    view.insertPictures(list[index])
-                    Log.d("测试"+skip,""+list[index].tltle)
+                    if(!top)
+                        view.insertPictures(list[index])
+                    else
+                        view.insertPictures(index,list[index])
                 }
             }
         })

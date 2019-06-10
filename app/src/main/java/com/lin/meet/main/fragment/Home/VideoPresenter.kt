@@ -7,6 +7,29 @@ import com.lin.meet.bean.User
 import com.lin.meet.bean.video_main
 
 class VideoPresenter(view:HomeConstract.VideoView):HomeConstract.VideoPresenter {
+    override fun onInsertToTop() {
+        if (loading)return
+        loading = true
+        val query = BmobQuery<video_main>()
+        query.order("-updatedAt")
+        query.addWhereEqualTo("isPicture",false)
+        query.setLimit(page)
+        query.setSkip(allPage)
+        query.findObjects(object :FindListener<video_main>(){
+            override fun done(p0: MutableList<video_main>?, p1: BmobException?) {
+                if (p1 == null && p0!!.isNotEmpty()) {
+                    allPage += p0.size
+                    for (i in p0.indices) {
+                        val bean = VideoBean(p0[i])
+                        onLoadUserTop(bean, i)
+                    }
+                }
+                view.endRefresh()
+                loading = false
+            }
+        })
+    }
+
     private var allPage = 0//已经加载数量
     private val page = 10//每次加载的数量
     private var loading = false
@@ -66,6 +89,21 @@ class VideoPresenter(view:HomeConstract.VideoView):HomeConstract.VideoPresenter 
                     } else {
                         view.insertVideo(bean)
                     }
+                }
+            }
+        })
+    }
+
+    private fun onLoadUserTop(bean: VideoBean, position: Int) {
+        if(bean==null) return
+        val query = BmobQuery<User>()
+        query.addWhereEqualTo("uid", bean.bean.uid)
+        query.findObjects(object : FindListener<User>() {
+            override fun done(list: List<User>, e: BmobException?) {
+                if (e == null && list.size > 0) {
+                    bean.nickName = list[0].nickName
+                    bean.headerUri = list[0].headerUri
+                    view.insertVideo(position, bean)
                 }
             }
         })

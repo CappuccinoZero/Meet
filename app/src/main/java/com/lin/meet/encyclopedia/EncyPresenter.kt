@@ -27,7 +27,8 @@ class EncyPresenter(view:EncyclopediaContract.View):EncyclopediaContract.Present
                     flag = -1
                 }
                 else{
-                    img = bean.images[index]
+                    if(index<bean.images.size)
+                        img = bean.images[index]
                 }
                 view.setBaike(index+1,bean.titles[index],bean.content[index],img)
             }

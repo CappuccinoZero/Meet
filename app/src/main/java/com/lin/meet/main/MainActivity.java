@@ -7,6 +7,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -86,17 +87,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Find find = new Find();
     private Home home = new Home();
     private Know know = new Know();
+    private boolean drawIsOpen = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         super.onCreate(savedInstanceState);
+        View decorView = getWindow().getDecorView();
+        int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+        decorView.setSystemUiVisibility(option);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        getWindow().setStatusBarColor(Color.TRANSPARENT);
         setContentView(R.layout.activity_main);
-
         initView();
         initLoadUserView();
-
-        //startActivity(new Intent(this, KnowActivity.class));
     }
 
     private void initView(){
@@ -109,7 +115,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         actionButton.setOnClickListener(this);
         options = new RequestOptions();
         options.error(R.color.bank_FF6C6C6C);
-
         initFragment();
         dataBase = new DataBaseModel();
         bv = (BottomNavigationView)findViewById(R.id.main_bnv);
@@ -121,25 +126,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startFabAnimation();
                 drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                 switch (menuItem.getItemId()){
+
                     case R.id.item_home:
                         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-                        if(lastShow==0)
+                        if(lastShow==0){
+                            home.scrollAndRefresh();
                             return true;
+                        }
                         switchFragment(0);
                         break;
                     case R.id.item_book:
-                        if(lastShow==1)
+                        if(lastShow==1){
+                            book.scrollAndRefresh();
                             return true;
+                        }
                         switchFragment(1);
                         break;
-                    case R.id.item_know:
-                        if(lastShow==2)
+                    case R.id.item_find:
+                        if(lastShow==2){
+                            find.refreshMap();
                             return true;
+                        }
                         switchFragment(2);
                         break;
-                    case R.id.item_find:
-                        if(lastShow==3)
+                    case R.id.item_know:
+                        if(lastShow==3){
+                            know.scrollAndRefresh();
                             return true;
+                        }
                         switchFragment(3);
                         break;
                 }
@@ -158,6 +172,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         headLayout.setOnClickListener(this);
         exit.setOnClickListener(this);
         checkCacheFile();
+        drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(@NonNull View view, float v) {
+
+            }
+
+            @Override
+            public void onDrawerOpened(@NonNull View view) {
+                drawIsOpen = true;
+            }
+
+            @Override
+            public void onDrawerClosed(@NonNull View view) {
+                drawIsOpen = false;
+            }
+
+            @Override
+            public void onDrawerStateChanged(int i) {
+
+            }
+        });
     }
 
 
@@ -168,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         find = new Find();
         home = new Home();
         know = new Know();
-        fragments = new Fragment[]{home,book,know,find};
+        fragments = new Fragment[]{home,book,find,know};
         lastShow = 0;
         getSupportFragmentManager()
                 .beginTransaction()
@@ -215,7 +250,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case 1:
                 if (grantResults.length > 0) {
                     for (int i = 0; i < grantResults.length; i++) {
-
                         int grantResult = grantResults[i];
                         if (grantResult == PackageManager.PERMISSION_DENIED) {
                             String s = permissions[i];
@@ -298,6 +332,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
+    public void onBackPressed() {
+        if(drawIsOpen)
+            drawer.closeDrawers();
+        else
+            super.onBackPressed();
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.mainHeadLayout:
@@ -310,7 +352,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Pair<View,String> pair4 = new Pair<>(roundView,roundView.getTransitionName());
                     Pair<View,String> pair5 = new Pair<>(itemLayout,itemLayout.getTransitionName());
                     ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation(this,pair1,pair2,pair3,pair4,pair5);
-                    ActivityCompat.startActivityForResult(this,intent,1,compat.toBundle());
+                    startActivityForResult(intent,1,compat.toBundle());
                 }else {
                     startActivity(new Intent(this, StartActivity.class));
                 }
@@ -367,12 +409,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case 2:
                 setHeaderBackground(path);
+                break;
         }
     }
 
     @Override
     public void setHeaderBackground(@NotNull String str) {
-        Glide.with(this).asDrawable().apply(options).load(str).into(headBackground);
+        Glide.with(this).load(str).apply(options).into(headBackground);
     }
 
 

@@ -18,6 +18,7 @@ import com.lin.meet.bean.User
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
+import com.luck.picture.lib.tools.PictureFileUtils
 import kotlinx.android.synthetic.main.activity_send_know.*
 import java.io.File
 
@@ -62,6 +63,14 @@ class SendKnowActivity : AppCompatActivity(), View.OnClickListener {
                 .openGallery(PictureMimeType.ofImage())
                 .maxSelectNum(1)
                 .minSelectNum(1)
+                .isGif(false)
+                .compress(true)
+                .minimumCompressSize(150)
+                .enableCrop(true)
+                .withAspectRatio(3,2)
+                .openClickSound(true)
+                .scaleEnabled(true)
+                .isDragFrame(true)
                 .forResult(PictureConfig.CHOOSE_REQUEST)
     }
 
@@ -71,7 +80,10 @@ class SendKnowActivity : AppCompatActivity(), View.OnClickListener {
             when(requestCode){
                 PictureConfig.CHOOSE_REQUEST->{
                     val selectList = PictureSelector.obtainMultipleResult(data)
-                    path = selectList[0].path
+                    if (selectList[0].isCompressed)
+                        path = selectList[0].compressPath
+                    else
+                        path = selectList[0].path
                 }
             }
         }
@@ -131,6 +143,7 @@ class SendKnowActivity : AppCompatActivity(), View.OnClickListener {
         data.putExtra("ID",bean.id)
         setResult(2001,data)
         startActivity(intent)
+        PictureFileUtils.deleteCacheDirFile(this)
         finish()
     }
 

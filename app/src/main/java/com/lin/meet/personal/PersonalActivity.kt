@@ -54,7 +54,7 @@ class PersonalActivity : AppCompatActivity(), View.OnClickListener,PersonalContr
     }
 
     override fun setHeadBg(uri: String) {
-        Glide.with(this).asDrawable().apply(option!!).load(uri).into(perImage)
+        Glide.with(this).load(uri).into(perImage)
     }
 
     override fun setNumber(str: String) {
@@ -146,7 +146,7 @@ class PersonalActivity : AppCompatActivity(), View.OnClickListener,PersonalContr
     }
 
     override fun setHeader(uri: String) {
-        Glide.with(this).asDrawable().load(uri).apply(option!!).into(perHeader)
+        Glide.with(this).load(uri).into(perHeader)
     }
 
     override fun setAttend(str: String) {
@@ -237,8 +237,8 @@ class PersonalActivity : AppCompatActivity(), View.OnClickListener,PersonalContr
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_personal)
-        initCalcul()
         initView()
+        initCalcul()
         initLoadView()
         initTransitionAnimation()
     }
@@ -390,7 +390,6 @@ class PersonalActivity : AppCompatActivity(), View.OnClickListener,PersonalContr
             toast("用户未登录")
             return
         }
-
         setHeadBg(user.backgroundUri)
         setHeader(user.headerUri)
         setNumber(user.uid.toString())

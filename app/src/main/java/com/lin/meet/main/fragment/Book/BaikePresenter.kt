@@ -8,6 +8,24 @@ import java.util.*
 
 
 class BaikePresenter(view: BaikeConstract.View): BaikeConstract.Presenter {
+    override fun onInsertBaikeToTop() {
+        val query = BmobQuery<Baike>()
+        query.setLimit(loadCount)
+        query.setSkip(initCount)
+        query.order("id")
+        query.findObjects(object : FindListener<Baike>(){
+            override fun done(p0: MutableList<Baike>?, p1: BmobException?) {
+                if(p1==null&&p0!!.size>0){
+                    initCount = (initCount+p0.size)%maxCount
+                    for(index in 0 until p0.size){
+                        view.insertBaikeToTop(index,p0[index])
+                    }
+                    view.endRefresh()
+                }
+            }
+        })
+    }
+
     override fun onSearch(msg: String) {
         view.initAdapter()
         searchMsg(msg)
@@ -15,13 +33,15 @@ class BaikePresenter(view: BaikeConstract.View): BaikeConstract.Presenter {
 
     override fun onRefreshBaike() {
         val random = Random()
-        val randomCount =1 + random.nextInt(maxCount)
-        initCount = randomCount % maxCount
+        val randomCount =1 + random.nextInt(initMaxCount)
+        initCount = randomCount % initMaxCount
         view.initAdapter()
         onInsertBaike()
     }
 
     override fun onInsertBaike() {
+        if(loading)return
+        loading = true
         val query = BmobQuery<Baike>()
         query.setLimit(loadCount)
         query.setSkip(initCount)
@@ -35,6 +55,7 @@ class BaikePresenter(view: BaikeConstract.View): BaikeConstract.Presenter {
                     }
                     view.endRefresh()
                 }
+                loading = false
             }
         })
     }
@@ -55,8 +76,10 @@ class BaikePresenter(view: BaikeConstract.View): BaikeConstract.Presenter {
         })
     }
 
+    private var loading = false
     private var initCount = 0
     private var loadCount = 10
     private val view = view
     private val maxCount = 2385
+    private val initMaxCount = 1050
 }

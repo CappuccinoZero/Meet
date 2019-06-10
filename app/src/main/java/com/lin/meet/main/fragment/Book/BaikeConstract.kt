@@ -6,9 +6,11 @@ interface BaikeConstract {
     interface View{
         fun initAdapter()
         fun insertBaike(baike:Baike)
+        fun insertBaikeToTop(position:Int,baike:Baike)
         fun endRefresh()
     }
     interface Presenter{
+        fun onInsertBaikeToTop()
         fun onRefreshBaike()
         fun onInsertBaike()
         fun onSearch(msg:String)

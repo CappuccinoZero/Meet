@@ -71,4 +71,13 @@ class BaikeAdapter(activity: Activity): RecyclerView.Adapter<BaikeViewHolder>() 
         notifyDataSetChanged()
         return baikes!!.size - 1
     }
+
+    fun insertBaikeToTop(position:Int,baike:Baike):Int{
+        if(baikes==null)
+            return -1
+        baikes!!.add(position,baike)
+        notifyDataSetChanged()
+        return baikes!!.size - 1
+    }
+
 }

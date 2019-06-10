@@ -14,6 +14,7 @@ public interface HomeConstract {
         void onInsertTopics();
         void onInsertTopic(String id);
         void onClickLike(int position,String id);
+        void onInsertToTop();
     }
     interface VideoView{
         void refreshVideos();
@@ -25,5 +26,6 @@ public interface HomeConstract {
         void onInitVideos(int flag);//flag = 0默认 flag = 1 具体id flag = 2刷新
         void onInsertVideos();
         void onInsertVideo(String id);
+        void onInsertToTop();
     }
 }

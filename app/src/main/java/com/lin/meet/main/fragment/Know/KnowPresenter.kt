@@ -7,30 +7,7 @@ import com.lin.meet.bean.KnowBean
 import com.lin.meet.bean.User
 
 class KnowPresenter(view:KnowConstarct.View):KnowConstarct.Presenter {
-    override fun insertKnow(id: String) {
-        val query:BmobQuery<KnowBean> = BmobQuery()
-        query.addWhereEqualTo("id",id)
-        query.order("-updatedAt")
-        query.findObjects(object :FindListener<KnowBean>(){
-            override fun done(p0: MutableList<KnowBean>?, p1: BmobException?) {
-                if(p1 == null){
-                    selectUser(p0!![0])
-                    view.endRefresh()
-                }
-            }
-        })
-    }
-
-    var paged = 0
-    var page = 10
-
-    override fun refreshKnows() {
-        paged = 0
-        view.refreshAdapter()
-        insetKnow()
-    }
-
-    override fun insetKnow() {
+    override fun onInsertKnowToTop() {
         val query:BmobQuery<KnowBean> = BmobQuery()
         query.setLimit(page)
         query.setSkip(paged)
@@ -40,11 +17,55 @@ class KnowPresenter(view:KnowConstarct.View):KnowConstarct.Presenter {
                 if(p1 == null){
                     paged += p0!!.size
                     for(index in 0 until p0.size){
-                        selectUser(0,p0[index])
-
+                        selectUser(index,p0[index])
                     }
                     view.endRefresh()
                 }
+            }
+        })
+    }
+
+    override fun insertKnow(id: String) {
+        val query:BmobQuery<KnowBean> = BmobQuery()
+        query.addWhereEqualTo("id",id)
+        query.order("-updatedAt")
+        query.findObjects(object :FindListener<KnowBean>(){
+            override fun done(p0: MutableList<KnowBean>?, p1: BmobException?) {
+                if(p1 == null){
+                    selectUser(0,p0!![0])
+                    view.endRefresh()
+                }
+            }
+        })
+    }
+
+    var paged = 0
+    var page = 10
+    var loading = false
+
+    override fun refreshKnows() {
+        paged = 0
+        view.refreshAdapter()
+        insetKnow()
+    }
+
+    override fun insetKnow() {
+        if(loading)return
+        loading = true
+        val query:BmobQuery<KnowBean> = BmobQuery()
+        query.setLimit(page)
+        query.setSkip(paged)
+        query.order("-updatedAt")
+        query.findObjects(object :FindListener<KnowBean>(){
+            override fun done(p0: MutableList<KnowBean>?, p1: BmobException?) {
+                if(p1 == null){
+                    paged += p0!!.size
+                    for(index in 0 until p0.size){
+                        selectUser(p0[index])
+                    }
+                    view.endRefresh()
+                }
+                loading = false
             }
         })
     }

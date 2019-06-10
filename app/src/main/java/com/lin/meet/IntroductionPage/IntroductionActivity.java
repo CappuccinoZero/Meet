@@ -27,9 +27,12 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.lin.meet.R;
-import com.lin.meet.my_util.MyUtil;
+import com.luck.picture.lib.PictureSelector;
+import com.luck.picture.lib.config.PictureConfig;
+import com.luck.picture.lib.config.PictureMimeType;
+import com.luck.picture.lib.entity.LocalMedia;
+import com.luck.picture.lib.tools.PictureFileUtils;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,6 +100,12 @@ public class IntroductionActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        PictureFileUtils.deleteExternalCacheDirFile(this);
+        super.onDestroy();
+    }
+
     private void init(){
         requestOptions.placeholder(R.mipmap.load);
         requestOptions.error(R.mipmap.error);
@@ -116,7 +125,8 @@ public class IntroductionActivity extends AppCompatActivity implements View.OnCl
             public void onClick(View v) {
                 Pair<View,String> pair1 = new Pair<>(animal_1, ViewCompat.getTransitionName(animal_1));
                 Pair<View,String> pair2 = new Pair<>(imageView_1, ViewCompat.getTransitionName(imageView_1));
-                ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation(IntroductionActivity.this,pair1,pair2);
+                Pair<View,String> pair3 = new Pair<>(animal_1, "cnTitle");
+                ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation(IntroductionActivity.this,pair1,pair2,pair3);
                 presenter.intoEncy(IntroductionActivity.this,id1,uri1,type1,compat);
             }
         });
@@ -150,7 +160,8 @@ public class IntroductionActivity extends AppCompatActivity implements View.OnCl
             public void onClick(View v) {
                 Pair<View,String> pair1 = new Pair<>(animal_2, ViewCompat.getTransitionName(animal_2));
                 Pair<View,String> pair2 = new Pair<>(imageView_2, ViewCompat.getTransitionName(imageView_2));
-                ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation(IntroductionActivity.this,pair1,pair2);
+                Pair<View,String> pair3 = new Pair<>(animal_2, "cnTitle");
+                ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation(IntroductionActivity.this,pair1,pair2,pair3);
                 presenter.intoEncy(IntroductionActivity.this,id2,uri2,type2,compat);
             }
         });
@@ -184,7 +195,8 @@ public class IntroductionActivity extends AppCompatActivity implements View.OnCl
             public void onClick(View v) {
                 Pair<View,String> pair1 = new Pair<>(animal_3, ViewCompat.getTransitionName(animal_3));
                 Pair<View,String> pair2 = new Pair<>(imageView_3, ViewCompat.getTransitionName(imageView_3));
-                ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation(IntroductionActivity.this,pair1,pair2);
+                Pair<View,String> pair3 = new Pair<>(animal_3, "cnTitle");
+                ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation(IntroductionActivity.this,pair1,pair2,pair3);
                 presenter.intoEncy(IntroductionActivity.this,id3,uri3,type3,compat);
             }
         });
@@ -319,9 +331,15 @@ public class IntroductionActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void openPhoto(int requestCode) {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        startActivityForResult(intent,requestCode);
+        PictureSelector.create(this)
+                .openGallery(PictureMimeType.ofImage())
+                .selectionMode(PictureConfig.SINGLE)
+                .enableCrop(true)
+                .withAspectRatio(1,1)
+                .isGif(false)
+                .openClickSound(true)
+                .isDragFrame(true)
+                .forResult(requestCode);
     }
 
     @Override
@@ -441,15 +459,19 @@ public class IntroductionActivity extends AppCompatActivity implements View.OnCl
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        LocalMedia media = null;
         switch (requestCode){
             case INTORDUCTION_OPEN_PHOTO:
                 if(data==null){
                     return;
                 }
                 initAllButton();
-                Uri image_uri=data.getData();
-                setImageView(image_uri);
-                image_path= MyUtil.get_path_from_url(this,image_uri);
+                media = PictureSelector.obtainMultipleResult(data).get(0);
+                if(media!=null&&media.isCut()){
+                    image_path = media.getCutPath();
+                }else if(media!=null){
+                    image_path = media.getPath();
+                }else return;
                 timeId=presenter.doIdentification(image_path);
                 break;
             case INIT_OPEN_PHOTO:
@@ -457,16 +479,15 @@ public class IntroductionActivity extends AppCompatActivity implements View.OnCl
                     finish();
                     return;
                 }
-                Uri uri=data.getData();
-                setImageView(uri);
-                image_path= MyUtil.get_path_from_url(this,uri);
-                if(!new File(image_path).exists()){
-                    Toast.makeText(this,"错误！图片不存在",Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                media = PictureSelector.obtainMultipleResult(data).get(0);
+                if(media!=null&&media.isCut()){
+                    image_path = media.getCutPath();
+                }else if(media!=null){
+                    image_path = media.getPath();
+                }else return;
+                setImageView(image_path);
                 timeId=presenter.doIdentification(image_path);
                 break;
-
         }
     }
 

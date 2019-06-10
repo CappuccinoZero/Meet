@@ -1,11 +1,11 @@
 package com.lin.meet.personal
 
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
-import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
@@ -28,6 +28,10 @@ import com.lljjcoder.bean.DistrictBean
 import com.lljjcoder.bean.ProvinceBean
 import com.lljjcoder.citywheel.CityConfig
 import com.lljjcoder.style.citypickerview.CityPickerView
+import com.luck.picture.lib.PictureSelector
+import com.luck.picture.lib.config.PictureConfig
+import com.luck.picture.lib.config.PictureMimeType
+import com.luck.picture.lib.tools.PictureFileUtils
 import kotlinx.android.synthetic.main.activity_persetting.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -51,6 +55,10 @@ class PersonalSetting : AppCompatActivity(), View.OnClickListener,PerStContract.
 
     override fun updateData(str: String, id: Int) {
         when(id){
+            0->{
+                PictureFileUtils.deleteCacheDirFile(this)
+                setUID(str)
+            }
             1->{
                 setName(str)
             }
@@ -68,9 +76,6 @@ class PersonalSetting : AppCompatActivity(), View.OnClickListener,PerStContract.
             }
             6->{
                 setFrom(str)
-            }
-            0->{
-                setUID(str)
             }
         }
     }
@@ -328,28 +333,24 @@ class PersonalSetting : AppCompatActivity(), View.OnClickListener,PerStContract.
     }
 
     private fun saveEditFinish(){
-        if((stShortEdit.text.toString().length==0&&isShortEdit)
-                ||(stLongEdit.text.toString().length==0&&!isShortEdit)
+        if((stShortEdit.text.toString().isEmpty() &&isShortEdit)
+                ||(stLongEdit.text.toString().isEmpty() &&!isShortEdit)
                 ||saveEdit){
             finishSave()
         }else{
             AlertDialog.Builder(this)
                     .setMessage("确定保存更改？")
                     .setTitle("未保存")
-                    .setPositiveButton("确定",object : DialogInterface.OnClickListener{
-                        override fun onClick(dialog: DialogInterface?, which: Int) {
-                            runOnUiThread(Runnable {
-                                saveText()
-                            })
-                        }
-                    })
-                    .setNeutralButton("取消",object :DialogInterface.OnClickListener{
-                        override fun onClick(dialog: DialogInterface?, which: Int) {
-                            runOnUiThread(Runnable {
-                                finishSave()
-                            })
-                        }
-                    })
+                    .setPositiveButton("确定") { _, _ ->
+                        runOnUiThread(Runnable {
+                            saveText()
+                        })
+                    }
+                    .setNeutralButton("取消") { _, _ ->
+                        runOnUiThread(Runnable {
+                            finishSave()
+                        })
+                    }
                     .create().show()
         }
     }
@@ -365,23 +366,50 @@ class PersonalSetting : AppCompatActivity(), View.OnClickListener,PerStContract.
     }
 
     private fun openPhoto(requestCode:Int){
-        var intent:Intent = Intent(Intent.ACTION_PICK)
-        intent.type = "image/*"
-        startActivityForResult(intent,requestCode)
+        val frame = requestCode == SETTING_BACKGROUND
+        val grid = requestCode == SETTING_BACKGROUND
+        val circle = requestCode != SETTING_BACKGROUND
+        val min = if(requestCode==SETTING_BACKGROUND)400 else 100
+        val w = if(requestCode==SETTING_BACKGROUND)4 else 1
+        val h = if(requestCode==SETTING_BACKGROUND)3 else 1
+        PictureSelector.create(this)
+                .openGallery(PictureMimeType.ofImage())
+                .selectionMode(PictureConfig.SINGLE)
+                .enableCrop(true)
+                .compress(true)
+                .withAspectRatio(w,h)
+                .isGif(false)
+                .showCropFrame(frame)
+                .showCropGrid(grid)
+                .freeStyleCropEnabled(true)
+                .circleDimmedLayer(circle)
+                .openClickSound(true)
+                .minimumCompressSize(min)
+                .rotateEnabled(true)
+                .scaleEnabled(true)
+                .isDragFrame(true)
+                .forResult(requestCode)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if(requestCode == SETTING_BACKGROUND&&data!=null){
-            val uri: Uri = data.data as Uri
-            var path:String = MyUtil.get_path_from_url(this,uri)
-            var preferences:SharedPreferences = MyUtil.getShardPreferences(this,"LoginToken")
+        var path:String ?= null
+        val preferences:SharedPreferences = MyUtil.getShardPreferences(this,"LoginToken")
+        if(resultCode  == Activity.RESULT_OK&&requestCode == SETTING_BACKGROUND&&data!=null){
+            val selectPicture = PictureSelector.obtainMultipleResult(data)[0] ?: return
+            if(selectPicture.isCompressed)
+                path = selectPicture.compressPath
+            else
+                path = selectPicture.path
             persenter!!.updateBackground(preferences.getString("username",""),preferences.getString("token",""),path)
         }
-        if(requestCode == SETTING_HEADER&&data!=null){
-            val uri: Uri = data.data as Uri
-            var path:String = MyUtil.get_path_from_url(this,uri)
-            var preferences:SharedPreferences = MyUtil.getShardPreferences(this,"LoginToken")
+        if(resultCode == Activity.RESULT_OK&&requestCode == SETTING_HEADER&&data!=null){
+            val selectPicture = PictureSelector.obtainMultipleResult(data)[0] ?: return
+            if(selectPicture.isCompressed)
+                path = selectPicture.compressPath
+            else
+                path = selectPicture.path
             persenter!!.updateHeader(preferences.getString("username","[null]"),preferences.getString("token",""),path)
+
         }
         super.onActivityResult(requestCode, resultCode, data)
     }

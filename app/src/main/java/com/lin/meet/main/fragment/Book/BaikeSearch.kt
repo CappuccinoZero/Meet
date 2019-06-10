@@ -11,18 +11,23 @@ import android.transition.ChangeBounds
 import android.transition.ChangeImageTransform
 import android.transition.ChangeTransform
 import android.transition.TransitionSet
+import android.view.KeyEvent
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import com.hw.ycshareelement.transition.ChangeTextTransition
 import com.lin.meet.R
 import kotlinx.android.synthetic.main.activity_baike_search.*
 
 class BaikeSearch : AppCompatActivity() {
+    var firstInto = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_baike_search)
         initView()
         initTransitionAnimation()
+        showInputMethod()
     }
 
     private fun initTransitionAnimation(){
@@ -38,13 +43,23 @@ class BaikeSearch : AppCompatActivity() {
     }
 
     private fun initView(){
-        search.requestFocus()
         search.addTextChangedListener(object :TextWatcher{
             override fun afterTextChanged(s: Editable?) {
                 search_text.visibility = if(search.text.toString().isNotEmpty()) View.VISIBLE else View.GONE
             }
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+        search.setOnEditorActionListener(object : TextView.OnEditorActionListener{
+            override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
+                if (actionId == EditorInfo.IME_ACTION_SEND
+                        || actionId == EditorInfo.IME_ACTION_DONE
+                        || (event != null && KeyEvent.KEYCODE_ENTER == event.getKeyCode() && KeyEvent.ACTION_DOWN == event.getAction())) {
+                    onSearch()
+                    return true
+                }
+                return false
+            }
         })
         back.setOnClickListener {
             hideInputMethod()
@@ -55,6 +70,12 @@ class BaikeSearch : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        if(firstInto)
+            search.requestFocus()
+        super.onResume()
+    }
+
     private fun hideInputMethod() {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         val v = window.peekDecorView()
@@ -63,15 +84,27 @@ class BaikeSearch : AppCompatActivity() {
         }
     }
 
+    private fun showInputMethod(){
+        Thread({
+            Thread.sleep(600)
+            runOnUiThread({
+                search.setSelection(0)
+                search.requestFocus()
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.showSoftInput(search, 0)
+            })
+        }).start()
+    }
+
     private fun onSearch(){
         val intent = Intent()
         intent.putExtra("Search",search.text.toString())
         setResult(1001,intent)
-        finish()
+        onBackPressed()
     }
 
-    override fun finish() {
-        super.finish()
+    override fun onBackPressed() {
+        super.onBackPressed()
         hideInputMethod()
     }
 }

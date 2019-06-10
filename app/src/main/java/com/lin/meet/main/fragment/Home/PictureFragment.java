@@ -12,10 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.lin.meet.R;
+import com.lin.meet.bean.TopSmoothScroller;
 import com.lin.meet.bean.video_main;
 import com.lin.meet.my_util.MyUtil;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 public class PictureFragment extends HomeBaseFragment implements PictureContract.View {
     private View mView;
@@ -23,6 +26,7 @@ public class PictureFragment extends HomeBaseFragment implements PictureContract
     private PicturesAdapter mAdapter;
     private PictureContract.Presenter presenter;
     private Handler handler = null;
+    StaggeredGridLayoutManager manager;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -40,7 +44,7 @@ public class PictureFragment extends HomeBaseFragment implements PictureContract
         presenter = new PicturePresenter(this);
         mAdapter = new PicturesAdapter(getActivity());
         mRecyclerView= (RecyclerView)mView.findViewById(R.id.pictures_recyclerView);
-        StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
+        manager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
         manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setAdapter(mAdapter);
@@ -49,6 +53,12 @@ public class PictureFragment extends HomeBaseFragment implements PictureContract
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 if(MyUtil.isSlidetoBottom(recyclerView)){//底部
                     presenter.insertPictures();
+                }
+                int positions[] = null;
+                positions = manager.findFirstVisibleItemPositions(positions);
+                if(returnTop&&positions!=null&&positions[0]==0){
+                    returnTop = false;
+                    presenter.insertToTop();
                 }
                 super.onScrolled(recyclerView, dx, dy);
             }
@@ -77,11 +87,48 @@ public class PictureFragment extends HomeBaseFragment implements PictureContract
             Message msg = new Message();
             msg.what = Home.END_REFRESH;
             handler.sendMessage(msg);
+            handler = null;
         }
     }
 
     public void doRefresh(Handler handler){
         this.handler = handler;
         presenter.refreshPictures();
+    }
+
+    private RecommendFragment.ReRefreshCallback doRefresh;
+    private boolean returnTop = false;
+    public void scrollAndRefresh(Handler handler, RecommendFragment.ReRefreshCallback doRefresh){
+        if(handler != null)
+            return;
+        this.handler = handler;
+        doRecyclerScroll();
+        int positions[] = null;
+        positions = manager.findFirstVisibleItemPositions(positions);
+        if(positions!=null&&positions[0]<=4){
+            doRefresh.doRefresh();
+            new Thread(()->{
+                try {
+                    Thread.sleep(600);
+                    Objects.requireNonNull(getActivity()).runOnUiThread(()-> presenter.insertToTop());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        }else {
+            this.doRefresh = doRefresh;
+            returnTop = true;
+        }
+    }
+
+    public void doRecyclerScroll(){
+        TopSmoothScroller scroller = new TopSmoothScroller(getActivity());
+        scroller.setTargetPosition(0);
+        manager.startSmoothScroll(scroller);
+    }
+
+    @Override
+    public void insertPictures(int posiotion, @NotNull video_main bean) {
+        mAdapter.insertPicture(posiotion,bean);
     }
 }

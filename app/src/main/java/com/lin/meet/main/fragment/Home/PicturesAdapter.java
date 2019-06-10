@@ -71,6 +71,19 @@ public class PicturesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         notifyDataSetChanged();
     }
 
+    void insertPicture(int position,final video_main bean){
+        Glide.with(context).load(bean.getUri()).into(new SimpleTarget<Drawable>() {
+            @Override
+            public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
+                float scale = resource.getIntrinsicWidth() / (float) resource.getIntrinsicHeight();
+                pictures.add(position,bean);
+                scales.add(position,scale);
+                notifyDataSetChanged();
+            }
+        });
+        notifyDataSetChanged();
+    }
+
     public void insertPicture(final video_main bean){
         Glide.with(context).load(bean.getUri()).into(new SimpleTarget<Drawable>() {
             @Override

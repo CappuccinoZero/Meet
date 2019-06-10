@@ -10,7 +10,8 @@ import android.support.v4.util.Pair;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.transition.Explode;
+import android.transition.Slide;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,7 +63,7 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.getWindow().setExitTransition(new Explode());
+                activity.getWindow().setExitTransition(new Slide(Gravity.LEFT));
                 viewHolder.roundView.setVisibility(View.VISIBLE);
                 Intent intent = new Intent(context, RecommendActivity.class);
                 intent.putExtra("LoveNewsBean",bean);
@@ -110,6 +111,11 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public void addRecomds(LoveNewsBean bean){
         list.add(bean);
+        notifyDataSetChanged();
+    }
+
+    public synchronized void addRecomds(int position,LoveNewsBean bean){
+        list.add(position,bean);
         notifyDataSetChanged();
     }
 

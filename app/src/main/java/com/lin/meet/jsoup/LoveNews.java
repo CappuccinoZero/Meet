@@ -17,6 +17,7 @@ import java.util.List;
  */
 public class LoveNews {
     public static final int JSOUP_NEWS_MESSAGE  = 3000;
+    public static final int JSOUP_NEWS_MESSAGE_TOP  = 3001;
     private static int MAX_PAGE = 3;
     private static String URL_START = "http://www.lovehhy.net";
     private static String URL = "http://www.lovehhy.net/News/List/XDWSJ/";
@@ -25,7 +26,7 @@ public class LoveNews {
 
     }
 
-    public static synchronized void updateNews(final Handler handler, final int i){
+    public static synchronized void updateNews(final Handler handler, final int i,boolean top){
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -65,7 +66,10 @@ public class LoveNews {
                         bean.setTime(time);
 
                         Message msg = new Message();
-                        msg.what = JSOUP_NEWS_MESSAGE;
+                        if(top)
+                            msg.what = JSOUP_NEWS_MESSAGE_TOP;
+                        else
+                            msg.what = JSOUP_NEWS_MESSAGE;
                         Bundle data = new Bundle();
                         data.putSerializable("LoveNews",bean);
                         msg.setData(data);

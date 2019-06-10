@@ -262,7 +262,7 @@ class TopicPresenter(view:TopicConstract.View):TopicConstract.Presenter {
         })
     }
 
-    override fun initData(id: String?) {
+    override fun initData(id: String?,sender:Boolean) {
         var query:BmobQuery<topic_main> = BmobQuery()
         topicId = id!!
         query.addWhereEqualTo("id",id)
@@ -270,7 +270,13 @@ class TopicPresenter(view:TopicConstract.View):TopicConstract.Presenter {
             override fun done(p0: MutableList<topic_main>?, p1: BmobException?) {
                 if(p1==null&&p0!!.size>0){
                     var bean = TopicMain(p0[0])
-                    selectComment(bean)
+                    if(sender&& BmobUser.isLogin()){
+                        val user = BmobUser.getCurrentUser(User::class.java)
+                        bean.nickName = user.nickName
+                        bean.headerUri = user.headerUri
+                        selectComment(bean,2)
+                    }else
+                        selectComment(bean,1)
                 }
                 else{
                     view.initResult(-1,null)
@@ -309,7 +315,7 @@ class TopicPresenter(view:TopicConstract.View):TopicConstract.Presenter {
     }
 
     //评论数
-    private fun selectComment(bean:TopicMain){
+    private fun selectComment(bean:TopicMain,code:Int){
         var query:BmobQuery<topic_comment> = BmobQuery()
         query.addWhereEqualTo("id",bean.bean.id)
         query.addWhereEqualTo("level",0)
@@ -318,7 +324,7 @@ class TopicPresenter(view:TopicConstract.View):TopicConstract.Presenter {
                 if(p1==null){
                     bean.commentCount = p0!!.size
                     view.setCommentCount(p0.size)
-                    selectLike(bean)
+                    selectLike(bean,code)
                 }
                 else{
                     view.initResult(-1,null)
@@ -329,14 +335,14 @@ class TopicPresenter(view:TopicConstract.View):TopicConstract.Presenter {
     }
 
     //喜欢数
-    private fun selectLike(bean:TopicMain){
+    private fun selectLike(bean:TopicMain,code:Int){
         var query:BmobQuery<topic_islike> = BmobQuery()
         query.addWhereEqualTo("id",topicId)
         query.findObjects(object :FindListener<topic_islike>(){
             override fun done(p0: MutableList<topic_islike>?, p1: BmobException?) {
                 if(p1==null){
                     bean.likeCount = p0!!.size
-                    view.initResult(1,bean)
+                    view.initResult(code,bean)
                     initComment(topicId)
                 }else{
                     view.initResult(-1,null)

@@ -74,6 +74,30 @@ public class TopicPresenter implements HomeConstract.TopicPresenter{
         });
     }
 
+    @Override
+    public void onInsertToTop() {
+        if(loading)return;
+        loading = true;
+        BmobQuery<topic_main> query = new BmobQuery<>();
+        query.order("-updatedAt");
+        query.setLimit(page);
+        query.setSkip(allPage);
+        query.findObjects(new FindListener<topic_main>() {
+            @Override
+            public void done(List<topic_main> list, BmobException e) {
+                if(e == null&&list.size()>0){
+                    allPage += list.size();
+                    for(int i=0;i<list.size();i++){
+                        TopicAdapter.TopicBean bean = new TopicAdapter.TopicBean(list.get(i));
+                        onLoadUserTop(bean,i);
+                    }
+                }
+                view.endRefresh();
+                loading = false;
+            }
+        });
+    }
+
     private void onLoadTopics(int flag){
         if(loading)return;
         loading = true;
@@ -114,6 +138,23 @@ public class TopicPresenter implements HomeConstract.TopicPresenter{
                         int position = view.insertTopic(bean);
                         onGetUserLike(position,bean.bean.getId());
                     }
+                }
+            }
+        });
+    }
+
+    private void onLoadUserTop(TopicAdapter.TopicBean bean,int position){
+        BmobQuery<User> query = new BmobQuery<>();
+        query.addWhereEqualTo("uid",bean.bean.getUid());
+        query.findObjects(new FindListener<User>() {
+            @Override
+            public void done(List<User> list, BmobException e) {
+                if(e == null&&list.size()>0){
+                    bean.nickName = list.get(0).getNickName();
+                    bean.header = list.get(0).getHeaderUri();
+                    view.insertTopic(position,bean);
+                    onGetUserLike(position,bean.bean.getId());
+
                 }
             }
         });

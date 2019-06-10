@@ -161,9 +161,7 @@ public class PerStPresenter implements PerStContract.Presenter {
         if(BmobUser.isLogin()){
             user = BmobUser.getCurrentUser(User.class);
             deleteHeader();
-            Log.d("测试", "channal 1");
         }else {
-            Log.d("测试", "channal 2");
             user = new User();
             user.setPassword(token);
             user.setUsername(phone);
@@ -188,7 +186,6 @@ public class PerStPresenter implements PerStContract.Presenter {
                 @Override
                 public void done(BmobException e) {
                     uploadHeader();
-                    Log.d("测试", "delete");
                 }
             });
         }

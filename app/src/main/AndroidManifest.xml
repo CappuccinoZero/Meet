@@ -37,8 +37,7 @@
             android:name=".Know.KnowActivity"
             android:theme="@style/translationStatusTheme" />
         <activity
-            android:name=".main.fragment.Book.BaikeSearch"
-            android:windowSoftInputMode="stateAlwaysVisible" />
+            android:name=".main.fragment.Book.BaikeSearch" />
         <activity android:name=".video.SendVideo" />
         <activity
             android:name=".topic.SendTopic"

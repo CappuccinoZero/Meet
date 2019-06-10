@@ -12,7 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.lin.meet.R;
+import com.lin.meet.bean.TopSmoothScroller;
 import com.lin.meet.my_util.MyUtil;
+
+import java.util.Objects;
 
 public class VideoFragment extends HomeBaseFragment implements HomeConstract.VideoView {
     private View mView;
@@ -20,6 +23,7 @@ public class VideoFragment extends HomeBaseFragment implements HomeConstract.Vid
     private VideoAdapter mAdapter;
     private HomeConstract.VideoPresenter presenter;
     private Handler handler;
+    LinearLayoutManager manager;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -34,7 +38,7 @@ public class VideoFragment extends HomeBaseFragment implements HomeConstract.Vid
 
     private void initVideo(){
         mRecyclerView = (RecyclerView)mView.findViewById(R.id.video_recyclerView);
-        LinearLayoutManager manager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
+        manager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
         mRecyclerView.setLayoutManager(manager);
         mAdapter = new VideoAdapter();
         mRecyclerView.setAdapter(mAdapter);
@@ -44,6 +48,10 @@ public class VideoFragment extends HomeBaseFragment implements HomeConstract.Vid
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 if(MyUtil.isSlidetoBottom(recyclerView)){
                     presenter.onInsertVideos();
+                }
+                if(returnTop&&manager.findFirstVisibleItemPosition()==0){
+                    returnTop = false;
+                    presenter.onInsertToTop();
                 }
                 super.onScrolled(recyclerView, dx, dy);
             }
@@ -70,6 +78,7 @@ public class VideoFragment extends HomeBaseFragment implements HomeConstract.Vid
         Message msg = new Message();
         msg.what = Home.END_REFRESH;
         handler.sendMessage(msg);
+        handler = null;
     }
 
     public void refresh(Handler handler){
@@ -86,5 +95,32 @@ public class VideoFragment extends HomeBaseFragment implements HomeConstract.Vid
     protected void loadData() {
         initVideo();
         presenter.onInitVideos(0);
+    }
+
+    boolean returnTop = false;
+    RecommendFragment.ReRefreshCallback doRefresh;
+    public void scrollAndRefresh(Handler handler, RecommendFragment.ReRefreshCallback doRefresh){
+        if (this.handler!=null) return;
+        this.handler = handler;
+        doRecyclerScroll();
+        if(manager.findFirstVisibleItemPosition()<=4){
+            doRefresh.doRefresh();
+            new Thread(()->{
+                try {
+                    Thread.sleep(600);
+                    Objects.requireNonNull(getActivity()).runOnUiThread(()->presenter.onInsertToTop());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        }else {
+            this.doRefresh = doRefresh;
+            returnTop = true;
+        }
+    }
+    public void doRecyclerScroll(){
+        TopSmoothScroller scroller = new TopSmoothScroller(getActivity());
+        scroller.setTargetPosition(0);
+        manager.startSmoothScroll(scroller);
     }
 }

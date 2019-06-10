@@ -7,7 +7,6 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -45,7 +45,6 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
     private MainActivity activity;
     private MyViewPage viewPager;
     private MyRefresh refresh;
-    private LinearLayout loading_view;
     private ImageView release;
     private BubbleDialog dialog;
     private AlertDialog alertDialog;
@@ -54,7 +53,7 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
     boolean v1=false,v2=false,v3=false;
     private RecyclerView re_recyclerView;
     private RecommendAdapter re_adapter;
-
+    private int lastI = 0;
     private RecyclerView ps_recyclerView;
 
     private RecyclerView top_recyclerView;
@@ -74,6 +73,10 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
         }
     };
 
+
+    public void testShow(){
+        Toast.makeText(getActivity(),"TestActivity",Toast.LENGTH_SHORT).show();
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -95,7 +98,6 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
         toolbar = (Toolbar) view.findViewById(R.id.home_toolbar);
         toolbar.setContentInsetsAbsolute(0,0);
         header = (CircleImageView)view.findViewById(R.id.home_header);
-        loading_view = (LinearLayout)view.findViewById(R.id.home_loading);
         activity = (MainActivity)getActivity();
         ((LinearLayout)view.findViewById(R.id.home_header_layout)).setOnClickListener(this);
         viewPager = (MyViewPage) view.findViewById(R.id.home_viewPage);
@@ -130,27 +132,6 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
         tabStrip.setStripType(NavigationTabStrip.StripType.LINE);
         tabStrip.setViewPager(viewPager);
         viewPager.setRecyclerStop(this);
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int i, float v, int i1) {
-
-            }
-
-            @Override
-            public void onPageSelected(int i) {
-                isShowLoad(false);
-                switch (i){
-                    case 3:
-                        PictureFragment fragment = (PictureFragment) adapter.list.get(i);
-                        break;
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int i) {
-
-            }
-        });
     }
 
     private void showRelaseDialog(){
@@ -206,19 +187,6 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
         JZVideoPlayer.releaseAllVideos();
     }
 
-    @Override
-    public void isShowLoad(final Boolean show) {
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if(show)
-                    loading_view.setVisibility(View.VISIBLE);
-                else
-                    loading_view.setVisibility(View.GONE);
-            }
-        });
-    }
-
 
     @Override
     public void setHeader(String path) {
@@ -253,6 +221,23 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
         }
         else if(requestCode == 11 && resultCode == 12){
             ((VideoFragment) adapter.list.get(2)).insertVideo(data.getStringExtra("VIDEO"));
+        }
+    }
+
+    public void scrollAndRefresh(){
+        switch (viewPager.getCurrentItem()){
+            case 0:
+                ((RecommendFragment) adapter.list.get(0)).scrollAndRefresh(handler,()-> refresh.setRefreshing(true));
+                break;
+            case 1:
+                ((TopicFragment) adapter.list.get(1)).scrollAndRefresh(handler,()-> refresh.setRefreshing(true));
+                break;
+            case 2:
+                ((VideoFragment) adapter.list.get(2)).scrollAndRefresh(handler,()-> refresh.setRefreshing(true));
+                break;
+            case 3:
+                ((PictureFragment) adapter.list.get(3)).scrollAndRefresh(handler,()-> refresh.setRefreshing(true));
+                break;
         }
     }
 }
