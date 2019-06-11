@@ -67,7 +67,7 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 viewHolder.roundView.setVisibility(View.VISIBLE);
                 Intent intent = new Intent(context, RecommendActivity.class);
                 intent.putExtra("LoveNewsBean",bean);
-                Pair<View,String> pair1 = new Pair<>((View)viewHolder.img, ViewCompat.getTransitionName(viewHolder.img));
+                Pair<View,String> pair1 = new Pair<>((View)viewHolder.imgLayout, ViewCompat.getTransitionName(viewHolder.imgLayout));
                 Pair<View,String> pair2 = new Pair<>((View)viewHolder.title, ViewCompat.getTransitionName(viewHolder.title));
                 Pair<View,String> pair3 = new Pair<>((View)viewHolder.roundView, ViewCompat.getTransitionName(viewHolder.roundView));
                 ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation(activity,pair1,pair2,pair3);
@@ -83,6 +83,7 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     static class RecommendViewHolder extends RecyclerView.ViewHolder{
         CardView cardView;
+        CardView imgLayout;
         TextView type;
         TextView title;
         TextView author;
@@ -91,6 +92,7 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         View roundView;
         public RecommendViewHolder(@NonNull View itemView) {
             super(itemView);
+            imgLayout = itemView.findViewById(R.id.img_layout);
             cardView = itemView.findViewById(R.id.recommend_card);
             type = itemView.findViewById(R.id.recommend_item_type);
             title = itemView.findViewById(R.id.recommend_item_title);

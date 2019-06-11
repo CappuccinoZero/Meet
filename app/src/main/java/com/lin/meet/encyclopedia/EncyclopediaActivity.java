@@ -1,5 +1,8 @@
 package com.lin.meet.encyclopedia;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -44,6 +47,7 @@ public class EncyclopediaActivity extends AppCompatActivity implements View.OnCl
     private boolean useCloseAnimation = false;
     private WebView webView;
     private TextToSpeech texttospeech;
+    private boolean finish = false;
     private CardView cardView;
     private TextView title_c,title_e,title_baike,title_name;
     private ImageView horn_c,horn_e,back;
@@ -84,8 +88,29 @@ public class EncyclopediaActivity extends AppCompatActivity implements View.OnCl
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         initView();
+        firstIntoCardAnimation();
         initData();
         initTransitionAnimation();
+    }
+
+    private void firstIntoCardAnimation(){
+        cardView.setTranslationY(getResources().getDimension(R.dimen.encyCardTop));
+        ObjectAnimator animator = ObjectAnimator.ofFloat(cardView,"TranslationY",cardView.getTranslationY(),0f);
+        animator.setDuration(150);
+        animator.setStartDelay(500);
+        animator.start();
+    }
+    private void endAnimation(){
+        ObjectAnimator animator = ObjectAnimator.ofFloat(cardView,"TranslationY",0f,getResources().getDimension(R.dimen.encyCardTop));
+        animator.setDuration(100);
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                onBackPressed();
+            }
+        });
+        animator.start();
     }
 
     private void initTransitionAnimation(){
@@ -111,6 +136,16 @@ public class EncyclopediaActivity extends AppCompatActivity implements View.OnCl
     protected void onDestroy() {
         isLife = false;
         super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(!finish){
+            endAnimation();
+            finish = true;
+            return;
+        }
+        super.onBackPressed();
     }
 
     public static void openEncyclopedia(Activity activity, String datas[], String newurl, String type, ActivityOptionsCompat compat){
@@ -448,7 +483,8 @@ public class EncyclopediaActivity extends AppCompatActivity implements View.OnCl
             CardView imgLayout = (CardView)view.findViewById(R.id.baike_image_layout);
             imgLayout.setVisibility(View.VISIBLE);
             ImageView imgView = (ImageView)view.findViewById(R.id.baike_image);
-            Glide.with(this).load(img).into(imgView);
+            if(isLife)
+                Glide.with(this).load(img).into(imgView);
         }
     }
 }

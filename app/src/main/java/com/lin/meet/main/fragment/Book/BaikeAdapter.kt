@@ -8,6 +8,7 @@ import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.util.Pair
 import android.support.v4.view.ViewCompat
 import android.support.v7.widget.RecyclerView
+import android.transition.Explode
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,7 +39,6 @@ class BaikeAdapter(activity: Activity): RecyclerView.Adapter<BaikeViewHolder>() 
         viewHolder.introduce.text = baikes!![i].brief
         viewHolder.setImage(context!!,baikes!![i].imageUri)
         viewHolder.view.setOnClickListener {
-            //activity.window.exitTransition = Explode()
             val intent = Intent (context,EncyclopediaActivity::class.java)
             intent.putExtra("Baike",true)
             intent.putExtra("cnName",baikes!![i].cnName)
@@ -46,6 +46,7 @@ class BaikeAdapter(activity: Activity): RecyclerView.Adapter<BaikeViewHolder>() 
             intent.putExtra("imageUri",baikes!![i].imageUri)
             intent.putExtra("url",baikes!![i].uri)
             intent.putExtra("type",baikes!![i].type)
+            activity.window.exitTransition = Explode()
             val pair1:Pair<View,String> = Pair(viewHolder.image,ViewCompat.getTransitionName(viewHolder.image))
             val pair2:Pair<View,String> = Pair(viewHolder.cnName,ViewCompat.getTransitionName(viewHolder.cnName))
             val pair3:Pair<View,String> = Pair(viewHolder.enName,ViewCompat.getTransitionName(viewHolder.enName))

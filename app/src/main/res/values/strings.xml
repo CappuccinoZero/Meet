@@ -1,4 +1,5 @@
 <resources>
-    <string name="app_name">Meet</string>
+    <string name="app_name">智能动物百科</string>
     <string name="baidu"><u>动物世界</u></string>
+    <string name="initN">\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n</string>
 </resources>

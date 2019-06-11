@@ -32,12 +32,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Know.SendKnowActivity"></activity>
+        <activity android:name=".picture_observer.PictureObserver"></activity>
+        <activity android:name=".Know.SendKnowActivity" />
         <activity
             android:name=".Know.KnowActivity"
             android:theme="@style/translationStatusTheme" />
-        <activity
-            android:name=".main.fragment.Book.BaikeSearch" />
+        <activity android:name=".main.fragment.Book.BaikeSearch" />
         <activity android:name=".video.SendVideo" />
         <activity
             android:name=".topic.SendTopic"
@@ -80,9 +80,12 @@
         <activity
             android:name=".history.HistoryActivity"
             android:label="" />
-        <service android:name="com.baidu.location.f"
+
+        <service
+            android:name="com.baidu.location.f"
             android:enabled="true"
-            android:process=":remote"/>
+            android:process=":remote" />
+
         <activity
             android:name=".setting.CameraSetting"
             android:label="设定" />

@@ -1,8 +1,10 @@
 package com.lin.meet.bean;
 
+import java.io.Serializable;
+
 import cn.bmob.v3.BmobObject;
 
-public class video_main extends BmobObject {
+public class video_main extends BmobObject implements Serializable {
     private String id;
     private String uid;
     private String uri;
