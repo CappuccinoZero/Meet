@@ -9,88 +9,12 @@
         app:elevation="0dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <android.support.v7.widget.Toolbar
-            app:layout_scrollFlags="scroll|enterAlways|snap"
-            android:id="@+id/home_toolbar"
-            android:background="@color/colorPrimary"
-            android:layout_width="match_parent"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            android:layout_height="50dp">
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <LinearLayout
-                    android:id="@+id/home_header_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent">
-                    <ImageView
-                        android:src="@drawable/menu"
-                        android:scaleType="fitXY"
-                        android:layout_width="12dp"
-                        android:layout_height="24dp"
-                        android:layout_gravity="center"/>
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:layout_gravity="center"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_marginStart="8dp"
-                        android:src="@drawable/temp"
-                        android:id="@+id/home_header"
-                        app:civ_border_color="#969696"
-                        app:civ_border_width="1dp"
-                        />
-                </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/home_search"
-                    android:layout_toLeftOf="@id/home_release"
-                    android:orientation="horizontal"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginEnd="15dp"
-                    android:layout_toRightOf="@id/home_header_layout"
-                    android:layout_marginBottom="7dp"
-                    android:layout_marginTop="7dp"
-                    android:clickable="true"
-                    android:background="@drawable/bg_search"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <ImageView
-                        android:src="@drawable/search"
-                        android:layout_marginStart="10dp"
-                        android:layout_gravity="center_vertical"
-                        android:padding="1dp"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp" />
-                    <TextView
-                        android:textColor="@color/text_back_0"
-                        android:textSize="@dimen/text_1"
-                        android:text="搜索"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="10dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
-                <ImageView
-                    android:clickable="true"
-                    android:background="@drawable/bg_ripple_oval_gray_0"
-                    android:layout_marginEnd="15dp"
-                    android:padding="6dp"
-                    android:id="@+id/home_release"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="center"
-                    android:src="@drawable/write"
-                    android:tint="#42000000"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp" />
-            </RelativeLayout>
-        </android.support.v7.widget.Toolbar>
         <com.gigamole.navigationtabstrip.NavigationTabStrip
             android:layout_marginStart="60dp"
             android:layout_marginEnd="60dp"
             android:id="@+id/home_tabLayout"
             android:layout_width="match_parent"
-            android:layout_height="36dp"
+            android:layout_height="45dp"
             app:nts_size="@dimen/text_0"
             app:nts_weight="2dp"
             app:nts_factor="2.5"

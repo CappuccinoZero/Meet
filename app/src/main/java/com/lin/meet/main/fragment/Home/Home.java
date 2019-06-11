@@ -8,58 +8,34 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.gigamole.navigationtabstrip.NavigationTabStrip;
 import com.lin.meet.R;
-import com.lin.meet.bean.User;
 import com.lin.meet.main.MainActivity;
+import com.lin.meet.main.fragment.Know.Know;
 import com.lin.meet.override.MyRefresh;
 import com.lin.meet.override.MyViewPage;
 import com.lin.meet.topic.SendTopic;
 import com.lin.meet.video.SendVideo;
 import com.xujiaji.happybubble.BubbleDialog;
-import com.xujiaji.happybubble.BubbleLayout;
 
-import cn.bmob.v3.BmobUser;
 import cn.jzvd.JZVideoPlayer;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 
-public class Home extends Fragment implements View.OnClickListener,HomeContract.View,MyViewPage.recyclerStopScroll {
+public class Home extends Fragment implements View.OnClickListener,MyViewPage.recyclerStopScroll {
     public static final int END_REFRESH = 100;
     private RequestOptions options;
     private View mView = null;
-    private CircleImageView header;
-    private Toolbar toolbar;
     private MainActivity activity;
     private MyViewPage viewPager;
     private MyRefresh refresh;
-    private ImageView release;
     private BubbleDialog dialog;
-    private AlertDialog alertDialog;
     private HomeFragmentAdapter adapter;
-    View view_0,view_1,view_2,view_3;
-    boolean v1=false,v2=false,v3=false;
-    private RecyclerView re_recyclerView;
-    private RecommendAdapter re_adapter;
-    private int lastI = 0;
-    private RecyclerView ps_recyclerView;
-
-    private RecyclerView top_recyclerView;
-    private TopicAdapter top_adapter;
-    private RecyclerView video_recyclerView;
-    private VideoAdapter videoAdapter;
     private NavigationTabStrip tabStrip;
     private Handler handler = new Handler(){
         @Override
@@ -92,26 +68,20 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
     }
 
     private void initView(View view){
-        release = (ImageView)view.findViewById(R.id.home_release);
         refresh = (MyRefresh) view.findViewById(R.id.home_refresh);
         refresh.setColorSchemeResources(R.color.teal_A400);
-        toolbar = (Toolbar) view.findViewById(R.id.home_toolbar);
-        toolbar.setContentInsetsAbsolute(0,0);
-        header = (CircleImageView)view.findViewById(R.id.home_header);
         activity = (MainActivity)getActivity();
-        ((LinearLayout)view.findViewById(R.id.home_header_layout)).setOnClickListener(this);
         viewPager = (MyViewPage) view.findViewById(R.id.home_viewPage);
         options = new RequestOptions();
-        release.setOnClickListener(this);
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 switch (viewPager.getCurrentItem()){
                     case 0:
-                        ((RecommendFragment) adapter.list.get(0)).refresh(handler);
+                        ((TopicFragment) adapter.list.get(0)).refresh(handler);
                         break;
                     case 1:
-                        ((TopicFragment) adapter.list.get(1)).refresh(handler);
+                        ((Know) adapter.list.get(1)).refresh(handler);
                         break;
                     case 2:
                         ((VideoFragment) adapter.list.get(2)).refresh(handler);
@@ -123,44 +93,20 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
                 }
             }
         });;
-        adapter = new HomeFragmentAdapter(this.getFragmentManager(),this);
+        adapter = new HomeFragmentAdapter(this.getFragmentManager());
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(2);
         tabStrip = (NavigationTabStrip)view.findViewById(R.id.home_tabLayout);
-        String title[]=new String[]{"推荐","话题","视频","壁纸"};
+        String title[]=new String[]{"话题","提问","视频","图片"};
         tabStrip.setTitles(title);
         tabStrip.setStripType(NavigationTabStrip.StripType.LINE);
         tabStrip.setViewPager(viewPager);
         viewPager.setRecyclerStop(this);
     }
 
-    private void showRelaseDialog(){
-        BubbleLayout bl = new BubbleLayout(activity);
-        bl.setBubbleColor(getResources().getColor(R.color.release_bg));
-        bl.setLookLength(50);
-        View view = LayoutInflater.from(activity).inflate(R.layout.release,null);
-        ((LinearLayout)view.findViewById(R.id.release_1)).setOnClickListener(this);
-        ((LinearLayout)view.findViewById(R.id.release_2)).setOnClickListener(this);
-        ((LinearLayout)view.findViewById(R.id.release_3)).setOnClickListener(this);
-        dialog=new BubbleDialog(activity);
-        dialog.addContentView(view)
-                .setClickedView(release)
-                .calBar(true)
-                .setBubbleLayout(bl)
-                .setTransParentBackground()
-                .setPosition(BubbleDialog.Position.BOTTOM)
-                .show();
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.home_header_layout:
-                activity.openDrawer();
-                break;
-            case R.id.home_release:
-                showRelaseDialog();
-                break;
             case R.id.release_1:
                 startActivityForResult(new Intent(getActivity(), SendTopic.class),10);
                 dialog.dismiss();
@@ -178,7 +124,6 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
     @Override
     public void onResume() {
         super.onResume();
-        updateHeader();
     }
 
     @Override
@@ -188,10 +133,7 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
     }
 
 
-    @Override
-    public void setHeader(String path) {
-        Glide.with(this).asDrawable().apply(options).load(path).into(header);
-    }
+
 
     @Override
     public void setViewPageItem(int direction) {
@@ -205,12 +147,6 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
                 return;
             viewPager.setCurrentItem(nowItem+1);
         }
-    }
-
-    public void updateHeader(){
-        if(!BmobUser.isLogin())
-            return;
-        setHeader(BmobUser.getCurrentUser(User.class).getHeaderUri());
     }
 
     @Override
@@ -227,10 +163,10 @@ public class Home extends Fragment implements View.OnClickListener,HomeContract.
     public void scrollAndRefresh(){
         switch (viewPager.getCurrentItem()){
             case 0:
-                ((RecommendFragment) adapter.list.get(0)).scrollAndRefresh(handler,()-> refresh.setRefreshing(true));
+                ((TopicFragment) adapter.list.get(0)).scrollAndRefresh(handler,()-> refresh.setRefreshing(true));
                 break;
             case 1:
-                ((TopicFragment) adapter.list.get(1)).scrollAndRefresh(handler,()-> refresh.setRefreshing(true));
+                ((Know) adapter.list.get(1)).scrollAndRefresh(handler,()-> refresh.setRefreshing(true));
                 break;
             case 2:
                 ((VideoFragment) adapter.list.get(2)).scrollAndRefresh(handler,()-> refresh.setRefreshing(true));

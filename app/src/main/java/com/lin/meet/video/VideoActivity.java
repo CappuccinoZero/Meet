@@ -3,10 +3,15 @@ package com.lin.meet.video;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.transition.ChangeBounds;
+import android.transition.ChangeImageTransform;
+import android.transition.ChangeTransform;
+import android.transition.TransitionSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.hw.ycshareelement.transition.ChangeTextTransition;
 import com.lin.meet.R;
 import com.lin.meet.bean.ReplyBean;
 import com.lin.meet.bean.video_comment;
@@ -71,6 +77,20 @@ public class VideoActivity extends AppCompatActivity implements View.OnClickList
         init();
         Intent intent = getIntent();
         presenter.initData(intent.getStringExtra("VIDEO"));
+        //initTranstionAnimation();
+    }
+
+    private void initTranstionAnimation(){
+        ViewCompat.setTransitionName(player,"video");
+        TransitionSet set = new TransitionSet();
+        set.addTransition(new ChangeBounds());
+        set.addTransition(new ChangeImageTransform());
+        set.addTransition(new ChangeTransform());
+        set.addTransition(new ChangeTextTransition());
+        set.addTarget(player);
+
+        getWindow().setSharedElementEnterTransition(set);
+        getWindow().setSharedElementEnterTransition(set);
     }
 
     @Override

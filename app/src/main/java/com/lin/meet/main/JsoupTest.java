@@ -56,7 +56,7 @@ public class JsoupTest extends AppCompatActivity {
             public void run() {
                 Document document = null;
                 try {
-                    document = Jsoup.connect("http://www.boqii.com/pet-all/dog/")
+                    document = Jsoup.connect("https://www.baidu.com/s?wd=%E5%95%8A%E5%95%8A%E5%95%8A")
                             .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36")
                             .timeout(30000)
                             .cookie("auth", "token")

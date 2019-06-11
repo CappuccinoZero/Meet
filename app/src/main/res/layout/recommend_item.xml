@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:clickable="true"
+    android:background="#FFFFFF"
     android:foreground="@drawable/bg_ripple_rect_borderless"
     app:cardCornerRadius="15dp"
     app:cardElevation="0dp"

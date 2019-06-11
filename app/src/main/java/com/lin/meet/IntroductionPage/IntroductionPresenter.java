@@ -39,7 +39,7 @@ public class IntroductionPresenter implements IntorductionContract.Presenter {
     }
 
     @Override
-    public long doIdentification(String path) {
+    public long doIdentification(String path,String path2) {
         Random r = new Random();
         int x = r.nextInt(3);
         float temp[][]=tflite.predict_image(path);
@@ -56,7 +56,7 @@ public class IntroductionPresenter implements IntorductionContract.Presenter {
         view.setImageView_3(tflite.myUrl[((int)temp[0][3])*3-x]);
         view.setId((int)temp[0][1],(int)temp[0][2],(int)temp[0][3]);
         view.updateFromNetwork();
-        return model.savePhoto(path,tflite.mylabel[(int)temp[0][1]]);
+        return model.savePhoto(path2,tflite.mylabel[(int)temp[0][1]]);
     }
 
     @Override

@@ -23,12 +23,13 @@
             android:id="@+id/main_bottom_layout"
             android:layout_gravity="bottom"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="60dp"
+            android:paddingTop="4dp"
             >
             <android.support.design.widget.BottomNavigationView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/colorPrimary"
+                android:background="@color/background_default"
                 android:id="@+id/main_bnv"
                 app:menu="@menu/navigation"
                 app:labelVisibilityMode="labeled"
@@ -56,7 +57,7 @@
         <android.support.design.widget.FloatingActionButton
             android:id = "@+id/open_camera_activity"
             android:layout_gravity="bottom|center"
-            android:layout_marginBottom="22dp"
+            android:layout_marginBottom="28dp"
             android:elevation="9dp"
             android:src="@drawable/camera_test"
             android:backgroundTint="#1DE9B6"
@@ -68,6 +69,11 @@
         <FrameLayout
             android:id="@+id/animator_layout"
             android:background="#000"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+        <include layout="@layout/send_view"
+            android:visibility="gone"
+            android:id="@+id/formView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </android.support.design.widget.CoordinatorLayout>

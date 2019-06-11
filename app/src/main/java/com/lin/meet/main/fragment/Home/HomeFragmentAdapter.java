@@ -4,15 +4,17 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.lin.meet.main.fragment.Know.Know;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class HomeFragmentAdapter extends FragmentPagerAdapter {
     public List<Fragment> list = new ArrayList<>();
-    public HomeFragmentAdapter(FragmentManager fm,HomeContract.View view) {
+    public HomeFragmentAdapter(FragmentManager fm) {
         super(fm);
-        RecommendFragment fragment_1 = new RecommendFragment();
-        TopicFragment fragment_2 = new TopicFragment();
+        TopicFragment fragment_1 = new TopicFragment();
+        Know fragment_2 = new Know();
         VideoFragment fragment_3 = new VideoFragment();
         PictureFragment fragment_4 = new PictureFragment();
         list.add(fragment_1);

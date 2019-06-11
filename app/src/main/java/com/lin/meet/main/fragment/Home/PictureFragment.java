@@ -58,6 +58,7 @@ public class PictureFragment extends HomeBaseFragment implements PictureContract
                 positions = manager.findFirstVisibleItemPositions(positions);
                 if(returnTop&&positions!=null&&positions[0]==0){
                     returnTop = false;
+                    doRefresh.doRefresh();
                     presenter.insertToTop();
                 }
                 super.onScrolled(recyclerView, dx, dy);
@@ -99,7 +100,7 @@ public class PictureFragment extends HomeBaseFragment implements PictureContract
     private RecommendFragment.ReRefreshCallback doRefresh;
     private boolean returnTop = false;
     public void scrollAndRefresh(Handler handler, RecommendFragment.ReRefreshCallback doRefresh){
-        if(handler != null)
+        if(this.handler != null)
             return;
         this.handler = handler;
         doRecyclerScroll();

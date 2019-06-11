@@ -13,6 +13,11 @@ interface MainConstract{
         fun downloadToCache(uri:String,fileName:String,result:Int)
     }
 
+    interface MainDrawerCallback {
+        fun openDrawer()
+        fun closeDrawer()
+    }
+
     interface Model{
         fun getName():String
         fun getHeader()

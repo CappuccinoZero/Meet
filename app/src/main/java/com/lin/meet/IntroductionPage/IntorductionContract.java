@@ -34,7 +34,7 @@ public interface IntorductionContract {
     public interface Presenter{
         void openPhoto();
         void intoEncy(Activity activity, int id, String uri, String type, ActivityOptionsCompat compat);
-        long doIdentification(String path);
+        long doIdentification(String path,String path2);
         void doIdentification(int id[],float maybe[]);
         void doIdentification(int id[],float maybe[],int swap);
         void updateResult(long time,String newName);

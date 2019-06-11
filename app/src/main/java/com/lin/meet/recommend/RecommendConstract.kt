@@ -35,7 +35,7 @@ interface RecommendConstract {
         fun onLikeSon(floor:Int,position:Int,isLike: Boolean)
     }
 
-    interface Model{
-
+    interface searchCallback{
+        fun setVisiable(visiable: Boolean)
     }
 }

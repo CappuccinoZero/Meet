@@ -48,11 +48,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <de.hdodenhof.circleimageview.CircleImageView
+            android:elevation="1dp"
             android:id="@+id/perHeader"
             android:src="@drawable/temp"
             android:layout_width="80dp"
             android:layout_height="80dp" />
         <LinearLayout
+            android:elevation="4dp"
             android:id="@+id/perEdit"
             android:visibility="visible"
             android:layout_marginTop="20dp"
@@ -153,6 +155,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView
+            android:elevation="1dp"
             android:layout_below="@+id/perFan"
             android:paddingTop="1dp"
             android:paddingBottom="1dp"
@@ -168,6 +171,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView
+            android:elevation="1dp"
             android:layout_toRightOf="@+id/perAge"
             android:layout_below="@+id/perFan"
             android:paddingTop="1dp"
@@ -184,6 +188,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView
+            android:elevation="1dp"
             android:layout_toRightOf="@+id/perSex"
             android:layout_below="@+id/perFan"
             android:paddingTop="1dp"

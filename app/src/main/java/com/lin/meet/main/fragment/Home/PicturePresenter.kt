@@ -28,7 +28,7 @@ class PicturePresenter(mView:PictureContract.View):PictureContract.Presenter {
         query.addWhereEqualTo("isPicture",true)
         query.findObjects(object : FindListener<video_main>() {
             override fun done(list: MutableList<video_main>?, e: BmobException?) {
-                if (isRefresh) view.stopRefresh()
+                view.stopRefresh()
                 loading = false
                 if (list==null)return
                 skip += list.size

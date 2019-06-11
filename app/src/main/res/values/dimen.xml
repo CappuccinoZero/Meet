@@ -21,4 +21,8 @@
     <dimen name="per_roll_maxdistance">350dp</dimen>
     <dimen name="per_roll_mindistance">1dp</dimen>
     <dimen name="encyCardTop">110dp</dimen>
+    <dimen name="recomMaxTranslationY">60dp</dimen>
+    <dimen name="refresh_start">40dp</dimen>
+    <dimen name="refresh_end">120dp</dimen>
+    <dimen name="sender_item">4dp</dimen>
 </resources>

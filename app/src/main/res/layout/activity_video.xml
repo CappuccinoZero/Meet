@@ -12,9 +12,11 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"/>
     <RelativeLayout
+        android:paddingStart="10dp"
+        android:elevation="1dp"
+        android:background="@color/background_default"
         android:layout_below="@+id/player"
         android:id="@+id/video_user_layout"
-        android:layout_marginStart="10dp"
         android:paddingBottom="4dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -41,6 +43,7 @@
             android:textColor="#00BFA5"
             android:text="作者"/>
         <TextView
+            android:clickable="true"
             android:id="@+id/attention"
             android:elevation="1dp"
             android:textColor="@color/text_white_2"

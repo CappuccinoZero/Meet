@@ -1,5 +1,6 @@
 package com.lin.meet.picture_observer
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.view.ViewCompat
 import android.support.v7.app.AppCompatActivity
@@ -18,8 +19,19 @@ import com.lin.meet.bean.video_main
 import kotlinx.android.synthetic.main.activity_picture_observer.*
 
 class PictureObserver : AppCompatActivity() ,ObserverContract.View{
+    var bean :video_main ?= null
+    override fun updateHot() {
+        if(bean!=null)
+            presenter.updateHot(bean!!)
+    }
+
+    override fun updateBroadcast(intent: Intent) {
+        sendBroadcast(intent)
+    }
+
+    var url = ""
     override fun toast(msg: String) {
-        Toast.makeText(this,msg,Toast.LENGTH_SHORT).show()
+        Toast.makeText(this,msg,Toast.LENGTH_LONG).show()
     }
 
     override fun setDownloadClickable(clickable: Boolean) {
@@ -34,7 +46,7 @@ class PictureObserver : AppCompatActivity() ,ObserverContract.View{
             attention.visibility = View.GONE
             nickName.text = DEFAULT_NICKNAME
         }else{
-
+            nickName.text = user?.nickName
         }
     }
 
@@ -49,15 +61,20 @@ class PictureObserver : AppCompatActivity() ,ObserverContract.View{
     fun initData(){
         if(intent.getBooleanExtra("haveContent",false)){
             val bean = intent.getSerializableExtra("bean") as video_main
+            this.bean = bean
+            this.url = bean.uri
             Glide.with(this).load(bean.uri).into(image)
             name.text = bean.tltle
-            content.text = bean.content
+            if(bean.content.isNotEmpty()&&bean.content!="@null"){
+                content.visibility = View.VISIBLE
+                content.text = bean.content
+            }
             presenter.initAuthorMessage(bean.uid)
         }else{
 
         }
         back.setOnClickListener { onBackPressed() }
-        download.setOnClickListener { presenter.downloadPicture() }
+        download.setOnClickListener { presenter.downloadPicture(url) }
     }
 
     fun initTransitionAnimation(){

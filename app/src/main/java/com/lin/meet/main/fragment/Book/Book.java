@@ -23,10 +23,11 @@ import com.lin.meet.R;
 import com.lin.meet.bean.Baike;
 import com.lin.meet.bean.TopSmoothScroller;
 import com.lin.meet.my_util.MyUtil;
+import com.lin.meet.recommend.RecommendConstract;
 
 import org.jetbrains.annotations.NotNull;
 
-public class Book extends Fragment implements BaikeConstract.View{
+public class Book extends Fragment implements BaikeConstract.View, RecommendConstract.searchCallback {
     private View mView = null;
     private BaikeConstract.Presenter presenter;
     private LinearLayout search;
@@ -36,6 +37,7 @@ public class Book extends Fragment implements BaikeConstract.View{
     private SwipeRefreshLayout refresh;
     private boolean stopLoad = false;
     private boolean returnTop = false;
+    private int MAX_TRANSLATION_Y;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -51,6 +53,7 @@ public class Book extends Fragment implements BaikeConstract.View{
     }
 
     private void initView(View view){
+        MAX_TRANSLATION_Y = (int)getActivity().getResources().getDimension(R.dimen.recomMaxTranslationY);
         presenter = new BaikePresenter(this);
         recyclerView = (RecyclerView)view.findViewById(R.id.baike_recycler);
         refresh = (SwipeRefreshLayout)view.findViewById(R.id.baike_refresh);
@@ -62,6 +65,10 @@ public class Book extends Fragment implements BaikeConstract.View{
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                int temp = (int)(search.getTranslationY()-dy);
+                if(temp<-MAX_TRANSLATION_Y)temp = -MAX_TRANSLATION_Y;
+                else if(temp>0)temp = 0;
+                search.setTranslationY(temp);
                 if(MyUtil.isSlidetoBottom(recyclerView)&&!stopLoad){
                     presenter.onInsertBaike();
                 }
@@ -83,6 +90,7 @@ public class Book extends Fragment implements BaikeConstract.View{
             ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),pair);
             startActivityForResult(new Intent(getActivity(),BaikeSearch.class),1001,compat.toBundle());
         });
+        adapter.setHideCallback(this);
     }
 
     @Override
@@ -135,5 +143,18 @@ public class Book extends Fragment implements BaikeConstract.View{
     @Override
     public void insertBaikeToTop(@NotNull int position,Baike baike) {
         adapter.insertBaikeToTop(position,baike);
+    }
+
+    @Override
+    public void setVisiable(boolean visiable) {
+        if(search!=null){
+            search.setVisibility(visiable?View.VISIBLE:View.INVISIBLE);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setVisiable(true);
     }
 }

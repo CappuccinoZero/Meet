@@ -32,7 +32,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".picture_observer.PictureObserver"></activity>
+        <activity android:name=".picture_observer.SendPitureActivity"></activity>
+        <activity android:name=".picture_observer.PictureObserver" />
         <activity android:name=".Know.SendKnowActivity" />
         <activity
             android:name=".Know.KnowActivity"

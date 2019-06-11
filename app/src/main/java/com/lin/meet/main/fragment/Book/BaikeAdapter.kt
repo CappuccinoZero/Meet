@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import com.lin.meet.R
 import com.lin.meet.bean.Baike
 import com.lin.meet.encyclopedia.EncyclopediaActivity
+import com.lin.meet.recommend.RecommendConstract
 
 class BaikeAdapter(activity: Activity): RecyclerView.Adapter<BaikeViewHolder>() {
     private var baikes:ArrayList<Baike> ?= null
@@ -23,36 +24,44 @@ class BaikeAdapter(activity: Activity): RecyclerView.Adapter<BaikeViewHolder>() 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): BaikeViewHolder {
         if(context==null)
             context = p0.context
-        val view = LayoutInflater.from(context).inflate(R.layout.baike_view,p0,false)
-        return BaikeViewHolder(view)
+        if(p1 == 0){
+            val view = LayoutInflater.from(context).inflate(R.layout.top_view,p0,false)
+            return BaikeViewHolder(view,true)
+        }else{
+            val view = LayoutInflater.from(context).inflate(R.layout.baike_view,p0,false)
+            return BaikeViewHolder(view)
+        }
     }
 
     override fun getItemCount(): Int {
         if(baikes!=null)
-            return baikes!!.size
-        return 0
+            return baikes!!.size+1
+        return 1
     }
 
     override fun onBindViewHolder(viewHolder: BaikeViewHolder, i: Int) {
-        viewHolder.cnName.text = baikes!![i].cnName
-        viewHolder.enName.text = baikes!![i].enName
-        viewHolder.introduce.text = baikes!![i].brief
-        viewHolder.setImage(context!!,baikes!![i].imageUri)
-        viewHolder.view.setOnClickListener {
-            val intent = Intent (context,EncyclopediaActivity::class.java)
-            intent.putExtra("Baike",true)
-            intent.putExtra("cnName",baikes!![i].cnName)
-            intent.putExtra("enName",baikes!![i].enName)
-            intent.putExtra("imageUri",baikes!![i].imageUri)
-            intent.putExtra("url",baikes!![i].uri)
-            intent.putExtra("type",baikes!![i].type)
-            activity.window.exitTransition = Explode()
-            val pair1:Pair<View,String> = Pair(viewHolder.image,ViewCompat.getTransitionName(viewHolder.image))
-            val pair2:Pair<View,String> = Pair(viewHolder.cnName,ViewCompat.getTransitionName(viewHolder.cnName))
-            val pair3:Pair<View,String> = Pair(viewHolder.enName,ViewCompat.getTransitionName(viewHolder.enName))
-            val pair4:Pair<View,String> = Pair(viewHolder.cnName,"cnTitle")
-            val compact = ActivityOptionsCompat.makeSceneTransitionAnimation(activity,pair1,pair2,pair3,pair4)
-            ActivityCompat.startActivity(activity,intent,compact.toBundle())
+        if(!viewHolder.top){
+            viewHolder.cnName?.text = baikes!![i-1].cnName
+            viewHolder.enName?.text = baikes!![i-1].enName
+            viewHolder.introduce?.text = baikes!![i-1].brief
+            viewHolder.setImage(context!!,baikes!![i-1].imageUri)
+            viewHolder.view?.setOnClickListener {
+                if(hideCallback!=null)hideCallback!!.setVisiable(false)
+                val intent = Intent (context, EncyclopediaActivity::class.java)
+                intent.putExtra("Baike",true)
+                intent.putExtra("cnName",baikes!![i-1].cnName)
+                intent.putExtra("enName",baikes!![i-1].enName)
+                intent.putExtra("imageUri",baikes!![i-1].imageUri)
+                intent.putExtra("url",baikes!![i-1].uri)
+                intent.putExtra("type",baikes!![i-1].type)
+                activity.window.exitTransition = Explode()
+                val pair1: Pair<View, String> = Pair(viewHolder.image, viewHolder.image?.let { it1 -> ViewCompat.getTransitionName(it1) })
+                val pair2: Pair<View, String> = Pair(viewHolder.cnName, viewHolder.cnName?.let { it1 -> ViewCompat.getTransitionName(it1) })
+                val pair3: Pair<View, String> = Pair(viewHolder.enName, viewHolder.enName?.let { it1 -> ViewCompat.getTransitionName(it1) })
+                val pair4: Pair<View, String> = Pair(viewHolder.cnName,"cnTitle")
+                val compact = ActivityOptionsCompat.makeSceneTransitionAnimation(activity,pair1,pair2,pair3,pair4)
+                ActivityCompat.startActivity(activity,intent,compact.toBundle())
+            }
         }
     }
 
@@ -81,4 +90,14 @@ class BaikeAdapter(activity: Activity): RecyclerView.Adapter<BaikeViewHolder>() 
         return baikes!!.size - 1
     }
 
+    override fun getItemViewType(position: Int): Int {
+        if(position == 0)
+            return 0
+        return 1
+    }
+
+    internal var hideCallback: RecommendConstract.searchCallback? = null
+    fun setHideCallback(hideCallback: RecommendConstract.searchCallback) {
+        this.hideCallback = hideCallback
+    }
 }

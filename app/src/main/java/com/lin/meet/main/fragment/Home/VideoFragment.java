@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.lin.meet.R;
 import com.lin.meet.bean.TopSmoothScroller;
+import com.lin.meet.main.MainConstract;
 import com.lin.meet.my_util.MyUtil;
 
 import java.util.Objects;
@@ -24,6 +25,7 @@ public class VideoFragment extends HomeBaseFragment implements HomeConstract.Vid
     private HomeConstract.VideoPresenter presenter;
     private Handler handler;
     LinearLayoutManager manager;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -51,6 +53,7 @@ public class VideoFragment extends HomeBaseFragment implements HomeConstract.Vid
                 }
                 if(returnTop&&manager.findFirstVisibleItemPosition()==0){
                     returnTop = false;
+                    doRefresh.doRefresh();
                     presenter.onInsertToTop();
                 }
                 super.onScrolled(recyclerView, dx, dy);

@@ -2,10 +2,10 @@ package com.lin.meet.main.fragment.Know;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -13,32 +13,31 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.lin.meet.Know.SendKnowActivity;
 import com.lin.meet.R;
 import com.lin.meet.bean.TopSmoothScroller;
+import com.lin.meet.main.fragment.Home.Home;
+import com.lin.meet.main.fragment.Home.HomeBaseFragment;
+import com.lin.meet.main.fragment.Home.RecommendFragment;
 import com.lin.meet.my_util.MyUtil;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
-
-public class Know extends Fragment implements View.OnClickListener,KnowConstarct.View {
+//startActivityForResult(new Intent(getActivity(), SendKnowActivity.class),2001);
+public class Know extends HomeBaseFragment implements KnowConstarct.View {
     private View mView = null;
     private RecyclerView recyclerView;
     private StaggeredGridLayoutManager manager;
     private KnowAdapter adapter;
-    private SwipeRefreshLayout refresh;
     private TextView know;
     private KnowConstarct.Presenter presenter;
     private boolean returnTop = false;
-    private boolean refreshing = false;
+    private Handler handler = null;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_know, container, false);
-        initView(mView);
-        presenter.refreshKnows();
         return mView;
     }
 
@@ -50,17 +49,10 @@ public class Know extends Fragment implements View.OnClickListener,KnowConstarct
     private void initView(View view){
         presenter = new KnowPresenter(this);
         recyclerView = view.findViewById(R.id.know_recycler);
-        refresh = view.findViewById(R.id.know_refresh);
         manager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(manager);
         adapter = new KnowAdapter();
         recyclerView.setAdapter(adapter);
-        know = (TextView)view.findViewById(R.id.know_text);
-        know.setOnClickListener(this);
-        refresh.setOnRefreshListener(()->{
-            presenter.refreshKnows();
-        });
-
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -71,20 +63,12 @@ public class Know extends Fragment implements View.OnClickListener,KnowConstarct
                 positions = manager.findFirstVisibleItemPositions(positions);
                 if(returnTop&&positions!=null&&positions[0]==0){
                     returnTop = false;
+                    doRefresh.doRefresh();
                     presenter.onInsertKnowToTop();
                 }
                 super.onScrolled(recyclerView, dx, dy);
             }
         });
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.know_text:
-                startActivityForResult(new Intent(getActivity(), SendKnowActivity.class),2001);
-                break;
-        }
     }
 
     @Override
@@ -99,9 +83,11 @@ public class Know extends Fragment implements View.OnClickListener,KnowConstarct
 
     @Override
     public void endRefresh() {
-        if(refresh.isRefreshing()){
-            refresh.setRefreshing(false);
-            refreshing = false;
+        if(handler!=null){
+            Message msg = new Message();
+            msg.what = Home.END_REFRESH;
+            handler.sendMessage(msg);
+            handler = null;
         }
     }
 
@@ -124,26 +110,39 @@ public class Know extends Fragment implements View.OnClickListener,KnowConstarct
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void scrollAndRefresh(){
-        if (refreshing)return;
-        refreshing = true;
+    RecommendFragment.ReRefreshCallback doRefresh;
+    public void scrollAndRefresh(Handler handler, RecommendFragment.ReRefreshCallback doRefresh){
+        if (handler==null)return;
+        this.handler = handler;
         TopSmoothScroller scroller = new TopSmoothScroller(getActivity());
         scroller.setTargetPosition(0);
         manager.startSmoothScroll(scroller);
-        refresh.setRefreshing(true);
         int positions[] = null;
         positions = manager.findFirstVisibleItemPositions(positions);
         if(positions!=null&&positions[0]<=4){
+            doRefresh.doRefresh();
             new Thread(()->{
                 try {
-                    Thread.sleep(800);
+                    Thread.sleep(600);
                     Objects.requireNonNull(getActivity()).runOnUiThread(()-> presenter.onInsertKnowToTop());
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }).start();
         }else {
+            this.doRefresh = doRefresh;
             returnTop = true;
         }
+    }
+
+    public void refresh(Handler handler){
+        this.handler = handler;
+        presenter.refreshKnows();
+    }
+
+    @Override
+    protected void loadData() {
+        initView(mView);
+        presenter.refreshKnows();
     }
 }

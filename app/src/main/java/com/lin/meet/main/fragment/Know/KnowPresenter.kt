@@ -63,8 +63,9 @@ class KnowPresenter(view:KnowConstarct.View):KnowConstarct.Presenter {
                     for(index in 0 until p0.size){
                         selectUser(p0[index])
                     }
-                    view.endRefresh()
+
                 }
+                view.endRefresh()
                 loading = false
             }
         })

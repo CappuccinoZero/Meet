@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="transForm">#D9C8C8C8</color>
     <color name="transparent">#00FFFFFF</color>
     <color name="colorPrimary">#FFFFFF</color>
     <color name="colorPrimaryDark">#FFFFFF</color>
@@ -24,4 +25,5 @@
     <color name="line_back">#1F000000</color>
     <color name="onclick">#2979FF</color>
     <color name="video_default">#787878</color>
+    <color name="background_default">#F0F0F0</color>
 </resources>

@@ -87,7 +87,7 @@ public class IntroductionActivity extends AppCompatActivity implements View.OnCl
             String path = intent.getStringExtra("imagePath");
             setImageView(path);
             if(intent.getBooleanExtra("fromHistory",false)){//来自历史页
-                presenter.doIdentification(path);
+                presenter.doIdentification(path,path);
                 ImageView tempImg = intent.getParcelableExtra("image");
             }else{//来自拍摄
                 timeId = intent.getLongExtra("time",0);
@@ -472,7 +472,7 @@ public class IntroductionActivity extends AppCompatActivity implements View.OnCl
                 }else if(media!=null){
                     image_path = media.getPath();
                 }else return;
-                timeId=presenter.doIdentification(image_path);
+                timeId=presenter.doIdentification(image_path,media.getPath());
                 break;
             case INIT_OPEN_PHOTO:
                 if(data==null){
@@ -486,7 +486,7 @@ public class IntroductionActivity extends AppCompatActivity implements View.OnCl
                     image_path = media.getPath();
                 }else return;
                 setImageView(image_path);
-                timeId=presenter.doIdentification(image_path);
+                timeId=presenter.doIdentification(image_path,media.getPath());
                 break;
         }
     }
