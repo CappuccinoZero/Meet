@@ -328,11 +328,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(id==R.id.item_know&&lastShow!=3){
             actionButton.setImageResource(R.drawable.camera_test);
             AnimatorSet set = new AnimatorSet();
-            ObjectAnimator rotation_0 = ObjectAnimator.ofFloat(actionButton,"rotation",-45,45);
+            ObjectAnimator rotation_0 = ObjectAnimator.ofFloat(actionButton,"rotation",-45,90);
             rotation_0.setDuration(150);
-            ObjectAnimator rotation_1 = ObjectAnimator.ofFloat(actionButton,"rotation",45,120);
+            ObjectAnimator rotation_1 = ObjectAnimator.ofFloat(actionButton,"rotation",90,110);
             rotation_1.setDuration(100);
-            ObjectAnimator rotation_2 = ObjectAnimator.ofFloat(actionButton,"rotation",120,90);
+            ObjectAnimator rotation_2 = ObjectAnimator.ofFloat(actionButton,"rotation",110,90);
             rotation_1.setDuration(25);
             rotation_1.addListener(new AnimatorListenerAdapter() {
                 @Override
@@ -349,7 +349,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             AnimatorSet set = new AnimatorSet();
             ObjectAnimator rotation_0 = ObjectAnimator.ofFloat(actionButton,"rotation",135,0);
             rotation_0.setDuration(150);
-            ObjectAnimator rotation_1 = ObjectAnimator.ofFloat(actionButton,"rotation",0,-45);
+            ObjectAnimator rotation_1 = ObjectAnimator.ofFloat(actionButton,"rotation",0,-20);
             rotation_1.setDuration(100);
             ObjectAnimator rotation_2 = ObjectAnimator.ofFloat(actionButton,"rotation",-20,0);
             rotation_1.setDuration(25);

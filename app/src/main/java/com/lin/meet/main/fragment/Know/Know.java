@@ -33,7 +33,6 @@ public class Know extends HomeBaseFragment implements KnowConstarct.View {
     private KnowConstarct.Presenter presenter;
     private boolean returnTop = false;
     private Handler handler = null;
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {

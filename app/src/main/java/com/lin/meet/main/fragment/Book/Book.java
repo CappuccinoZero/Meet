@@ -62,6 +62,9 @@ public class Book extends Fragment implements BaikeConstract.View, RecommendCons
         recyclerView.setLayoutManager(manager);
         adapter = new BaikeAdapter(getActivity());
         recyclerView.setAdapter(adapter);
+        refresh.setProgressViewOffset(true,
+                (int)getActivity().getResources().getDimension(R.dimen.refresh_start),
+                (int)getActivity().getResources().getDimension(R.dimen.refresh_end));
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
