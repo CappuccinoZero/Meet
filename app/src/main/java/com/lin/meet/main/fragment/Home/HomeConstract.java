@@ -8,12 +8,14 @@ public interface HomeConstract {
         void endRefresh();
         void likeResult(int resultCode,int position,boolean like);
         void setLike(int position,boolean like);
+        void endLoadMore();
+        void isNetError(boolean error);
     }
     interface TopicPresenter{
         void onInitTopics(int flag);//flag = 0默认 flag = 1 具体id flag = 2刷新
         void onInsertTopics();
         void onInsertTopic(String id);
-        void onClickLike(int position,String id);
+        void onClickLike(boolean like,String id,String uid,int position);
         void onInsertToTop();
     }
     interface VideoView{
@@ -21,6 +23,8 @@ public interface HomeConstract {
         void insertVideo(int position,VideoBean bean);
         void insertVideo(VideoBean bean);
         void endRefresh();
+        void endLoadMore();
+        void setNetError(boolean error);
     }
     interface VideoPresenter{
         void onInitVideos(int flag);//flag = 0默认 flag = 1 具体id flag = 2刷新

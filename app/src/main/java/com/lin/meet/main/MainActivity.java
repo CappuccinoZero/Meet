@@ -5,11 +5,15 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.bottomnavigation.LabelVisibilityMode;
@@ -26,6 +30,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.transition.Fade;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -39,29 +44,42 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.lin.meet.Know.SendKnowActivity;
+import com.google.ar.core.ArCoreApk;
 import com.lin.meet.R;
+import com.lin.meet.ar.ARCoreActivity;
 import com.lin.meet.bean.User;
 import com.lin.meet.camera_demo.CameraActivity;
+import com.lin.meet.drawer_collection.CollectionActivity;
+import com.lin.meet.drawer_dynamic.DynamicActivity;
+import com.lin.meet.drawer_footprint.FootprintActivity;
+import com.lin.meet.drawer_friends.vc.FriendsActivity;
+import com.lin.meet.drawer_message.view.MyMessageActivity;
+import com.lin.meet.drawer_setting.MainSettingActivity;
+import com.lin.meet.know.SendKnowActivity;
 import com.lin.meet.login.StartActivity;
 import com.lin.meet.main.fragment.Book.Book;
 import com.lin.meet.main.fragment.Find.Find;
 import com.lin.meet.main.fragment.Home.Home;
 import com.lin.meet.main.fragment.Home.RecommendFragment;
+import com.lin.meet.my_util.MyUtil;
 import com.lin.meet.personal.PersonalActivity;
 import com.lin.meet.picture_observer.SendPitureActivity;
+import com.lin.meet.start.IntroduceActivity;
 import com.lin.meet.topic.SendTopic;
 import com.lin.meet.video.SendVideo;
+import com.youngfeng.snake.annotations.EnableDragToClose;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import cn.bmob.v3.BmobUser;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+@EnableDragToClose
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,MainConstract.View,MainConstract.MainDrawerCallback {
     public static String savePath = Environment.getExternalStorageDirectory().getAbsoluteFile()+ File.separator+"Mybitmap"+File.separator+"Cache"+File.separator;
     private BottomNavigationView bv;
@@ -72,15 +90,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private DrawerLayout drawer;
     private CircleImageView header;
     private TextView name;
-    private FloatingActionButton actionButton;
+    private ImageView actionButton;
     private User user;
     private RequestOptions options;
     private MainConstract.Presenter presenter;
     private RelativeLayout headLayout;
-    private ImageView headBackground;
-    private TextView exit;
-    private View roundView;
-    private RelativeLayout itemLayout;
+    private boolean isUseAr = false;
+    private View ar;
+    private View drawerView;
     private Book book ;
     private Find find ;
     private Home home ;
@@ -90,10 +107,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean showStatusBar = true;
     private FloatingActionButton sender1,sender2,sender3,sender4;
     private TextView text1,text2,text3,text4;
+    private View setting,message,friends,collection,dynamic,foot;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         super.onCreate(savedInstanceState);
+        maybeEnableArButton();
         View decorView = getWindow().getDecorView();
         int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -101,10 +120,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         decorView.setSystemUiVisibility(option);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         getWindow().setStatusBarColor(Color.TRANSPARENT);
+        initFirstIn();
         setContentView(R.layout.activity_main);
         initView();
         initFragment();
         initLoadUserView();
+    }
+
+    private void initFirstIn(){
+        SharedPreferences sharedPreferences = MyUtil.getShardPreferences(this,"FirstIn");
+        boolean first = sharedPreferences.getBoolean("firstIn",false);
+        if(!first){
+            HashMap<String,Boolean> map = new HashMap();
+            map.put("firstIn",false);
+            MyUtil.saveSharedBooleanPreferences(this,"FirstIn",map);
+            startActivity(new Intent(this, IntroduceActivity.class));
+            finish();
+        }
     }
 
     private void initView(){
@@ -120,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         text3 = (TextView)formView.findViewById(R.id.videoText);
         text4 = (TextView)formView.findViewById(R.id.pictureText);
         animator_layout = (FrameLayout)findViewById(R.id.animator_layout);
-        actionButton = (FloatingActionButton)findViewById(R.id.open_camera_activity);
+        actionButton = (ImageView)findViewById(R.id.open_camera_activity);
         actionButton.setOnClickListener(this);
         options = new RequestOptions();
         options.error(R.color.bank_FF6C6C6C);
@@ -133,7 +165,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startFabAnimation(menuItem.getItemId());
                 drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                 switch (menuItem.getItemId()){
-
                     case R.id.item_home:
                         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                         if(lastShow==0){
@@ -143,6 +174,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         switchFragment(0);
                         break;
                     case R.id.item_book:
+                        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                         if(lastShow==1){
                             book.scrollAndRefresh();
                             return true;
@@ -167,45 +199,83 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return true;
             }
         });
-        itemLayout = (RelativeLayout)findViewById(R.id.draw_item_layout);
-        exit = (TextView) findViewById(R.id.exit);
+        drawerView = (View)findViewById(R.id.main_include);
+        message = (View)findViewById(R.id.message);
+        friends = (View)findViewById(R.id.friends);
+        setting = (View) findViewById(R.id.setting);
+        dynamic = (View)findViewById(R.id.dynamic);
+        collection = (View)findViewById(R.id.collection);
         drawer = (DrawerLayout) findViewById(R.id.main_drawer);
         nv = (NavigationView) findViewById(R.id.main_nv);
         headLayout = (RelativeLayout) nv.getHeaderView(0);
-        headBackground = (ImageView) headLayout.findViewById(R.id.user_background);
         header = (CircleImageView)headLayout.findViewById(R.id.user_header);
         name = (TextView)headLayout.findViewById(R.id.user_name);
-        roundView = (View)headLayout.findViewById(R.id.user_view);
+        foot = (View)findViewById(R.id.foot);
+        ar = (View)findViewById(R.id.ar);
         sender1.setOnClickListener(this);
         sender2.setOnClickListener(this);
         sender3.setOnClickListener(this);
         sender4.setOnClickListener(this);
         headLayout.setOnClickListener(this);
-        exit.setOnClickListener(this);
+        setting.setOnClickListener(this);
+        message.setOnClickListener(this);
+        friends.setOnClickListener(this);
+        dynamic.setOnClickListener(this);
+        foot.setOnClickListener(this);
+        collection.setOnClickListener(this);
+        ar.setOnClickListener(this);
         checkCacheFile();
         drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
-            public void onDrawerSlide(@NonNull View view, float v) {
-
-            }
-
+            public void onDrawerSlide(@NonNull View view, float v) { }
             @Override
             public void onDrawerOpened(@NonNull View view) {
                 drawIsOpen = true;
             }
-
             @Override
-            public void onDrawerClosed(@NonNull View view) {
-                drawIsOpen = false;
-            }
-
+            public void onDrawerClosed(@NonNull View view) { drawIsOpen = false; }
             @Override
-            public void onDrawerStateChanged(int i) {
-
-            }
+            public void onDrawerStateChanged(int i) {}
         });
+
+        Glide.with(this).load(R.mipmap.camera);
+        Glide.with(this).load(R.mipmap.add);
     }
 
+    private void startDrawActivity(int id){
+        new Thread(()->{
+            try {
+                Thread.sleep(200);
+                runOnUiThread(()->{
+                    switch (id){
+                        case R.id.message:
+                            startActivity(new Intent(MainActivity.this, MyMessageActivity.class));
+                            break;
+                        case R.id.friends:
+                            startActivity(new Intent(MainActivity.this, FriendsActivity.class));
+                            break;
+                        case R.id.dynamic:
+                            startActivity(new Intent(MainActivity.this, DynamicActivity.class));
+                            break;
+                        case R.id.collection:
+                            startActivity(new Intent(MainActivity.this, CollectionActivity.class));;
+                            break;
+                        case R.id.foot:
+                            startActivity(new Intent(MainActivity.this, FootprintActivity.class));
+                            break;
+                        case R.id.setting:
+                            startActivity(new Intent(MainActivity.this, MainSettingActivity.class));
+                            overridePendingTransition(R.anim.right_in,R.anim.right_out);
+                            break;
+                        default:
+                            break;
+                    }
+                });
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
 
     private static final String TAG = "MainActivity";
 
@@ -215,6 +285,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         home = new Home();
         recod = new RecommendFragment();
         recod.setDrawerCallback(this);
+        book.setDrawerCallback(this);
         fragments = new Fragment[]{recod,book,find,home};
         lastShow = 0;
         getSupportFragmentManager()
@@ -300,7 +371,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onAnimationEnd(Animator animation) {
                 CameraActivity.startCameraActivity(MainActivity.this);
-                overridePendingTransition(R.anim.anim_in,R.anim.anim_out);
+                overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                 actionButton.setTranslationY(0);
                 hideStateBar();
                 super.onAnimationEnd(animation);
@@ -321,12 +392,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         animator_layout.getBackground().setAlpha(0);
         actionButton.setScaleX(1);
         actionButton.setScaleY(1);
+        actionButton.setRotation(0);
+        initLoadUserView();
         showStateBar();
     }
 
     private void startFabAnimation(int id){
         if(id==R.id.item_know&&lastShow!=3){
-            actionButton.setImageResource(R.drawable.camera_test);
             AnimatorSet set = new AnimatorSet();
             ObjectAnimator rotation_0 = ObjectAnimator.ofFloat(actionButton,"rotation",-45,90);
             rotation_0.setDuration(150);
@@ -337,7 +409,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             rotation_1.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationStart(Animator animation) {
-                    actionButton.setImageResource(R.drawable.delete);
+                    Glide.with(MainActivity.this).load(R.mipmap.add).into(actionButton);
                     super.onAnimationStart(animation);
                 }
             });
@@ -345,7 +417,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             set.start();
         }
         if(id!=R.id.item_know&&lastShow==3){
-            actionButton.setImageResource(R.drawable.delete);
+            actionButton.setImageResource(R.mipmap.add);
             AnimatorSet set = new AnimatorSet();
             ObjectAnimator rotation_0 = ObjectAnimator.ofFloat(actionButton,"rotation",135,0);
             rotation_0.setDuration(150);
@@ -356,16 +428,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             rotation_1.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationStart(Animator animation) {
-                    actionButton.setImageResource(R.drawable.camera_test);
+                    Glide.with(MainActivity.this).load(R.mipmap.camera).into(actionButton);
                     super.onAnimationStart(animation);
                 }
             });
             set.play(rotation_1).before(rotation_2).after(rotation_0);
             set.start();
-        }else {
-            ObjectAnimator animator = ObjectAnimator.ofFloat(actionButton,"rotation",0,-20,20,0);
-            animator.setDuration(200);
-            animator.start();
         }
     }
 
@@ -401,15 +469,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if(BmobUser.isLogin()){
                     getWindow().setExitTransition(new Fade());
                     Intent intent = new Intent(this, PersonalActivity.class);
-                    Pair<View,String> pair1 = new Pair<>(headBackground,headBackground.getTransitionName());
                     Pair<View,String> pair2 = new Pair<>(header,header.getTransitionName());
                     Pair<View,String> pair3 = new Pair<>(name,name.getTransitionName());
-                    Pair<View,String> pair4 = new Pair<>(roundView,roundView.getTransitionName());
-                    Pair<View,String> pair5 = new Pair<>(itemLayout,itemLayout.getTransitionName());
-                    ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation(this,pair1,pair2,pair3,pair4,pair5);
+                    Pair<View,String> pair5 = new Pair<>(drawerView,"main_item_layout");
+                    ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation(this,pair2,pair3,pair5);
                     startActivityForResult(intent,1,compat.toBundle());
                 }else {
                     startActivity(new Intent(this, StartActivity.class));
+                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                 }
                 break;
             case R.id.open_camera_activity:
@@ -428,9 +495,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 }
                 break;
-            case R.id.exit:
-                finish();
-                BmobUser.logOut();
+            case R.id.setting:
+                startDrawActivity(R.id.setting);
+                drawer.closeDrawer(Gravity.START);
                 break;
             case R.id.topicSender:
                 startActivity(new Intent(this, SendTopic.class));
@@ -444,6 +511,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.pictureSender:
                 startActivity(new Intent(this, SendPitureActivity.class));
                 break;
+            case R.id.message:
+                startDrawActivity(R.id.message);
+                drawer.closeDrawer(Gravity.START);
+                break;
+            case R.id.friends:
+                startDrawActivity(R.id.friends);
+                drawer.closeDrawer(Gravity.START);
+                break;
+            case R.id.dynamic:
+                startDrawActivity(R.id.dynamic);
+                drawer.closeDrawer(Gravity.START);
+                break;
+            case R.id.collection:
+                startDrawActivity(R.id.collection);
+                drawer.closeDrawer(Gravity.START);
+                break;
+            case R.id.foot:
+                startDrawActivity(R.id.foot);
+                drawer.closeDrawer(Gravity.START);
+                break;
+            case R.id.ar:
+                if(isUseAr){
+                    startActivity(new Intent(this, ARCoreActivity.class));
+                }else{
+                    if(Build.VERSION.SDK_INT < Build.VERSION_CODES.N){
+                        Toast.makeText(this,"使用AR功能需要SDK 24以上",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    else{
+                        Toast.makeText(this,"使用AR功能需要安装ARCOre",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+                break;
         }
         if(v.getId()==R.id.topicSender||v.getId()==R.id.knowSender|v.getId()==R.id.videoSender|v.getId()==R.id.pictureSender){
             showStatusBar = !showStatusBar;
@@ -456,6 +557,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void setHeader(@NotNull String str) {
         Glide.with(this).load(str).apply(options).into(header);
+    }
+
+    public void setDefaultHeader() {
+        Glide.with(this).load(R.drawable.header).apply(options).into(header);
     }
 
     @Override
@@ -480,11 +585,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(BmobUser.isLogin()){
             user = BmobUser.getCurrentUser(User.class);
         }else{
+            setDefaultHeader();
+            setName("未登录");
+            setSignature("想遇见可可爱爱的动物呀");
             return;
         }
-        setHeader(user.getHeaderUri());
+        if(user.getHeaderUri().isEmpty())
+            setDefaultHeader();
+        else
+            setHeader(user.getHeaderUri());
         setHeaderBackground(user.getBackgroundUri());
         setName(user.getNickName());
+        setSignature(user);
     }
 
     @Override
@@ -497,6 +609,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 setHeaderBackground(path);
                 break;
         }
+    }
+
+    private void setSignature(User user){
+        ((TextView)headLayout.findViewById(R.id.user_signature)).setText(user.getSignature());
+    }
+
+    private void setSignature(String user){
+        ((TextView)headLayout.findViewById(R.id.user_signature)).setText(user);
     }
 
     private void openSenderAnimation(){
@@ -554,12 +674,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void setHeaderBackground(@NotNull String str) {
-        Glide.with(this).load(str).apply(options).into(headBackground);
+        //Glide.with(this).load(str).apply(options).into(headBackground);
     }
 
 
     @Override
     public void closeDrawer() {
         drawer.closeDrawers();
+    }
+
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {}
+
+    void maybeEnableArButton() {
+        ArCoreApk.Availability availability = ArCoreApk.getInstance().checkAvailability(this);
+        if (availability.isTransient()) {
+            // Re-query at 5Hz while compatibility is checked in the background.
+            new Handler().postDelayed(this::maybeEnableArButton, 200);
+        }
+        if (availability.isSupported()) {
+            isUseAr = true;
+        } else {
+            isUseAr = false;
+        }
     }
 }

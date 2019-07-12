@@ -10,13 +10,14 @@ import android.widget.TextView
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.lin.meet.R
-import com.lin.meet.bean.video_main
+import com.lin.meet.db_bean.picture_main
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
 import com.luck.picture.lib.tools.PictureFileUtils
+import com.youngfeng.snake.annotations.EnableDragToClose
 import kotlinx.android.synthetic.main.activity_send_piture.*
-
+@EnableDragToClose
 class SendPitureActivity : AppCompatActivity(),ObserverContract.SendView {
     private var progressView: View? = null
     private var uploadText: TextView? =null
@@ -40,7 +41,7 @@ class SendPitureActivity : AppCompatActivity(),ObserverContract.SendView {
             progressDialog!!.dismiss()
     }
 
-    override fun SendResult(code: Int, bean: video_main?) {
+    override fun SendResult(code: Int, bean: picture_main?) {
         if(code == 1){
             val intent = Intent(this,PictureObserver::class.java)
             intent.putExtra("haveContent",true)
@@ -88,6 +89,7 @@ class SendPitureActivity : AppCompatActivity(),ObserverContract.SendView {
                 .compress(true)
                 .openClickSound(true)
                 .minimumCompressSize(500)
+                .isCamera(false)
                 .isDragFrame(true)
                 .forResult(code)
     }
@@ -101,6 +103,9 @@ class SendPitureActivity : AppCompatActivity(),ObserverContract.SendView {
             else
                 path = media.path
             loadImg()
+        }
+        else if(requestCode==QUEST_CODE){
+            finish()
         }
     }
 

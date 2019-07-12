@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".drawer_footprint.FootprintActivity">
+    <android.support.v7.widget.Toolbar
+        android:theme="@style/ThemeOverlay.AppCompat.Dark"
+        android:background="@color/msg_appbar"
+        android:gravity="center"
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"/>
+    <com.baidu.mapapi.map.MapView
+        android:id="@+id/mapView"
+        android:clickable="true"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"/>
+    <TextView
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:textSize="@dimen/text_0"
+        android:text="— 选择足迹 —"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="20dp" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</LinearLayout>

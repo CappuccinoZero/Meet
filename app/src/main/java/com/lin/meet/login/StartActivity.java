@@ -11,9 +11,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.lin.meet.R;
+import com.youngfeng.snake.annotations.EnableDragToClose;
 
 import pers.lin.linanimations.animations.RippleView;
 
+@EnableDragToClose
 public class  StartActivity extends AppCompatActivity implements View.OnClickListener {
     private RelativeLayout rippleLayout;
     private Button checkLogin;
@@ -31,8 +33,6 @@ public class  StartActivity extends AppCompatActivity implements View.OnClickLis
         rippleLayout = (RelativeLayout)findViewById(R.id.ripple_layout);
         checkLogin = (Button)findViewById(R.id.check_login);
         checkRegister = (TextView)findViewById(R.id.check_register);
-        rippleView = (RippleView)findViewById(R.id.login_rippleView);
-        rippleView.setAsBackground(rippleView.getBgColor());
         checkLogin.setOnClickListener(this);
         checkRegister.setOnClickListener(this);
     }
@@ -42,12 +42,12 @@ public class  StartActivity extends AppCompatActivity implements View.OnClickLis
         switch (v.getId()){
             case R.id.check_login:
                 startActivity(new Intent(this,LoginActivity.class));
-                overridePendingTransition(R.anim.anim_in,R.anim.anim_out);
+                overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                 finish();
                 break;
             case R.id.check_register:
                 startActivity(new Intent(this,RegisterActivity.class));
-                overridePendingTransition(R.anim.anim_in,R.anim.anim_out);
+                overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                 finish();
                 break;
         }
@@ -59,12 +59,18 @@ public class  StartActivity extends AppCompatActivity implements View.OnClickLis
          */
 
         finish();
-        overridePendingTransition(R.anim.anim_in,R.anim.anim_out);
+        overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
     }
 }

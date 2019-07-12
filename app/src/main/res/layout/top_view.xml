@@ -1,8 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="76dp"/>
-</LinearLayout>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="wrap_content"/>
+<!--<pers.lin.linanimations.animations.FlowRect-->
+    <!--android:id="@+id/testSf"-->
+    <!--app:flow_asBackground="#fff"-->
+    <!--app:backgroundColor="#2979FF"-->
+    <!--app:startColor="#3D5AFE"-->
+    <!--app:centerColor="#2979FF"-->
+    <!--app:endColor="#00B0FF"-->
+    <!--app:colorGradient="true"-->
+    <!--app:FlowSpeed="5"-->
+    <!--app:flowRadius="200"-->
+    <!--app:spaceX ="30dp"-->
+    <!--app:rectHeight="500dp"-->
+    <!--app:translationX="30dp"-->
+    <!--app:spaceY="30dp"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent" />-->
+
+<!--<pers.lin.linanimations.animations.WaveView-->
+    <!--android:layout_above="@+id/wave_bottomView"-->
+    <!--android:id="@+id/login_waveView"-->
+    <!--app:backgroundTint="#fff"-->
+    <!--app:wave_asBackground="#fff"-->
+    <!--app:waveSpeed="10"-->
+    <!--app:waveWidth="250dp"-->
+    <!--app:waveHeight="30dp"-->
+    <!--app:container="rect"-->
+    <!--app:parcent="0.05"-->
+    <!--app:randomWave="true"-->
+    <!--app:firstColor="#FAFFCDD2"-->
+    <!--app:secondColor="#FFAB40"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent" />-->
+<!--<View-->
+    <!--android:background="@drawable/bg_gradient_login"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:id="@+id/wave_bottomView"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="150dp">-->
+
+<!--<pers.lin.linanimations.animations.RippleView-->
+<!--android:id="@+id/login_rippleView"-->
+<!--app:ripple_asBackground="#fff"-->
+<!--app:style="out"-->
+<!--app:rateOfChange="normal"-->
+<!--app:color="#A7FFEB"-->
+<!--app:density="150dp"-->
+<!--app:isFill="true"-->
+<!--app:isGradient="true"-->
+<!--app:speed="5"-->
+<!--app:gradient="deep"-->
+<!--app:locate="leftTop"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="match_parent" />-->
+
+

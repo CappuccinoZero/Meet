@@ -6,9 +6,9 @@
     <dimen name="text_3">20sp</dimen>
     <dimen name="text_4">24sp</dimen>
     <dimen name="text_5">34sp</dimen>
-    <dimen name="history_toobar_height">40dp</dimen>
-    <dimen name="history_head">250dp</dimen>
-    <dimen name="history_appbarlayout">160dp</dimen>
+    <dimen name="history_toobar_height">44dp</dimen>
+    <dimen name="history_head">300dp</dimen>
+    <dimen name="history_appbarlayout">200dp</dimen>
     <dimen name="history_recycler_margin">20dp</dimen>
     <dimen name="dialog_margin">20dp</dimen>
     <dimen name="dialog_loading">100dp</dimen>
@@ -25,4 +25,9 @@
     <dimen name="refresh_start">40dp</dimen>
     <dimen name="refresh_end">120dp</dimen>
     <dimen name="sender_item">4dp</dimen>
+    
+    <dimen name="header_translationY">68dp</dimen>
+    <dimen name="search_translationY">131dp</dimen>
+    <dimen name="search_scaleX">50dp</dimen>
+    <dimen name="image_height">225dp</dimen>
 </resources>

@@ -3,6 +3,9 @@ package com.lin.meet.login;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -16,7 +19,6 @@ import com.lin.meet.main.MainActivity;
 import com.lin.meet.my_util.MyUtil;
 
 import java.util.HashMap;
-
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener,LoginConstract.LoginView {
     private LoginConstract.LoginPresenter presenter;
     private RelativeLayout flowLayout;
@@ -42,6 +44,51 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         presenter = LoginPresenter.getLoginPresenter(this);
         loginButton.setOnClickListener(this);
         flowBack.setOnClickListener(this);
+
+        phoneEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(phoneEdit.getText().toString().isEmpty()){
+                    phoneEdit.setGravity(Gravity.CENTER);
+                    phoneEdit.setCursorVisible(false);
+                }else {
+                    phoneEdit.setGravity(Gravity.START);
+                    phoneEdit.setCursorVisible(true);
+                }
+            }
+        });
+        passwordEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(passwordEdit.getText().toString().isEmpty()){
+                    passwordEdit.setGravity(Gravity.CENTER);
+                    passwordEdit.setCursorVisible(false);
+                }else {
+                    passwordEdit.setGravity(Gravity.START);
+                    passwordEdit.setCursorVisible(true);
+                }
+            }
+        });
     }
 
 
@@ -50,7 +97,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         switch (v.getId()){
             case R.id.flowBack:
                 startActivity(new Intent(this,StartActivity.class));
-                overridePendingTransition(R.anim.anim_in,R.anim.anim_out);
+                overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                 finish();
                 break;
             case R.id.login_Button:
@@ -98,7 +145,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onBackPressed() {
         startActivity(new Intent(this,StartActivity.class));
-        overridePendingTransition(R.anim.anim_in,R.anim.anim_out);
+        overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
         super.onBackPressed();
     }
 }

@@ -1,31 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
+    android:background="@drawable/gradient_bg"
     android:id="@+id/ripple_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <pers.lin.linanimations.animations.RippleView
-        android:id="@+id/login_rippleView"
-        app:ripple_asBackground="#fff"
-        app:style="out"
-        app:rateOfChange="normal"
-        app:color="#A7FFEB"
-        app:density="150dp"
-        app:isFill="true"
-        app:isGradient="true"
-        app:speed="5"
-        app:gradient="deep"
-        app:locate="leftTop"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <TextView
         android:textColor="@color/text_white_2"
         android:layout_marginStart="30dp"
         android:layout_marginTop="50dp"
         android:textStyle="bold"
-        android:textSize="40sp"
-        android:text="Meet"
+        android:textSize="49sp"
+        android:text="@string/app_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <TextView
@@ -34,8 +20,8 @@
         android:layout_marginStart="30dp"
         android:layout_marginTop="200dp"
         android:textStyle="bold"
-        android:textSize="32sp"
-        android:text="One today is worth"
+        android:textSize="28sp"
+        android:text="Go to different places"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <TextView
@@ -44,8 +30,8 @@
         android:layout_below="@id/login_text"
         android:layout_marginTop="4dp"
         android:textStyle="bold"
-        android:textSize="32sp"
-        android:text="two tomorrows"
+        android:textSize="28sp"
+        android:text="see different scenery"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <Button

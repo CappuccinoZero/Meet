@@ -11,7 +11,6 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -27,9 +26,9 @@ import com.bumptech.glide.request.RequestOptions;
 import com.lin.meet.IntroductionPage.IntroductionActivity;
 import com.lin.meet.R;
 import com.lin.meet.camera_demo.PhotoBean;
-import com.lin.meet.override.SmoothCheckBox;
 import com.lin.meet.main.DataBase;
 import com.lin.meet.main.DataBaseModel;
+import com.lin.meet.override.SmoothCheckBox;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -39,8 +38,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import static android.support.constraint.Constraints.TAG;
 
 public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements HistoryContract.Adapter{
     private Context context;
@@ -142,7 +139,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void doSelectAll() {
         count = cache_list.size();
         for(int i=0;i<cache_list.size();i++){
-            Log.d(TAG, "doSelectAll: 选择数量"+i);
             map.put(cache_list.get(i),true);
         }
         this.notifyDataSetChanged();

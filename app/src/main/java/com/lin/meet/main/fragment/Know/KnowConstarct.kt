@@ -6,6 +6,8 @@ interface KnowConstarct {
         fun insertKnow(bean:KnowAndUser)
         fun insertKnow(position:Int,bean:KnowAndUser)
         fun endRefresh()
+        fun endLoadMore()
+        fun isNetError(error:Boolean)
     }
 
     interface Presenter{

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -29,9 +30,9 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.hw.ycshareelement.transition.ChangeTextTransition;
 import com.lin.meet.R;
-import com.lin.meet.bean.ReplyBean;
-import com.lin.meet.bean.User;
-import com.lin.meet.bean.recommentBean;
+import com.lin.meet.db_bean.Reply;
+import com.lin.meet.db_bean.comment;
+import com.lin.meet.jsoup.AidongwuUtil;
 import com.lin.meet.jsoup.LoveNews;
 import com.lin.meet.jsoup.LoveNewsBean;
 import com.lin.meet.override.EmojiAdapter;
@@ -54,11 +55,18 @@ public class RecommendActivity extends AppCompatActivity implements View.OnClick
                         initContent(bean);
                     }
                     break;
+                case AidongwuUtil.JSOUP_AIDONGWU_CONTENT:
+                    Bundle data2 = msg.getData();
+                    if(data2!=null){
+                        LoveNewsBean bean = (LoveNewsBean) data2.getSerializable("bean");
+                        initContent(bean);
+                    }
+                    break;
             }
         }
     };
     private RecommendConstract.Presenter presenter;
-    private recommentBean.recomment_comment currentComment;
+    private comment currentComment;
     private boolean isUseEmoji = false;
     private ImageView useEmoji;
     private GridView emojiView;
@@ -99,9 +107,8 @@ public class RecommendActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void initTransitionAnimation(){
-        ViewCompat.setTransitionName(headImage,"recommend_img");
+        ViewCompat.setTransitionName(headImage,"recommend_item");
         ViewCompat.setTransitionName(title,"recommend_text");
-        ViewCompat.setTransitionName(roundView,"recommend_view");
 
         TransitionSet set = new TransitionSet();
         set.addTransition(new ChangeBounds());
@@ -110,7 +117,6 @@ public class RecommendActivity extends AppCompatActivity implements View.OnClick
         set.addTransition(new ChangeTextTransition());
         set.addTarget(headImage);
         set.addTarget(title);
-        set.addTarget(roundView);
 
         getWindow().setSharedElementEnterTransition(set);
         getWindow().setSharedElementEnterTransition(set);
@@ -148,17 +154,24 @@ public class RecommendActivity extends AppCompatActivity implements View.OnClick
             }
         });
         adapter = new RecommendAdapter(this);
-        LoveNews.updateNewsContent(handler,bean);
-        presenter.checkNet(bean.getContentUri());
         emojiAdapter = new EmojiAdapter(this);
         emojiView.setAdapter(emojiAdapter);
         Glide.with(this).asDrawable().load(bean.getImg()).into(headImage);
         title.setText(bean.getTitle());
         closeEmoji();
+        if(bean.getFlag()==0){
+            LoveNews.updateNewsContent(handler,bean);
+        }else{
+            AidongwuUtil.onGetAidongwuContent(handler,bean);
+        }
+        presenter.checkNet(bean);
     }
 
     private void initContent(LoveNewsBean bean){
-        adapter.initAdapter(bean);
+        if(bean.getFlag()==0)
+            adapter.initAdapter(bean);
+        else
+            adapter.initAidongwuAdapter(bean);
         manager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);
@@ -188,9 +201,6 @@ public class RecommendActivity extends AppCompatActivity implements View.OnClick
         replyNormal.setVisibility(View.GONE);
     }
 
-    private void userSonEdit(){
-
-    }
 
     @Override
     public void hideEdit(){
@@ -252,6 +262,7 @@ public class RecommendActivity extends AppCompatActivity implements View.OnClick
                 isLike = !isLike;
                 presenter.onLike(isLike);
                 adapter.setLike(isLike);
+                adapter.changeThumbCount(isLike);
                 like(isLike);
                 break;
         }
@@ -306,8 +317,10 @@ public class RecommendActivity extends AppCompatActivity implements View.OnClick
     }
 
     @Override
-    public void senMessageResult(int resultCode) {
+    public void senMessageResult(int resultCode,Reply msg) {
         if(resultCode == 1){
+            int position = adapter.insertComment(msg);
+            moveToPosition(position);
             toast("发送成功");
             hideEdit();
             tempReply = "";
@@ -328,8 +341,8 @@ public class RecommendActivity extends AppCompatActivity implements View.OnClick
     }
 
     @Override
-    public int insertComment(@NotNull ReplyBean bean) {
-        return adapter.insertComment(bean);
+    public int insertComment(@NotNull Reply bean) {
+        return adapter.insertComment(0,bean);
     }
 
     @Override
@@ -345,17 +358,9 @@ public class RecommendActivity extends AppCompatActivity implements View.OnClick
     }
 
     @Override
-    public void sonSendResult(int id,String msg,int ResultCode) {
-        switch (id){
-            case 1:
-                adapter.updateSonReply(msg, BmobUser.getCurrentUser(User.class).getNickName(),ResultCode,id);
-                break;
-            case 2:
-                adapter.updateSonReply(msg, BmobUser.getCurrentUser(User.class).getNickName(),ResultCode,id);
-                break;
-            default:
-                adapter.updateSonReply(msg, BmobUser.getCurrentUser(User.class).getNickName(),ResultCode,id);
-                break;
+    public void sonSendResult(int resultCode,int position) {
+        if(resultCode==1){
+            adapter.addComment(position);
         }
         hideEdit();
         replyEdit.setText("");
@@ -363,7 +368,7 @@ public class RecommendActivity extends AppCompatActivity implements View.OnClick
     }
 
     @Override
-    public void showSonEdit(recommentBean.recomment_comment comment, int position) {
+    public void showSonEdit(comment comment, int position) {
         useEdit = 2;
         currentComment = comment;
         if(lastPosition!=position&&lastPosition!=-1){
@@ -378,39 +383,59 @@ public class RecommendActivity extends AppCompatActivity implements View.OnClick
         like(true);
         this.isLike = isLike;
         presenter.onLike(isLike);
+        if(isLike){
+            ScaleAnim.startAnim(thumb,R.mipmap.like2);
+        }else {
+            ScaleAnim.startAnim(thumb,R.mipmap.like);
+        }
     }
 
     @Override
-    public void onSonLike(int position, int floor, Boolean isLike) {
-        presenter.onLikeSon(floor,position,isLike);
+    public void onSonLike(String parentId,String parentUid,boolean like) {
+        presenter.onLikeSon(parentId,parentUid,like);
+    }
+
+    @Override
+    public void startComment(Intent intent) {
+        startActivityForResult(intent,2000);
+        overridePendingTransition(R.anim.bottom_in,R.anim.bottom_out);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==2000&&resultCode==2001){
+            adapter.updateLikeStatus(data.getBooleanExtra("Like",false));
+            adapter.updateCommentStatus(data.getIntExtra("Count",-1));
+        }
     }
 
     @Override
     public void like(boolean isLike) {
         if(isLike){
-            ScaleAnim.startAnim(thumb,R.drawable.thumb_red);
+            ScaleAnim.startAnim(thumb,R.mipmap.like2);
         }else {
-            ScaleAnim.startAnim(thumb,R.drawable.thumb);
+            ScaleAnim.startAnim(thumb,R.mipmap.like);
         }
     }
 
     @Override
     public void star(boolean isStar) {
         if(isStar){
-            ScaleAnim.startAnim(star,R.drawable.star_1);
+            ScaleAnim.startAnim(star,R.mipmap.love2);
         }else {
-            ScaleAnim.startAnim(star,R.drawable.star_0);
+            ScaleAnim.startAnim(star,R.mipmap.love);
         }
     }
 
     @Override
     public void likeError() {
-        thumb.setImageResource(R.drawable.thumb);
+        thumb.setImageResource(R.mipmap.like);
     }
 
     @Override
     public void starError() {
-        star.setImageResource(R.drawable.star_0);
+        star.setImageResource(R.mipmap.love);
     }
 
     @Override
@@ -422,7 +447,7 @@ public class RecommendActivity extends AppCompatActivity implements View.OnClick
     public void setlike(boolean isLike) {
         this.isLike = isLike;
         adapter.setLike(isLike);
-        thumb.setImageResource(isLike?R.drawable.thumb_red:R.drawable.thumb);
+        thumb.setImageResource(isLike?R.mipmap.like2:R.mipmap.like);
     }
 
     @Override
@@ -441,11 +466,11 @@ public class RecommendActivity extends AppCompatActivity implements View.OnClick
     public void setStar(boolean isStar) {
         if(isStar){
             isStar = true;
-            star.setImageResource(R.drawable.star_1);
+            star.setImageResource(R.mipmap.love2);
         }
         else {
             isStar = false;
-            star.setImageResource(R.drawable.star_0);
+            star.setImageResource(R.mipmap.love);
         }
     }
 

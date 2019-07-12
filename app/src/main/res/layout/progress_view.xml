@@ -12,12 +12,12 @@
         android:layout_width="64dp"
         android:layout_height="64dp"
         style="@style/SpinKitView.FadingCircle"
-        app:SpinKit_Color="#A7FFEB"
+        app:SpinKit_Color="#4D5997"
         />
     <TextView
         android:id="@+id/text_upload"
         android:layout_marginTop="30dp"
-        android:textColor="#1DE9B6"
+        android:textColor="#82B1FF"
         android:textSize="@dimen/text_2"
         android:layout_gravity="center"
         android:text="正在上传中,请稍等..."

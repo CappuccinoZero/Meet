@@ -23,7 +23,7 @@
                 android:layout_marginStart="24dp"
                 android:padding="3dp"
                 android:layout_centerVertical="true"
-                android:src="@drawable/close_back"
+                android:src="@mipmap/close_black"
                 android:layout_width="32dp"
                 android:layout_height="32dp" />
             <TextView

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:foreground="@drawable/ripple_reply_item"
+    android:clickable="true"
+    android:focusable="true"
+    android:id="@+id/replyItem"
+    android:layout_width="match_parent"
+    android:layout_height="100dp">
+    <RelativeLayout
+        android:layout_toStartOf="@id/content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="2dp"
+            android:id="@+id/header"
+            android:layout_gravity="center"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@drawable/header"
+            />
+        <TextView
+            android:layout_marginTop="14dp"
+            android:layout_marginStart="4dp"
+            android:id="@+id/nickName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/header"
+            android:text="作者"
+            android:textColor="#3D5AFE"
+            android:textSize="@dimen/text_1" />
+        <TextView
+            android:layout_marginTop="6dp"
+            android:layout_marginStart="4dp"
+            android:text="攒了我的回复"
+            android:id="@+id/likeText"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_toRightOf="@id/header"
+            android:layout_below="@id/nickName"
+            android:textSize="@dimen/text_1"
+            android:textColor="@color/text_back_2"
+            android:minLines="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="4dp"
+            android:textSize="@dimen/text_0"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_toRightOf="@id/header"
+            android:layout_below="@id/likeText"
+            android:text="时间"
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <TextView
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:id="@+id/content"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="4dp"
+        android:minLines="1"
+        android:textColor="#99000000"
+        android:textSize="@dimen/text_0" />
+    <View
+        android:layout_marginStart="8dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/line_back"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+</RelativeLayout>

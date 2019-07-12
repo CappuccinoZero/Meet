@@ -1,5 +1,7 @@
 package com.lin.meet.bean;
 
+import com.lin.meet.db_bean.topic_main;
+
 import java.io.Serializable;
 
 public class TopicMain implements Serializable {

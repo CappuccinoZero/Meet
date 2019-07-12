@@ -1,0 +1,72 @@
+{
+  materials: [
+    {
+      name: 'Dolphin',
+      parameters: [
+        {
+          baseColor: [
+            1,
+            1,
+            1,
+            1,
+          ],
+        },
+        {
+          baseColorMap: 'Dolphin',
+        },
+        {
+          normalMap: null,
+        },
+        {
+          interpolatedColor: null,
+        },
+        {
+          metallic: 0,
+        },
+        {
+          metallicMap: null,
+        },
+        {
+          roughness: 1,
+        },
+        {
+          roughnessMap: null,
+        },
+        {
+          opacity: null,
+        },
+      ],
+      source: 'build/sceneform_sdk/default_materials/fbx_material.sfm',
+    },
+  ],
+  model: {
+    attributes: [
+      'Position',
+      'TexCoord',
+      'Orientation',
+      'BoneIndices',
+      'BoneWeights',
+    ],
+    collision: {},
+    file: 'sampledata/models/ddd.FBX',
+    name: 'ddd',
+    recenter: 'root',
+    scale: 0.3,
+  },
+  samplers: [
+    {
+      file: 'sampledata/models/Textures/Dolphin.jpg',
+      name: 'Dolphin',
+      pipeline_name: 'Textures\\Dolphin.jpg',
+    },
+    {
+      file: 'sampledata/models/Textures/Dolphin_bump.jpg',
+      name: 'Dolphin_bump',
+      params: {
+        usage_type: 'Data',
+      },
+      pipeline_name: 'Textures\\Dolphin_bump.jpg',
+    },
+  ],
+  version: '0.54:2',
+}

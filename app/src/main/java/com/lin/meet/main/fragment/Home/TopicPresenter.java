@@ -1,9 +1,10 @@
 package com.lin.meet.main.fragment.Home;
 
 import com.lin.meet.bean.User;
-import com.lin.meet.bean.topic_islike;
-import com.lin.meet.bean.topic_main;
+import com.lin.meet.db_bean.comment_like;
+import com.lin.meet.db_bean.topic_main;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
@@ -45,30 +46,43 @@ public class TopicPresenter implements HomeConstract.TopicPresenter{
                 if(e == null&&list.size()>0){
                     TopicAdapter.TopicBean bean = new TopicAdapter.TopicBean(list.get(0));
                     onLoadUser(bean,1);
+                }else{
+                    view.endRefresh();
                 }
             }
         });
     }
 
-    @Override
-    public void onClickLike(int position,String id) {
-        if(!BmobUser.isLogin()){
-            return;
-        }
-        BmobQuery<topic_islike> query = new BmobQuery<>();
-        query.addWhereEqualTo("id",id);
-        query.addWhereEqualTo("uid", BmobUser.getCurrentUser(User.class).getUid());
-        query.findObjects(new FindListener<topic_islike>() {
-            @Override
-            public void done(List<topic_islike> list, BmobException e) {
-                if(e==null&&list.size()==0){
-                    insertLike(id,position);
-                }
-                else if(e==null){
-                    deleteLike(list.get(0),position);
-                }
-                else {
 
+    @Override
+    public void onClickLike(boolean like,String id,String uid,int position){
+        if(!BmobUser.isLogin())
+            return;
+        List queryList =new ArrayList<BmobQuery<comment_like>>();
+        BmobQuery query1 = new BmobQuery<comment_like>();
+        query1.addWhereEqualTo("uid",BmobUser.getCurrentUser(User.class).getUid());
+        queryList.add(query1);
+        BmobQuery query2 =new BmobQuery<comment_like>();
+        query2.addWhereEqualTo("parentId",id);
+        queryList.add(query2);
+        BmobQuery query4 = new BmobQuery<comment_like>();
+        query4.addWhereEqualTo("mainId",id);
+        queryList.add(query4);
+        BmobQuery query5 = new BmobQuery<comment_like>();
+        query5.addWhereEqualTo("isMain",true);
+        queryList.add(query5);
+        BmobQuery query6 = new BmobQuery<comment_like>();
+        query6.addWhereEqualTo("flag",1);
+        queryList.add(query6);
+        BmobQuery query = new BmobQuery<comment_like>();
+        query.and(queryList);
+        query.findObjects(new FindListener<comment_like>() {
+            @Override
+            public void done(List<comment_like> list, BmobException e) {
+                if(list != null&&list.size()>0&&e==null&&!like){
+                    deleteLike(list.get(0),position);
+                }else if(list != null&&list.size()==0&&e==null&&like){
+                    insertLike(id,uid,position);
                 }
             }
         });
@@ -78,6 +92,7 @@ public class TopicPresenter implements HomeConstract.TopicPresenter{
     public void onInsertToTop() {
         if(loading)return;
         loading = true;
+        view.isNetError(false);
         BmobQuery<topic_main> query = new BmobQuery<>();
         query.order("-updatedAt");
         query.setLimit(page);
@@ -92,6 +107,7 @@ public class TopicPresenter implements HomeConstract.TopicPresenter{
                         onLoadUserTop(bean,i);
                     }
                 }
+                view.endLoadMore();
                 view.endRefresh();
                 loading = false;
             }
@@ -101,6 +117,7 @@ public class TopicPresenter implements HomeConstract.TopicPresenter{
     private void onLoadTopics(int flag){
         if(loading)return;
         loading = true;
+        view.isNetError(false);
         BmobQuery<topic_main> query = new BmobQuery<>();
         query.order("-updatedAt");
         query.setLimit(page);
@@ -109,14 +126,17 @@ public class TopicPresenter implements HomeConstract.TopicPresenter{
             @Override
             public void done(List<topic_main> list, BmobException e) {
                 if(e == null&&list.size()>0){
+                    view.isNetError(false);
                     allPage += list.size();
                     for(int i=0;i<list.size();i++){
                         TopicAdapter.TopicBean bean = new TopicAdapter.TopicBean(list.get(i));
                         onLoadUser(bean,flag);
                     }
-                    if(flag == 2)
-                        view.endRefresh();
                 }
+                if(e!=null&&flag==2)
+                    view.isNetError(true);
+                view.endLoadMore();
+                view.endRefresh();
                 loading = false;
             }
         });
@@ -154,7 +174,6 @@ public class TopicPresenter implements HomeConstract.TopicPresenter{
                     bean.header = list.get(0).getHeaderUri();
                     view.insertTopic(position,bean);
                     onGetUserLike(position,bean.bean.getId());
-
                 }
             }
         });
@@ -162,13 +181,28 @@ public class TopicPresenter implements HomeConstract.TopicPresenter{
 
     private void onGetUserLike(int position,String id){
         if(!BmobUser.isLogin())
-            return;
-        BmobQuery<topic_islike> query = new BmobQuery<>();
-        query.addWhereEqualTo("id",id);
-        query.addWhereEqualTo("uid", BmobUser.getCurrentUser(User.class).getUid());
-        query.findObjects(new FindListener<topic_islike>() {
+        return;
+        List queryList =new ArrayList<BmobQuery<comment_like>>();
+        BmobQuery query1 = new BmobQuery<comment_like>();
+        query1.addWhereEqualTo("uid",BmobUser.getCurrentUser(User.class).getUid());
+        queryList.add(query1);
+        BmobQuery query2 =new BmobQuery<comment_like>();
+        query2.addWhereEqualTo("parentId",id);
+        queryList.add(query2);
+        BmobQuery query4 = new BmobQuery<comment_like>();
+        query4.addWhereEqualTo("mainId",id);
+        queryList.add(query4);
+        BmobQuery query5 = new BmobQuery<comment_like>();
+        query5.addWhereEqualTo("isMain",true);
+        queryList.add(query5);
+        BmobQuery query6 = new BmobQuery<comment_like>();
+        query6.addWhereEqualTo("flag",1);
+        queryList.add(query6);
+        BmobQuery query = new BmobQuery<comment_like>();
+        query.and(queryList);
+        query.findObjects(new FindListener<comment_like>() {
             @Override
-            public void done(List<topic_islike> list, BmobException e) {
+            public void done(List<comment_like> list, BmobException e) {
                 if(list.size()>0&&e==null){
                     view.setLike(position,true);
                 }
@@ -178,7 +212,7 @@ public class TopicPresenter implements HomeConstract.TopicPresenter{
 
 
 
-    private void deleteLike(topic_islike like,int position){
+    private void deleteLike(comment_like like,int position){
         like.delete(new UpdateListener() {
             @Override
             public void done(BmobException e) {
@@ -189,11 +223,8 @@ public class TopicPresenter implements HomeConstract.TopicPresenter{
         });
     }
 
-    private void insertLike(String id,int position){
-        topic_islike like = new topic_islike();
-        like.setId(id);
-        like.setIslike(true);
-        like.setUid(BmobUser.getCurrentUser(User.class).getUid());
+    private void insertLike(String id,String uid,int position){
+        comment_like like = comment_like.createMainLike(uid,id,1);
         like.save(new SaveListener<String>() {
             @Override
             public void done(String s, BmobException e) {

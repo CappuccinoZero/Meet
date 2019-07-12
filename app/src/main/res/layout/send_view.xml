@@ -24,13 +24,14 @@
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/topicSender"
                 android:src="@mipmap/send_topic"
-                app:backgroundTint="#FF3D00"
+                app:backgroundTint="#413B85"
                 app:elevation="@dimen/sender_item"
                 android:layout_gravity="center"
                 app:fabSize="mini"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
+                android:elevation="4dp"
                 android:id="@+id/topicText"
                 android:layout_marginTop="6dp"
                 android:textColor="@color/text_back_2"
@@ -49,13 +50,14 @@
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/knowSender"
                 android:src="@mipmap/send_know"
-                app:backgroundTint="#00C853"
+                app:backgroundTint="#413B85"
                 app:elevation="@dimen/sender_item"
                 android:layout_gravity="center"
                 app:fabSize="mini"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
+                android:elevation="4dp"
                 android:id="@+id/knowText"
                 android:layout_marginTop="6dp"
                 android:textColor="@color/text_back_2"
@@ -74,13 +76,14 @@
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/videoSender"
                 android:src="@mipmap/send_video"
-                app:backgroundTint="#F50057"
+                app:backgroundTint="#413B85"
                 app:elevation="@dimen/sender_item"
                 android:layout_gravity="center"
                 app:fabSize="mini"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
+                android:elevation="4dp"
                 android:id="@+id/videoText"
                 android:layout_marginTop="6dp"
                 android:textColor="@color/text_back_2"
@@ -99,13 +102,14 @@
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/pictureSender"
                 android:src="@mipmap/send_picture"
-                app:backgroundTint="#AA00FF"
+                app:backgroundTint="#413B85"
                 app:elevation="@dimen/sender_item"
                 android:layout_gravity="center"
                 app:fabSize="mini"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
+                android:elevation="4dp"
                 android:id="@+id/pictureText"
                 android:layout_marginTop="6dp"
                 android:textColor="@color/text_back_2"

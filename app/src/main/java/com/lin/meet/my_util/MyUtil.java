@@ -14,6 +14,8 @@ import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.WindowManager;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.security.MessageDigest;
@@ -22,6 +24,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MyUtil {
+
+    public static long getFileSize(File file) throws Exception {
+        long size = 0;
+        if (file.exists()) {
+            FileInputStream fis = null;
+            fis = new FileInputStream(file);
+            size = fis.available();
+            fis.close();
+        } else {
+            file.createNewFile();
+        }
+        return size;
+    }
     /**
      * 把图片转换为tflite所需的数据格式
      * @param bitmap
@@ -150,6 +165,15 @@ public class MyUtil {
         editor.apply();
     }
 
+    public static void saveSharedBooleanPreferences(Context context, String key, HashMap<String,Boolean> map){
+        SharedPreferences.Editor editor = context.getSharedPreferences(key,Context.MODE_PRIVATE).edit();
+        for (Map.Entry<String,Boolean> entry:map.entrySet()){
+            editor.putBoolean(entry.getKey(),entry.getValue());
+        }
+        editor.apply();
+    }
+
+
     public static SharedPreferences getShardPreferences(Context context,String key){
         SharedPreferences pre = context.getSharedPreferences(key,Context.MODE_PRIVATE);
         if(pre==null){
@@ -187,5 +211,9 @@ public class MyUtil {
         if(uri1.length()!=uri2.length())
             return false;
         return uri1.toLowerCase().equals(uri2.toLowerCase());
+    }
+
+    public static boolean isEmail(String email){
+        return email.matches("\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*");
     }
 }

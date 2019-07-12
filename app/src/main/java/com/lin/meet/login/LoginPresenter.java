@@ -1,5 +1,6 @@
 package com.lin.meet.login;
 
+import com.lin.meet.bean.DefaultUtil;
 import com.lin.meet.bean.User;
 import com.lin.meet.my_util.MyUtil;
 
@@ -43,6 +44,7 @@ public class LoginPresenter implements LoginConstract.RegisterPresenter,LoginCon
         User userBean = new User();
         userBean.setUsername(user);
         userBean.setNickName(nickName);
+        userBean.setUid(DefaultUtil.createUid(user));
         userBean.setPassword(MyUtil.getMD5String(password));
         userBean.signUp(new SaveListener<User>() {
             @Override

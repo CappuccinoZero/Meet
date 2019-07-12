@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import cn.bmob.v3.BmobUser
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -17,13 +18,16 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.lin.meet.R
+import com.lin.meet.bean.User
 import com.lin.meet.my_util.MyUtil
 import com.lin.meet.override.SmoothCheckBox
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
+import com.youngfeng.snake.annotations.EnableDragToClose
 import kotlinx.android.synthetic.main.activity_send_video.*
 
+@EnableDragToClose
 class SendVideo : AppCompatActivity(),VideoContract.SendView,View.OnClickListener{
     override fun saveVideoResult(resultCode: Int, id: String?) {
         if(resultCode == 1){
@@ -31,6 +35,7 @@ class SendVideo : AppCompatActivity(),VideoContract.SendView,View.OnClickListene
             data.putExtra("VIDEO",id)
             val intent = Intent(this,VideoActivity::class.java)
             intent.putExtra("VIDEO",id)
+            intent.putExtra("UID", BmobUser.getCurrentUser(User::class.java).uid)
             startActivity(intent)
             setResult(12,data)
             finish()
@@ -79,6 +84,8 @@ class SendVideo : AppCompatActivity(),VideoContract.SendView,View.OnClickListene
                     presenter!!.onSendVideoFromUri(uri,video_title.text.toString())
                 else if(send)
                     presenter!!.onSendVideoFromPath(path,video_title.text.toString())
+                showUriEdit(false)
+                check_uri.visibility = View.GONE
                 return false
             }
         }).apply(RequestOptions().skipMemoryCache(true))
@@ -111,10 +118,10 @@ class SendVideo : AppCompatActivity(),VideoContract.SendView,View.OnClickListene
 
     override fun setVideoState(life: Boolean?) {
         start_video.visibility = if(life!!) View.VISIBLE else View.GONE
+        add_video.visibility = if(life) View.GONE else View.VISIBLE
         close.visibility = if(life) View.VISIBLE else View.GONE
-        add_video.visibility = if(life)View.GONE else View.VISIBLE
         if(!life){
-            video_image.setImageResource(R.color.video_default)
+            video_image.setImageResource(R.color.white)
             path = "@null"
         }
     }
@@ -160,6 +167,8 @@ class SendVideo : AppCompatActivity(),VideoContract.SendView,View.OnClickListene
             }
             R.id.uri_close->{
                 uri_edit.setText("")
+                showUriEdit(true)
+                check_uri.visibility = View.VISIBLE
                 setUriState(false)
                 getUriFocus()
             }
@@ -170,9 +179,6 @@ class SendVideo : AppCompatActivity(),VideoContract.SendView,View.OnClickListene
             }
             R.id.uri_play->{
                 playVideo()
-            }
-            R.id.uri_add->{
-                getUriFocus()
             }
             R.id.check_uri->{
                 checkUri(false)
@@ -212,7 +218,6 @@ class SendVideo : AppCompatActivity(),VideoContract.SendView,View.OnClickListene
         uri_close.setOnClickListener(this)
         uri_image.setOnClickListener(this)
         uri_play.setOnClickListener(this)
-        uri_add.setOnClickListener(this)
         check_uri.setOnClickListener(this)
 
     }
@@ -221,7 +226,6 @@ class SendVideo : AppCompatActivity(),VideoContract.SendView,View.OnClickListene
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_send_video)
         initView()
-        uri_edit.setText("http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4")
     }
 
 
@@ -244,14 +248,15 @@ class SendVideo : AppCompatActivity(),VideoContract.SendView,View.OnClickListene
                 .openGallery(PictureMimeType.ofVideo())
                 .previewVideo(true)
                 .selectionMode(PictureConfig.SINGLE)
+                .isCamera(false)
                 .forResult(PictureConfig.CHOOSE_REQUEST)
     }
 
     private fun playVideo(){
         if(box.isChecked)
-            PictureSelector.create(this).externalPictureVideo("http://bmob-cdn-24942.b0.upaiyun.com/2019/04/25/aa0bdce7de8d4c43ab1aaef9330cae7a.mp4")
+            PictureSelector.create(this).externalPictureVideo(uri)
         else
-            PictureSelector.create(this).externalPictureVideo("http://bmob-cdn-24942.b0.upaiyun.com/2019/04/25/aa0bdce7de8d4c43ab1aaef9330cae7a.mp4")
+            PictureSelector.create(this).externalPictureVideo(path)
     }
 
     private fun getUriFocus(){
@@ -260,11 +265,10 @@ class SendVideo : AppCompatActivity(),VideoContract.SendView,View.OnClickListene
     }
 
     private fun setUriState(life: Boolean){
-        uri_play.visibility = if(life!!) View.VISIBLE else View.GONE
+        uri_play.visibility = if(life) View.VISIBLE else View.GONE
         uri_close.visibility = if(life) View.VISIBLE else View.GONE
-        uri_add.visibility = if(life)View.GONE else View.VISIBLE
         if(!life){
-            uri_image.setImageResource(R.color.video_default)
+            uri_image.setImageResource(R.color.text_white_2)
             uri = "@null"
         }else
             uri = uri_edit.text.toString()

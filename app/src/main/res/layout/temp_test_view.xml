@@ -7,7 +7,7 @@
         app:civ_border_width="1dp"
         app:civ_border_color="#1DE9B6"
         android:id="@+id/flag_image"
-        android:src="@drawable/temp"
+        android:src="@drawable/header"
         android:layout_width="32dp"
         android:layout_height="32dp" />
 </LinearLayout>

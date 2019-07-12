@@ -1,0 +1,75 @@
+{
+  animations: [
+    {
+      clips: [
+        {
+          name: 'Take 001',
+          runtime_name: 'rooster',
+        },
+      ],
+      path: 'sampledata/models/rooster.fbx',
+    },
+  ],
+  materials: [
+    {
+      name: 'lambert11',
+      parameters: [
+        {
+          baseColor: [
+            1,
+            1,
+            1,
+            1,
+          ],
+        },
+        {
+          baseColorMap: 'rooster_color',
+        },
+        {
+          normalMap: null,
+        },
+        {
+          interpolatedColor: null,
+        },
+        {
+          metallic: 0,
+        },
+        {
+          metallicMap: null,
+        },
+        {
+          roughness: 1,
+        },
+        {
+          roughnessMap: null,
+        },
+        {
+          opacity: null,
+        },
+      ],
+      source: 'build/sceneform_sdk/default_materials/fbx_material.sfm',
+    },
+  ],
+  model: {
+    attributes: [
+      'Position',
+      'TexCoord',
+      'Orientation',
+      'BoneIndices',
+      'BoneWeights',
+    ],
+    collision: {},
+    file: 'sampledata/models/rooster.fbx',
+    name: 'rooster',
+    recenter: 'root',
+    scale: 0.25,
+  },
+  samplers: [
+    {
+      file: 'sampledata/models/rooster_color.png',
+      name: 'rooster_color',
+      pipeline_name: 'Textures\\rooster color.png',
+    },
+  ],
+  version: '0.54:2',
+}

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".Know.KnowActivity">
+    tools:context=".know.KnowActivity">
     <android.support.design.widget.AppBarLayout
         android:fitsSystemWindows="true"
         android:id="@+id/know_appbar"
@@ -43,9 +43,9 @@
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/open_edit"
         app:layout_anchorGravity="bottom|end"
-        android:backgroundTint="#1DE9B6"
+        android:backgroundTint="#8C9EFF"
         app:layout_anchor="@id/know_appbar"
-        android:src="@drawable/know_comment"
+        android:src="@mipmap/comment3"
         android:layout_margin="16dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
@@ -84,7 +84,7 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginStart="10dp"
                 android:id="@+id/comment_send"
-                android:textColor="#00BFA5"
+                android:textColor="#5199BB"
                 android:text="发送"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />

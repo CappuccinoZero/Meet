@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    tools:context=".drawer_message.view.MyMessageActivity">
+    <android.support.v7.widget.Toolbar
+        android:theme="@style/ThemeOverlay.AppCompat.Dark"
+        android:id="@+id/toolbar"
+        android:background="@color/msg_appbar"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"/>
+    <LinearLayout
+        android:paddingBottom="4dp"
+        android:background="@color/msg_appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.gigamole.navigationtabstrip.NavigationTabStrip
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
+            android:id="@+id/tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            app:nts_size="@dimen/text_0"
+            app:nts_weight="2dp"
+            app:nts_factor="2"
+            app:nts_type="line"
+            app:nts_gravity="bottom"
+            app:nts_typeface="fonts/typeface.otf"
+            app:nts_corners_radius="6dp"
+            app:nts_animation_duration="300"
+            app:nts_color="@color/msg_tab_text_1"
+            app:nts_active_color="@color/msg_tab_text_1"
+            app:nts_inactive_color="@color/msg_tab_text_0" />
+    </LinearLayout>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</LinearLayout>

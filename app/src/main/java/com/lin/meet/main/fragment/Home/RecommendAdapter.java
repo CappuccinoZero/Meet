@@ -29,12 +29,13 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RecommendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private List<LoveNewsBean> list;
+    private List<LoveNewsBean> list = new ArrayList<>();
     private Context context;
     private Activity activity;
+    private boolean isLoading = false;
+    private boolean isError = false;
 
     RecommendAdapter(Activity activity){
-        list = new ArrayList<>();
         this.activity = activity;
     }
     @NonNull
@@ -42,24 +43,36 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         if(context==null)
             context=viewGroup.getContext();
-        View view = null;
-        if(i!=0){
-            view = LayoutInflater.from(context).inflate(R.layout.recommend_item,viewGroup,false);
+        if(i==1){
+            View view = LayoutInflater.from(context).inflate(R.layout.recommend_item,viewGroup,false);
             return new RecommendViewHolder(view,false);
         }
-        view = LayoutInflater.from(context).inflate(R.layout.top_view,viewGroup,false);
-        return new RecommendViewHolder(view,true);
+        else{
+            View view = LayoutInflater.from(context).inflate(R.layout.loading_item_2,viewGroup,false);
+            return new RecommendViewHolder(view,true);
+        }
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-        if(viewHolder instanceof RecommendViewHolder&&!((RecommendViewHolder) viewHolder).isTopView){
-            LoveNewsBean bean = list.get(i-1);
-            ((RecommendViewHolder) viewHolder).type.setText(bean.getType());
+        if(!((RecommendViewHolder) viewHolder).isBottom){
+            LoveNewsBean bean = list.get(i);
             ((RecommendViewHolder) viewHolder).title.setText(bean.getTitle());
             ((RecommendViewHolder) viewHolder).author.setText(bean.getAuthor());
             ((RecommendViewHolder) viewHolder).setImageUrl(context,bean.getImg());
             setOnclickListener((RecommendViewHolder) viewHolder,bean);
+        }else {
+            if(isError){
+                ((RecommendViewHolder) viewHolder).errorView.setVisibility(View.VISIBLE);
+                ((RecommendViewHolder) viewHolder).loadingView1.setVisibility(View.GONE);
+            }
+            else if(isLoading){
+                ((RecommendViewHolder) viewHolder).errorView.setVisibility(View.GONE);
+                ((RecommendViewHolder) viewHolder).loadingView1.setVisibility(View.VISIBLE);
+            }else{
+                ((RecommendViewHolder) viewHolder).errorView.setVisibility(View.GONE);
+                ((RecommendViewHolder) viewHolder).loadingView1.setVisibility(View.INVISIBLE);
+            }
         }
     }
 
@@ -69,13 +82,11 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             public void onClick(View v) {
                 if(hideCallback!=null)hideCallback.setVisiable(false);
                 activity.getWindow().setExitTransition(new Explode());
-                viewHolder.roundView.setVisibility(View.VISIBLE);
                 Intent intent = new Intent(context, RecommendActivity.class);
                 intent.putExtra("LoveNewsBean",bean);
-                Pair<View,String> pair1 = new Pair<>((View)viewHolder.imgLayout, ViewCompat.getTransitionName(viewHolder.imgLayout));
+                Pair<View,String> pair1 = new Pair<>((View)viewHolder.cardView, ViewCompat.getTransitionName(viewHolder.cardView));
                 Pair<View,String> pair2 = new Pair<>((View)viewHolder.title, ViewCompat.getTransitionName(viewHolder.title));
-                Pair<View,String> pair3 = new Pair<>((View)viewHolder.roundView, ViewCompat.getTransitionName(viewHolder.roundView));
-                ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation(activity,pair1,pair2,pair3);
+                ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation(activity,pair1,pair2);
                 ActivityCompat.startActivity(activity,intent,compat.toBundle());
             }
         });
@@ -86,28 +97,35 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         return list.size()+1;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        if(position == list.size())
+            return 0;
+        return 1;
+    }
+
     static class RecommendViewHolder extends RecyclerView.ViewHolder{
-        public boolean isTopView;
+        public boolean isBottom;
         CardView cardView;
-        CardView imgLayout;
-        TextView type;
         TextView title;
         TextView author;
         ImageView img;
         CircleImageView header;
-        View roundView;
-        RecommendViewHolder(@NonNull View itemView, boolean isTopView) {
+
+        View loadingView1;
+        View errorView;
+        RecommendViewHolder(@NonNull View itemView, boolean isBottom) {
             super(itemView);
-            this.isTopView = isTopView;
-            if (!isTopView){
-                imgLayout = itemView.findViewById(R.id.img_layout);
+            this.isBottom = isBottom;
+            if (!isBottom){
                 cardView = itemView.findViewById(R.id.recommend_card);
-                type = itemView.findViewById(R.id.recommend_item_type);
                 title = itemView.findViewById(R.id.recommend_item_title);
                 author = itemView.findViewById(R.id.recommend_item_author);
                 img = itemView.findViewById(R.id.recommend_item_img);
                 header = itemView.findViewById(R.id.recommend_item_header);
-                roundView = itemView.findViewById(R.id.roundView);
+            }else{
+                loadingView1 = itemView.findViewById(R.id.loading_1);
+                errorView =itemView.findViewById(R.id.errorView);
             }
         }
 
@@ -121,31 +139,57 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
-    public void addRecomds(LoveNewsBean bean){
+    public void addRecomd(LoveNewsBean bean){
         list.add(bean);
         notifyDataSetChanged();
     }
 
-    public synchronized void addRecomds(int position,LoveNewsBean bean){
+    public void addRecomds(List<LoveNewsBean> beans){
+        for(int i=0;i<beans.size();i++){
+            list.add(beans.get(i));
+            notifyDataSetChanged();
+        }
+    }
+
+    public void addTopRecomds(List<LoveNewsBean> beans){
+        for(int i=0;i<beans.size();i++){
+            list.add(i,beans.get(i));
+            notifyDataSetChanged();
+        }
+    }
+
+    public synchronized void addRecomd(int position,LoveNewsBean bean){
         list.add(position,bean);
         notifyDataSetChanged();
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        if (position==0)
-            return 0;
-        return 1;
-    }
-
     public void refresh(){
         list.clear();
+        isLoading = false;
         notifyDataSetChanged();
     }
 
     RecommendConstract.searchCallback hideCallback;
     public void setHideCallback(RecommendConstract.searchCallback hideCallback){
         this.hideCallback = hideCallback;
+    }
+
+    void setLoadingStatus(boolean isLoading){
+        this.isLoading = isLoading;
+        notifyDataSetChanged();
+    }
+
+    boolean isLoading(){
+        return isLoading;
+    }
+
+    void setError(boolean error){
+        this.isError = error;
+        notifyDataSetChanged();
+    }
+
+    boolean isError(){
+        return isError;
     }
 
 }

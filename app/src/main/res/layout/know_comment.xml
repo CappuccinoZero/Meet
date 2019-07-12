@@ -26,7 +26,7 @@
                 android:layout_gravity="center"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/temp"
+                android:src="@drawable/header"
                 />
             <TextView
                 android:id="@+id/comment_nickName"
@@ -37,7 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_0"
-                android:textColor="#00BFA5"
+                android:textColor="#3F84A5"
                 android:text="用户"/>
             <TextView
                 android:id="@+id/comment_time"
@@ -75,7 +75,7 @@
                 android:layout_gravity="center"
                 android:id="@+id/agree_img"
                 android:padding="2dp"
-                android:src="@drawable/disagree"
+                android:src="@mipmap/agree"
                 android:layout_width="14dp"
                 android:layout_height="14dp" />
             <TextView

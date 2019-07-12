@@ -31,7 +31,7 @@
         android:layout_alignParentLeft="true"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:src="@mipmap/back_w"/>
+        android:src="@mipmap/onback_white"/>
     <ImageView
         android:layout_marginEnd="20dp"
         android:layout_marginTop="25dp"
@@ -68,12 +68,12 @@
         android:layout_height="30dp"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
-        app:circle_color="#00BFA5"
-        app:color1="#00BFA5"
-        app:color2="#00BFA5"
-        app:color3="#00BFA5"
+        app:circle_color="#8C9EFF"
+        app:color1="#8C9EFF"
+        app:color2="#8C9EFF"
+        app:color3="#8C9EFF"
         app:color4="#6200EA"
-        app:click_color="#00BFA5"
+        app:click_color="#8C9EFF"
         app:duration="500"
         app:radius="6dp"
         app:scale="1">

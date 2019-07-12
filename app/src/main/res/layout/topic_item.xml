@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_marginTop="4dp"
-    app:cardElevation="1dp"
-    app:cardCornerRadius="15dp"
+    app:cardElevation="4dp"
+    app:cardCornerRadius="12dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="4dp"
+    android:layout_marginBottom="4dp"
     android:layout_width="match_parent"
     android:id="@+id/topic_cardView"
     android:orientation="vertical"
@@ -14,22 +17,22 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
-        android:background="#fff"
+        android:background="#FDFDFD"
         android:layout_height="wrap_content">
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
+
             <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp"
                 android:id="@+id/topic_header"
-                android:layout_gravity="center"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:src="@drawable/temp"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="6dp"
+                android:src="@drawable/header"
                 app:civ_border_color="#C8C8C8"
-                app:civ_border_width="1dp"
-                />
+                app:civ_border_width="1dp" />
             <LinearLayout
                 android:layout_toRightOf="@+id/topic_header"
                 android:layout_margin="5dp"
@@ -42,9 +45,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/text_0"
-                    android:textColor="#00BFA5"
+                    android:textColor="#99BAC8"
                     android:text="作者"/>
                 <TextView
+                    android:layout_marginTop="2dp"
                     android:id="@+id/time"
                     android:layout_gravity="left"
                     android:layout_width="wrap_content"
@@ -53,55 +57,34 @@
                     android:textColor="@color/text_back_1"
                     android:text="时间"/>
             </LinearLayout>
-            <TextView
-                android:id="@+id/type"
-                android:textColor="@color/text_white_2"
-                android:gravity="center"
-                android:textSize="@dimen/text_0"
-                android:text="类型"
-                android:background="@drawable/sector"
-                android:layout_alignParentRight="true"
-                android:layout_width="56dp"
-                android:layout_height="24dp" />
         </RelativeLayout>
         <View
-            android:layout_marginTop="5dp"
-            android:background="@color/line_back"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="1dp"
+            android:background="#4086A7"
             android:layout_toRightOf="@+id/recommend_title"
             android:layout_centerVertical="true"
-            android:layout_width="100dp"
-            android:layout_height="1dp"/>
-        <LinearLayout
-            android:layout_marginStart="5dp"
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <TextView
-                android:id="@+id/title"
-                android:layout_marginTop="10dp"
-                android:textSize="18sp"
-                android:textColor="@color/text_back_2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="标题"
-                />
-            <TextView
-                android:id="@+id/content"
-                android:layout_marginEnd="5dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLines="4"
-                android:text="内容"
-                />
-        </LinearLayout>
+            android:layout_height="1dp"/>
+        <TextView
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:id="@+id/title"
+            android:layout_marginTop="10dp"
+            android:textSize="18sp"
+            android:textColor="@color/text_back_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="标题"
+            />
         <android.support.v7.widget.CardView
             android:id="@+id/imageLayout"
-            android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
             app:cardElevation="0dp"
-            app:cardCornerRadius="15dp"
+            app:cardCornerRadius="16dp"
             android:layout_width="match_parent"
             android:layout_height="200dp">
             <ImageView
@@ -112,6 +95,8 @@
                 android:layout_height="200dp" />
         </android.support.v7.widget.CardView>
         <LinearLayout
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="4dp"
             android:layout_gravity="right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
@@ -120,14 +105,14 @@
                 android:id="@+id/thumb"
                 android:padding="2dp"
                 android:layout_margin="5dp"
-                android:src="@drawable/thumb"
+                android:src="@mipmap/like"
                 android:layout_width="24dp"
                 android:layout_height="24dp" />
             <ImageView
                 android:id="@+id/comment"
                 android:padding="2dp"
                 android:layout_margin="5dp"
-                android:src="@drawable/comment"
+                android:src="@mipmap/comment"
                 android:layout_width="24dp"
                 android:layout_height="24dp" />
             <ImageView
@@ -135,7 +120,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginTop="5dp"
-                android:src="@drawable/share"
+                android:src="@mipmap/zf"
                 android:layout_width="24dp"
                 android:layout_height="24dp" />
         </LinearLayout>

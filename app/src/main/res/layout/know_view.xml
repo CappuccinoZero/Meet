@@ -1,79 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="200dp"
     android:id="@+id/know_item"
-    app:cardCornerRadius="4dp"
+    app:cardCornerRadius="12dp"
     app:cardElevation="4dp"
-    android:layout_margin="4dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp"
     android:clickable="true"
     android:focusable="true"
     android:foreground="@drawable/bg_ripple_rect_borderless"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <LinearLayout
+    <RelativeLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <android.support.v7.widget.CardView
-            android:id="@+id/img_layout"
-            android:layout_margin="2dp"
-            app:cardElevation="0dp"
-            app:cardCornerRadius="4dp"
+        <ImageView
+            android:transitionName="know_img"
+            android:src="@drawable/default_image"
+            android:id="@+id/img"
+            android:scaleType="centerCrop"
             android:layout_width="match_parent"
-            android:layout_height="150dp">
-            <ImageView
-                android:transitionName="know_img"
-                android:src="@drawable/default_image"
-                android:id="@+id/img"
-                android:scaleType="centerCrop"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </android.support.v7.widget.CardView>
+            android:layout_height="match_parent" />
         <TextView
-            android:id="@+id/know_content"
-            android:layout_margin="8dp"
-            android:layout_width="match_parent"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp"
+            android:paddingEnd="8dp"
+            android:paddingStart="8dp"
+            android:background="@drawable/knwo_shape"
+            android:textColor="#9BBBC9"
+            android:text="未解决"
+            android:layout_alignParentEnd="true"
+            android:id="@+id/know_text2"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-        <RelativeLayout
-            android:layout_marginBottom="8dp"
+        <View
+            android:background="@drawable/gradient_bg_recommend"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"/>
+        <LinearLayout
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
             <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginStart="12dp"
                 android:id="@+id/know_header"
-                android:layout_gravity="center"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:src="@drawable/temp"
-                app:civ_border_color="#C8C8C8"
+                android:layout_gravity="top"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@drawable/header"
                 app:civ_border_width="1dp"
-                />
+                app:civ_border_color="#fff" />
             <TextView
-                android:id="@+id/know_nickName"
-                android:layout_marginStart="5dp"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/know_header"
-                android:layout_gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/text_0"
-                android:textColor="@color/text_back_1"
-                android:text="作者"/>
-            <TextView
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="4dp"
+                android:layout_marginTop="6dp"
+                android:layout_toEndOf="@id/know_header"
                 android:paddingBottom="2dp"
                 android:paddingTop="2dp"
-                android:paddingEnd="4dp"
-                android:paddingStart="4dp"
-                android:background="@drawable/knwo_shape"
-                android:textColor="#1DE9B6"
-                android:text="未解决"
-                android:layout_alignParentEnd="true"
-                android:id="@+id/know_text2"
+                android:paddingEnd="12dp"
+                android:paddingStart="12dp"
+                android:layout_gravity="top"
+                android:layout_marginStart="4dp"
+                android:id="@+id/know_nickName"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </RelativeLayout>
-    </LinearLayout>
+                android:layout_height="wrap_content"
+                android:text="作者"
+                android:background="@drawable/dynamic_nickname"
+                android:textColor="#77A2B7"
+                android:textSize="10sp" />
+            <TextView
+                android:maxLines="2"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="4dp"
+                android:layout_marginEnd="8dp"
+                android:textSize="@dimen/text_2"
+                android:textColor="#fff"
+                android:id="@+id/know_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+    </RelativeLayout>
 </android.support.v7.widget.CardView>

@@ -1,0 +1,74 @@
+{
+  animations: [
+    {
+      clips: [
+        {
+          name: 'Base stack',
+        },
+      ],
+      path: 'sampledata/models/model.fbx',
+    },
+  ],
+  materials: [
+    {
+      name: 'lambert332',
+      parameters: [
+        {
+          baseColor: [
+            1,
+            1,
+            1,
+            1,
+          ],
+        },
+        {
+          baseColorMap: 'roomitems_019_inu',
+        },
+        {
+          normalMap: null,
+        },
+        {
+          interpolatedColor: null,
+        },
+        {
+          metallic: 0,
+        },
+        {
+          metallicMap: null,
+        },
+        {
+          roughness: 1,
+        },
+        {
+          roughnessMap: null,
+        },
+        {
+          opacity: null,
+        },
+      ],
+      source: 'build/sceneform_sdk/default_materials/fbx_material.sfm',
+    },
+  ],
+  model: {
+    attributes: [
+      'Position',
+      'TexCoord',
+      'Orientation',
+      'BoneIndices',
+      'BoneWeights',
+    ],
+    collision: {},
+    file: 'sampledata/models/model.fbx',
+    name: 'model',
+    recenter: 'root',
+    scale: 3.0,
+  },
+  samplers: [
+    {
+      file: 'sampledata/models/model.fbm/roomitems_019_inu.png',
+      name: 'roomitems_019_inu',
+      pipeline_name: 'model.fbm/roomitems_019_inu.png',
+    },
+  ],
+  version: '0.54:2',
+}

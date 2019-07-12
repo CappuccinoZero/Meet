@@ -8,11 +8,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.lin.meet.R
+import com.lin.meet.bean.DefaultUtil
 import de.hdodenhof.circleimageview.CircleImageView
 
 class KnowViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val item = itemView.findViewById<CardView>(R.id.know_item)
-    val imgLayout = itemView.findViewById<CardView>(R.id.img_layout)
     val img = itemView.findViewById<ImageView>(R.id.img)
     val header = itemView.findViewById<CircleImageView>(R.id.know_header)
     val nickName = itemView.findViewById<TextView>(R.id.know_nickName)
@@ -29,9 +29,8 @@ class KnowViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun setImg(context:Context,uri:String){
         if(uri == "@null"){
-            imgLayout.visibility = View.GONE
+            Glide.with(context).load(DefaultUtil.getRandomAnimalPicture()).into(img)
         }else{
-            imgLayout.visibility = View.VISIBLE
             Glide.with(context).load(uri).into(img)
         }
     }
@@ -42,8 +41,8 @@ class KnowViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun setContent(content:String){
         if(content == null)
-            this.content.text = "提问："
+            this.content.text = "Q："
         else
-            this.content.text = "提问："+content
+            this.content.text = "Q："+content
     }
 }

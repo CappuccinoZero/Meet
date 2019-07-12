@@ -1,7 +1,9 @@
 package com.lin.meet.topic;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,21 +23,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lin.meet.R;
-import com.lin.meet.bean.ReplyBean;
 import com.lin.meet.bean.TopicMain;
-import com.lin.meet.bean.topic_comment;
+import com.lin.meet.db_bean.Reply;
+import com.lin.meet.db_bean.comment;
 import com.lin.meet.override.EmojiAdapter;
 import com.lin.meet.override.ScaleAnim;
+import com.youngfeng.snake.annotations.EnableDragToClose;
 
 import cn.bmob.v3.BmobUser;
 
+@EnableDragToClose
 public class TopicActivity extends AppCompatActivity implements View.OnClickListener,EmojiAdapter.EmojiCallback,TopicConstract.View, TopicAdapter.TopicCallback {
     private String id;
-    private topic_comment currentComment;
+    private comment currentComment;
     private boolean like = false;
     private boolean isStar = false;
     private ImageView thumb;
     private ImageView star;
+    private boolean initLike = false;
 
     private ImageView useEmoji;
     private boolean isUseEmoji = false;
@@ -66,11 +71,11 @@ public class TopicActivity extends AppCompatActivity implements View.OnClickList
         adapter.initAdapter(bean);
         if(bean!=null){
             id = bean.bean.getId();
-            presenter.initData(id,false);
+            presenter.initData(id,false,bean.bean.getUid());
         }
         else{
             id = getIntent().getStringExtra("ID");
-            presenter.initData(id,true);
+            presenter.initData(id,getIntent().getBooleanExtra("isSender",true),2);
         }
     }
 
@@ -97,14 +102,15 @@ public class TopicActivity extends AppCompatActivity implements View.OnClickList
         ActionBar actionBar = getSupportActionBar();
         if(actionBar!=null){
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.mipmap.back_x);
+            actionBar.setHomeAsUpIndicator(R.mipmap.onback_black);
         }
 
         adapter = new TopicAdapter(this);
         manager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(manager);
-
+        if(getIntent().getBooleanExtra("comment",false))
+            replyLayout.post(()->replyLayout.performClick());
         emojiAdapter = new EmojiAdapter(this);
         emojiView.setAdapter(emojiAdapter);
         closeEmoji();
@@ -153,7 +159,8 @@ public class TopicActivity extends AppCompatActivity implements View.OnClickList
                 if(useEdit==1)
                     presenter.senComment(replyEdit.getText().toString());
                 else
-                    presenter.onSendOnMessage(currentComment.getFloor(),replyEdit.getText().toString(),lastPosition);
+                    presenter.onSendOnMessage(currentComment,replyEdit.getText().toString(),lastPosition);
+                hideEdit();
                 break;
             case R.id.thumb:
                 if(isNoLogin())return;
@@ -169,9 +176,9 @@ public class TopicActivity extends AppCompatActivity implements View.OnClickList
     private void onClickStar(){
         isStar = !isStar;
         if(isStar){
-            ScaleAnim.startAnim(star,R.drawable.star_1);
+            ScaleAnim.startAnim(star,R.mipmap.love2);
         }else {
-            ScaleAnim.startAnim(star,R.drawable.star_0);
+            ScaleAnim.startAnim(star,R.mipmap.love);
         }
         presenter.onStar();
     }
@@ -204,9 +211,17 @@ public class TopicActivity extends AppCompatActivity implements View.OnClickList
     }
 
     @Override
+    public void onBackPressed() {
+        if(like!=initLike){
+            setResult(2001);
+        }
+        super.onBackPressed();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId()==android.R.id.home){
-            finish();
+            onBackPressed();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -251,7 +266,6 @@ public class TopicActivity extends AppCompatActivity implements View.OnClickList
             case 0:
                 break;
             case 1:
-                adapter.initThumbCount(bean);
                 break;
             case 2:
                 adapter.initAdapter(bean);
@@ -266,33 +280,15 @@ public class TopicActivity extends AppCompatActivity implements View.OnClickList
     }
 
     @Override
-    public int insertComment(ReplyBean reply,Boolean isRoll) {
+    public int insertComment(Reply reply, Boolean isRoll) {
         int position = adapter.insertComment(reply);
         if(isRoll){
             manager.scrollToPosition(position);
         }
         tempReply = "";
-        hideEdit();
         return position;
     }
 
-    @Override
-    public void sendSonResult(int resultCode,int position, int level, String msg,String nickName) {
-        switch (level){
-            case 1:
-                adapter.updateSonReply(msg,nickName,position,level);
-                break;
-            case 2:
-                adapter.updateSonReply(msg,nickName,position,level);
-                break;
-            default:
-                adapter.updateSonReply(msg,nickName,position,level);
-                break;
-        }
-        hideEdit();
-        replyEdit.setText("");
-        tempSon = "";
-    }
 
     @Override
     public void setCommentCount(int count) {
@@ -304,10 +300,6 @@ public class TopicActivity extends AppCompatActivity implements View.OnClickList
         adapter.setThumbCount(position);
     }
 
-    @Override
-    public void setCommentLike(int position, int count) {
-        adapter.setCommentLikeCount(position,count);
-    }
 
     @Override
     public void likeResult(int resultCode, boolean like) {
@@ -320,46 +312,31 @@ public class TopicActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    @Override
-    public void likeCommentResult(int resultCode, int position, boolean like) {
-        if(resultCode == 1){
-            adapter.updateCommentLike(position,like);
-        }
-    }
 
     @Override
     public void setLikeNoAnim(boolean like) {
+        initLike = like;
         if(like){
             adapter.setLike(like);
             this.like = like;
-            thumb.setImageResource(R.drawable.thumb_red);
+            thumb.setImageResource(R.mipmap.like2);
         }
-    }
-
-    @Override
-    public void setCommentLike(int position, boolean like) {
-        adapter.setCommentLike(position,like);
     }
 
     @Override
     public void initStart() {
         isStar = true;
-        star.setImageResource(R.drawable.star_1);
+        star.setImageResource(R.mipmap.like);
     }
 
-    @Override
-    public void onStartResult(int resultCode, boolean star) {
-        if(resultCode == 1){
-            isStar = star;
-        }
-    }
 
     @Override
-    public void showSonEdit(topic_comment comment, int position) {
+    public void showSonEdit(comment comment, int position) {
         useEdit = 2;
         currentComment = comment;
         if(lastPosition!=position&&lastPosition!=-1){
             useEdit = 3;
+            tempSon = "";
             replyEdit.setText("");
         }
         showEdit(position);
@@ -373,23 +350,66 @@ public class TopicActivity extends AppCompatActivity implements View.OnClickList
     }
 
     @Override
-    public void onCommentLike(int position, int floor) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==2000&&resultCode==2001){
+            adapter.updateLikeStatus(data.getBooleanExtra("Like",false));
+            adapter.updateCommentStatus(data.getIntExtra("Count",-1));
+        }
+    }
+
+    @Override
+    public void onCommentLike(String parentId,String parentUid,boolean like) {
         if(isNoLogin())return;
-        presenter.onClickCommentLike(floor,position);
+        presenter.onClickCommentLike(parentId,parentUid,like);
+    }
+
+    @Override
+    public void startComment(Intent intent) {
+        startActivityForResult(intent,2000);
+        overridePendingTransition(R.anim.bottom_in,R.anim.bottom_out);
     }
 
     private void like(){
         like = !like;
         if(like){
-            ScaleAnim.startAnim(thumb,R.drawable.thumb_red);
+            ScaleAnim.startAnim(thumb,R.mipmap.like2);
         }else {
-            ScaleAnim.startAnim(thumb,R.drawable.thumb);
+            ScaleAnim.startAnim(thumb,R.mipmap.like);
         }
-        presenter.onClickLike();
+        presenter.onClickLike(like);
+        likeResult(1,like);
     }
 
     private boolean isNoLogin(){
         return !BmobUser.isLogin();
     }
 
+    @Override
+    public void senMessageResult(int resultCode,Reply msg) {
+        if(resultCode == 1){
+            int position = adapter.insertComment(0,msg);
+            moveToPosition(position);
+            toast("发送成功");
+            hideEdit();
+            tempReply = "";
+            replyEdit.setText("");
+        }else if(resultCode == 0){
+            toast("回复错误,请检查网络");
+        }
+    }
+
+    @Override
+    public void sonSendResult(int resultCode,int position) {
+        if(resultCode==1){
+            adapter.addComment(position);
+        }
+        hideEdit();
+        replyEdit.setText("");
+        tempSon = "";
+    }
+
+    public void moveToPosition(int position) {
+        manager.scrollToPosition(position);
+    }
 }

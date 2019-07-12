@@ -2,7 +2,6 @@ package com.lin.meet.personal;
 
 import android.content.Context;
 import android.os.Environment;
-import android.util.Log;
 
 import com.lin.meet.bean.User;
 import com.lin.meet.my_util.MyUtil;
@@ -44,9 +43,7 @@ public class PerStPresenter implements PerStContract.Presenter {
         if(BmobUser.isLogin()){
             user = BmobUser.getCurrentUser(User.class);
             deleteBackground();
-            Log.d("测试", "channal 1");
         }else {
-            Log.d("测试", "channal 2");
             user = new User();
             user.setPassword(token);
             user.setUsername(phone);
@@ -71,7 +68,6 @@ public class PerStPresenter implements PerStContract.Presenter {
                 @Override
                 public void done(BmobException e) {
                     uploadBackground();
-                    Log.d("测试", "delete");
                 }
             });
         }
@@ -88,10 +84,11 @@ public class PerStPresenter implements PerStContract.Presenter {
                     if(e==null){
                         user.setBackgroundUri(uploadFile.getFileUrl());
                         updateUser("上传成功","",0);
-                        view.setBackground(savePath+saveFile("background",path));
+                        view.setBackground(uploadFile.getFileUrl());
                     }else{
 
                     }
+                    view.closeProgressDialog();
                 }
             });
         }
@@ -202,10 +199,11 @@ public class PerStPresenter implements PerStContract.Presenter {
                     if(e==null){
                         user.setHeaderUri(uploadFile.getFileUrl());
                         updateUser("上传成功","",0);
-                        view.setHeader(savePath+saveFile("header",headPath));
+                        view.setHeader(uploadFile.getFileUrl());
                     }else{
 
                     }
+                    view.closeProgressDialog();
                 }
             });
         }

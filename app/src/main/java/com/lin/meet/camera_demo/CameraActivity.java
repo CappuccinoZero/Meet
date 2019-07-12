@@ -24,7 +24,6 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.util.TypedValue;
@@ -38,6 +37,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.lin.meet.IntroductionPage.IntroducationSnakeActivity;
 import com.lin.meet.IntroductionPage.IntroductionActivity;
 import com.lin.meet.R;
 import com.lin.meet.history.HistoryActivity;
@@ -57,7 +57,6 @@ import static android.content.ContentValues.TAG;
 public class CameraActivity extends Activity implements View.OnClickListener, View.OnTouchListener,MyCameraContract.AccListener,MyCameraContract.GravityListener {
 
     public final static int REQUEST_CODE = 0x01;
-
     private boolean touching = false;
     private boolean isPause = false;
     private boolean isLife;
@@ -72,7 +71,7 @@ public class CameraActivity extends Activity implements View.OnClickListener, Vi
     private ImageView setting;
     private ImageView history;
     private ImageView photo;
-    private FloatingActionButton camera_discern;
+    private ImageView camera_discern;
     private int isOpen = 0;
     private String imagePath;
     private long save_time = 0;
@@ -114,6 +113,8 @@ public class CameraActivity extends Activity implements View.OnClickListener, Vi
     public boolean setting_onGravity = true;
     public boolean setting_onSave = true;
     public boolean setting_onLocation = true;
+
+    private boolean startPreview = true;
     public static void startCameraActivity(Context context) {
         ((Activity) context).startActivityForResult(new Intent(context, CameraActivity.class), REQUEST_CODE);
     }
@@ -130,13 +131,24 @@ public class CameraActivity extends Activity implements View.OnClickListener, Vi
         init();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(mCamera!=null){
+            mCamera.stopPreview();
+            mCamera.setPreviewCallback(null);
+            mCamera.release();
+            mCamera = null;
+        }
+    }
+
     private void init() {
         containerLayout = (LinearLayout) findViewById(R.id.container_layout);
         cameraCrop = (ImageView) findViewById(R.id.camera_crop);
         back = (ImageView) findViewById(R.id.back);
         light = (ImageView) findViewById(R.id.light);
         setting = (ImageView) findViewById(R.id.camera_setting);
-        camera_discern = (FloatingActionButton) findViewById(R.id.camera_discern);
+        camera_discern = (ImageView) findViewById(R.id.camera_discern);
         cameraView = (CameraView) findViewById(R.id.camera_view);
         history = (ImageView) findViewById(R.id.open_history);
         photo = (ImageView) findViewById(R.id.open_photo);
@@ -183,7 +195,7 @@ public class CameraActivity extends Activity implements View.OnClickListener, Vi
             case R.id.camera_setting:
                 isLife=false;
                 startActivityForResult(new Intent(this, CameraSetting.class),10000);
-                overridePendingTransition(R.anim.anim_in,R.anim.anim_out);
+                overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                 break;
             case R.id.light:
                 if (isOpen == 0) {
@@ -214,13 +226,13 @@ public class CameraActivity extends Activity implements View.OnClickListener, Vi
             case R.id.open_history:
                 isLife=false;
                 startActivity(new Intent(this, HistoryActivity.class));
-                overridePendingTransition(R.anim.anim_in,R.anim.anim_out);
+                overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                 break;
             case R.id.open_photo:
-                Intent intent = new Intent(this, IntroductionActivity.class);
+                Intent intent = new Intent(this, IntroducationSnakeActivity.class);
                 intent.putExtra("usePhoto",true);
                 startActivity(intent);
-                overridePendingTransition(R.anim.anim_in,R.anim.anim_out);
+                overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                 isLife=false;
                 break;
             case R.id.view_1:
@@ -254,6 +266,7 @@ public class CameraActivity extends Activity implements View.OnClickListener, Vi
     /**
      * 拍照
      */
+    private Camera mCamera = null;
     public  void takePhoto() {
         cameraView.takePhoto(new Camera.PictureCallback() {
             @Override
@@ -261,6 +274,8 @@ public class CameraActivity extends Activity implements View.OnClickListener, Vi
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+                        startPreview = false;
+                        mCamera = camera;
                         Bitmap bitmap = null;
                         if (bytes != null) {
                             //读取照片
@@ -287,6 +302,8 @@ public class CameraActivity extends Activity implements View.OnClickListener, Vi
 
                             if(isPause)return;
                             camera.startPreview();
+                            startPreview = true;
+                            mCamera = null;
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -302,7 +319,7 @@ public class CameraActivity extends Activity implements View.OnClickListener, Vi
                                         cameraCrop.setBackground(getResources().getDrawable(R.drawable.shape_cornet_green));
                                         id1=(int)temp[0][1];id2=(int)temp[0][2];id3=(int)temp[0][3];
                                         showDialog((int)temp[0][1],temp[1][1],0,view_1,100);
-                                        showDialog((int)temp[0][2],temp[1][2],1,view_2,400);
+                                        showDialog((int)temp[0][2],temp[1][2],1,view_2,350);
                                         showDialog((int)temp[0][3],temp[1][3],2,view_3,250);
                                         roll_x=0;roll_y=0;
                                         start_sensor = true;
@@ -327,7 +344,10 @@ public class CameraActivity extends Activity implements View.OnClickListener, Vi
 
     @Override
     protected void onResume() {
+        if(mCamera!=null&&!startPreview)
+            mCamera.startPreview();
         super.onResume();
+        touching = false;
         closeDialog();
         isLife=true;
         isPause = false;
@@ -444,8 +464,6 @@ public class CameraActivity extends Activity implements View.OnClickListener, Vi
         view.setTranslationX(transX);
         view.setTranslationY(0);
         view.setVisibility(View.VISIBLE);
-        String str ;
-
 
         if(tflite.describe[id].charAt(0)=='1')
             ((TextView)view.findViewById(R.id.posi)).setVisibility(View.VISIBLE);
@@ -520,6 +538,7 @@ public class CameraActivity extends Activity implements View.OnClickListener, Vi
                 else{
                     if(touching)return super.onTouchEvent(event);
                     touching = true;
+                    Log.d("测试", "onTouchEvent: dianji");
                     if(setting_onTouchCamera)
                         cameraView.focus(true);
                     else
@@ -630,7 +649,6 @@ public class CameraActivity extends Activity implements View.OnClickListener, Vi
         ObjectAnimator animator ;
         int v1=50,v2=50,v3=50;
         if(gx<last_gx){
-            Log.d(TAG, "GravityListener: 提示 A ");
             if(view_1.getTranslationX()==0&&view_3.getTranslationX()<150&&view_2.getTranslationX()>=150)
                 v1=0;
             else if(view_1.getTranslationX()==0&&view_3.getTranslationX()==0&&view_2.getTranslationX()<=150){
@@ -778,7 +796,7 @@ public class CameraActivity extends Activity implements View.OnClickListener, Vi
     @Override
     public void finish(){
         super.finish();
-        overridePendingTransition(R.anim.anim_in,R.anim.anim_out);
+        overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
     }
 
     private void intoIntorductionActivity(int page){
@@ -794,7 +812,9 @@ public class CameraActivity extends Activity implements View.OnClickListener, Vi
         intent.putExtra("page",page);
         intent.putExtra("time",save_time);
         startActivity(intent);
-        overridePendingTransition(R.anim.anim_in,R.anim.anim_out);
+        overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) { }
 }

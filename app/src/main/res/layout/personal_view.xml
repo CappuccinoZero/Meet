@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="#fff"
+    android:background="@drawable/personal_shape"
     android:paddingStart="20dp"
     android:paddingEnd="20dp"
     android:paddingBottom="30dp"
@@ -8,10 +8,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <TextView
+        android:layout_marginTop="20dp"
         android:layout_marginBottom="10dp"
         android:text="个人信息"
         android:textSize="@dimen/text_3"
-        android:textColor="#00BFA5"
+        android:textColor="#4D5997"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <LinearLayout
@@ -170,7 +171,7 @@
         android:layout_marginTop="20dp"
         android:text="个性签名"
         android:textSize="@dimen/text_3"
-        android:textColor="#00BFA5"
+        android:textColor="#4D5997"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <TextView
@@ -186,7 +187,7 @@
         android:layout_marginTop="20dp"
         android:text="自我介绍"
         android:textSize="@dimen/text_3"
-        android:textColor="#00BFA5"
+        android:textColor="#4D5997"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <TextView

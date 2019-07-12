@@ -25,8 +25,9 @@ import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
 import com.luck.picture.lib.tools.PictureFileUtils
+import com.youngfeng.snake.annotations.EnableDragToClose
 import kotlinx.android.synthetic.main.activity_send_topic.*
-
+@EnableDragToClose
 class SendTopic : AppCompatActivity(), View.OnClickListener,MyLocationListener.locationCallback,SendTopicConstract.View, TextWatcher,EmojiAdapter.EmojiCallback {
 
 
@@ -39,7 +40,6 @@ class SendTopic : AppCompatActivity(), View.OnClickListener,MyLocationListener.l
                 val data = Intent()
                 intent.putExtra("ID",id)
                 data.putExtra("ID",id)
-                Log.d("让人恶心的BUG", "insertTopic: $id")
                 setResult(11,data)
                 startActivityForResult(intent,0)
                 PictureFileUtils.deleteCacheDirFile(this)
@@ -155,7 +155,6 @@ class SendTopic : AppCompatActivity(), View.OnClickListener,MyLocationListener.l
 
     override fun stop() {
         location_text.text = myListener.province+myListener.city+myListener.district
-        Log.d("回复测试","地址信息："+location_text.text.toString())
         isUserLocation = 0
     }
 
@@ -355,6 +354,7 @@ class SendTopic : AppCompatActivity(), View.OnClickListener,MyLocationListener.l
                 .openClickSound(true)
                 .compress(true)
                 .minimumCompressSize(100)
+                .isCamera(false)
                 .forResult(PictureConfig.CHOOSE_REQUEST)
     }
 
@@ -367,6 +367,7 @@ class SendTopic : AppCompatActivity(), View.OnClickListener,MyLocationListener.l
                 .openClickSound(true)
                 .compress(true)
                 .minimumCompressSize(150)
+                .isCamera(false)
                 .forResult(index)
     }
 

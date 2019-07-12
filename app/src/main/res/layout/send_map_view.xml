@@ -43,38 +43,41 @@
             android:layout_marginBottom="10dp"
             android:layout_marginStart="10dp"
             android:id="@+id/map_dialog_send"
-            android:textColor="#00BFA5"
+            android:textColor="#536DFE"
             android:text="发送"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </RelativeLayout>
-    <EditText
-        android:textSize="@dimen/text_2"
-        android:hint="请输入你想发表的动态"
-        android:id="@+id/map_dialog_edit"
-        android:gravity="top"
-        android:layout_marginBottom="2dp"
+    <FrameLayout
+        android:layout_marginBottom="20dp"
         android:layout_marginTop="2dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:background="@drawable/map_edit_stroke"
-        android:paddingTop="2dp"
-        android:paddingBottom="2dp"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
-        android:minLines="6"
-        android:maxLines="6"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="60dp">
+        android:layout_height="wrap_content">
+        <EditText
+            android:background="@null"
+            android:textSize="@dimen/text_2"
+            android:hint="请输入你想发表的动态"
+            android:id="@+id/map_dialog_edit"
+            android:gravity="top"
+            android:layout_marginBottom="40dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:minLines="8"
+            android:maxLines="8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
         <android.support.v7.widget.CardView
             android:layout_marginTop="5dp"
             app:cardElevation="0dp"
             app:cardCornerRadius="8dp"
-            android:layout_gravity="center"
+            android:layout_margin="12dp"
+            android:layout_gravity="bottom|end"
             android:layout_width="50dp"
             android:layout_height="50dp">
             <ImageView
@@ -87,5 +90,5 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </android.support.v7.widget.CardView>
-    </LinearLayout>
+    </FrameLayout>
 </LinearLayout>

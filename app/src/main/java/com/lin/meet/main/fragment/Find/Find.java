@@ -37,6 +37,7 @@ import com.bumptech.glide.Glide;
 import com.lin.meet.R;
 import com.lin.meet.bean.MapFlag;
 import com.lin.meet.bean.User;
+import com.lin.meet.personal.PersonalActivity;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
@@ -154,7 +155,6 @@ public class Find extends Fragment implements FindContract.View, View.OnClickLis
     }
 
     public class MylocationListener extends BDAbstractLocationListener {
-
         @Override
         public void onReceiveLocation(BDLocation location) {
             if (location == null || mapView == null){
@@ -198,18 +198,18 @@ public class Find extends Fragment implements FindContract.View, View.OnClickLis
 
     private void initMap(){
         map = mapView.getMap();
-        locationClient = new LocationClient(getContext());
         map.setMyLocationEnabled(true);
         LocationClientOption option = new LocationClientOption();
         option.setOpenGps(true);
         option.setCoorType("bd09ll");
         option.setScanSpan(1000);
+        locationClient = new LocationClient(getContext());
         locationClient.setLocOption(option);
         locationClient.registerLocationListener(new MylocationListener());
+        locationClient.start();
         MapStatus.Builder builder = new MapStatus.Builder();
         builder.zoom(19f);
         map.setMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
-        locationClient.start();
 
         map.setOnMarkerClickListener(this);
 
@@ -304,6 +304,7 @@ public class Find extends Fragment implements FindContract.View, View.OnClickLis
         map_head = mView.findViewById(R.id.map_header);
         map_name = mView.findViewById(R.id.map_nickName);
         map_content = mView.findViewById(R.id.map_content);
+        map_head.setOnClickListener(v-> PersonalActivity.Companion.startOther(getActivity(),users.get(index).getUid()));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
         builder.setView(mView);

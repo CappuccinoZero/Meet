@@ -5,15 +5,24 @@ import android.content.Context;
 import android.support.v4.app.ActivityOptionsCompat;
 
 import com.lin.meet.bean.Baike;
+import com.lin.meet.bean.MapFlag;
+import com.lin.meet.bean.User;
 import com.lin.meet.encyclopedia.EncyclopediaActivity;
 import com.lin.meet.my_util.TFLiteUtil;
 
+import java.io.File;
 import java.util.List;
 import java.util.Random;
 
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UploadFileListener;
+
+import static com.lin.meet.db_bean.CreateID.getId;
 
 public class IntroductionPresenter implements IntorductionContract.Presenter {
     IntorductionContract.View view;
@@ -136,6 +145,50 @@ public class IntroductionPresenter implements IntorductionContract.Presenter {
                         view.setUri3(list.get(0).getUri(),list.get(0).getType());
                         view.setContent(list.get(0).getBrief(),3);
                     }
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onFlagMap(String path, String name,String maybe) {
+        if(!BmobUser.isLogin()){
+            view.saveError("登录后才能标记。");
+            return;
+        }
+        StringBuilder builder = new StringBuilder();
+        builder.append("我使用识图功能识别了一种动物\"").append(name).append("\",识别相似度有").append(maybe).append("。");
+
+        File file = new File(path);
+        BmobFile bmobFile =new BmobFile(file);
+        bmobFile.uploadblock(new UploadFileListener() {
+            @Override
+            public void done(BmobException e) {
+                if(e==null){
+                    saveFlag(bmobFile.getFileUrl(),builder.toString());
+                }else {
+                    view.saveError("标记失败,请检查网络。");
+                }
+            }
+        });
+    }
+
+    public void saveFlag(String image, String content){
+        User user = BmobUser.getCurrentUser(User.class);
+        MapFlag bean =new MapFlag();
+        bean.setX(view.getMapX());
+        bean.setY(view.getMapY());
+        bean.setContent(content);
+        bean.setImage(image);
+        bean.setUid(user.getUid());
+        bean.setId(getId());
+        bean.save(new SaveListener<String>() {
+            @Override
+            public void done(String s, BmobException e) {
+                if(e==null){
+                    view.showMapDialog(2);
+                }else{
+                    view.saveError("标记失败,请检查网络。");
                 }
             }
         });

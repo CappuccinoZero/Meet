@@ -12,9 +12,9 @@
         android:layout_height="wrap_content">
         <ImageView
             android:scaleType="fitXY"
-            android:src="@drawable/bg_1"
+            android:src="@drawable/bg_2"
             android:layout_width="match_parent"
-            android:layout_height="150dp" />
+            android:layout_height="160dp" />
         <TextView
             android:layout_marginBottom="30dp"
             android:layout_marginEnd="20dp"
@@ -23,18 +23,18 @@
             android:textSize="@dimen/text_2"
             android:textColor="@color/text_back_2"
             android:layout_gravity="start"
-            android:text="是否确定将识别结果分享在地图上？"
+            android:text="是否将识别结果分享在地图上？"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="30dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp"
             android:layout_marginStart="30dp"
             android:textSize="@dimen/text_2"
             android:textColor="@color/text_back_2"
             android:layout_gravity="start"
-            android:text="当其他人来到附近时候,能够看到你的识别结果和看到你的个人资料"
+            android:text="当其他人来到附近时,能够看到您的标记并可以查看你的个人资料和关注你"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
@@ -51,7 +51,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             style="@style/SpinKitView.RotatingPlane"
-            app:SpinKit_Color="#FF9100"
+            app:SpinKit_Color="#3D5AFE"
             />
         <TextView
             android:layout_marginBottom="30dp"
@@ -71,17 +71,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
-            android:src="@drawable/thumb_red"
-            android:layout_marginTop="30dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/bg_3"
             android:layout_gravity="center"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            />
+            android:layout_width="match_parent"
+            android:layout_height="170dp" />
         <TextView
             android:layout_marginBottom="30dp"
             android:layout_marginTop="20dp"
-            android:textSize="@dimen/text_2"
-            android:textColor="@color/text_back_2"
+            android:textSize="@dimen/text_3"
+            android:textColor="#F50057"
             android:layout_gravity="center"
             android:gravity="center"
             android:text="标记完成！"

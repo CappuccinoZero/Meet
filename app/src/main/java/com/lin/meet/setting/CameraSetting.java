@@ -3,20 +3,25 @@ package com.lin.meet.setting;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.lin.meet.R;
-import com.lin.meet.override.SmoothCheckBox;
+import com.nightonke.jellytogglebutton.JellyToggleButton;
+import com.nightonke.jellytogglebutton.State;
+import com.youngfeng.snake.annotations.EnableDragToClose;
 
+@EnableDragToClose
 public class CameraSetting extends AppCompatActivity implements View.OnClickListener,CSettingContract.View {
     private Toolbar toolbar;
     private RelativeLayout layout_0;
@@ -25,17 +30,21 @@ public class CameraSetting extends AppCompatActivity implements View.OnClickList
     private RelativeLayout layout_3;
     private RelativeLayout layout_4;
     private RelativeLayout layout_5;
-    private SmoothCheckBox box_0;
-    private SmoothCheckBox box_1;
-    private SmoothCheckBox box_2;
-    private SmoothCheckBox box_3;
-    private SmoothCheckBox box_4;
+    private JellyToggleButton box_0;
+    private JellyToggleButton box_1;
+    private JellyToggleButton box_2;
+    private JellyToggleButton box_3;
+    private JellyToggleButton box_4;
     private CSettingContract.Presenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setStatusBarColor(getResources().getColor(R.color.camera_setting_color));
+        View decorView = getWindow().getDecorView();
+        int option = (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LAYOUT_STABLE|View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        decorView.setSystemUiVisibility(option);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        getWindow().setStatusBarColor(Color.TRANSPARENT);
         setContentView(R.layout.camera_setting_layout);
         init();
         presenter.initSetting(this);
@@ -50,15 +59,16 @@ public class CameraSetting extends AppCompatActivity implements View.OnClickList
         layout_3 = (RelativeLayout)findViewById(R.id.c_layout_3);
         layout_4 = (RelativeLayout)findViewById(R.id.c_layout_4);
         layout_5 = (RelativeLayout)findViewById(R.id.c_layout_5);
-        box_0 = (SmoothCheckBox)findViewById(R.id.c_box_0);
-        box_1 = (SmoothCheckBox)findViewById(R.id.c_box_1);
-        box_2 = (SmoothCheckBox)findViewById(R.id.c_box_2);
-        box_3 = (SmoothCheckBox)findViewById(R.id.c_box_3);
-        box_4 = (SmoothCheckBox)findViewById(R.id.c_box_4);
-        box_3.setOnCheckedChangeListener(new SmoothCheckBox.OnCheckedChangeListener() {
+        box_0 = (JellyToggleButton) findViewById(R.id.c_box_0);
+        box_1 = (JellyToggleButton)findViewById(R.id.c_box_1);
+        box_2 = (JellyToggleButton)findViewById(R.id.c_box_2);
+        box_3 = (JellyToggleButton)findViewById(R.id.c_box_3);
+        box_4 = (JellyToggleButton)findViewById(R.id.c_box_4);
+
+        box_3.setOnStateChangeListener(new JellyToggleButton.OnStateChangeListener() {
             @Override
-            public void onCheckedChanged(SmoothCheckBox checkBox, boolean isChecked) {
-                if(box_3.isChecked()){
+            public void onStateChange(float process, State state, JellyToggleButton jtb) {
+                if(state==State.RIGHT){
                     if (ActivityCompat.checkSelfPermission(CameraSetting.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(CameraSetting.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(CameraSetting.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION} , 1);
                     }
@@ -76,8 +86,9 @@ public class CameraSetting extends AppCompatActivity implements View.OnClickList
         ActionBar actionBar = getSupportActionBar();
         if(actionBar!=null){
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.mipmap.back_x);
+            actionBar.setHomeAsUpIndicator(R.mipmap.onback_white);
         }
+
     }
 
     @Override
@@ -99,7 +110,7 @@ public class CameraSetting extends AppCompatActivity implements View.OnClickList
         intent.putExtra("box_5",box_3.isChecked());
         setResult(10001, intent);
         super.finish();
-        overridePendingTransition(R.anim.anim_in,R.anim.anim_out);
+        overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
     }
 
     @Override
@@ -173,7 +184,7 @@ public class CameraSetting extends AppCompatActivity implements View.OnClickList
 
     @Override
     protected void onDestroy() {
-        presenter.saveSetting(box_0.isChecked(),box_4.isChecked(),box_1.isChecked(),box_2.isChecked(),box_3.isChecked(),this);
+        presenter.saveSetting( box_0.isChecked(),box_4.isChecked(),box_1.isChecked(),box_2.isChecked(),box_3.isChecked(),this);
         super.onDestroy();
     }
 

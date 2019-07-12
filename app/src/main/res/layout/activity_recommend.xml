@@ -60,7 +60,7 @@
         android:layout_width="match_parent"
         android:layout_height="15dp"/>
     <RelativeLayout
-        android:background="@drawable/round_top_util"
+        android:background="#fff"
         android:paddingStart="4dp"
         android:paddingTop="6dp"
         android:paddingBottom="4dp"
@@ -68,7 +68,7 @@
         android:id="@+id/video_reply_normal"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="42dp">
+        android:layout_height="48dp">
         <LinearLayout
             android:id="@+id/video_reply_layout"
             android:layout_toLeftOf="@id/video_bottom_right"
@@ -80,19 +80,8 @@
             android:paddingEnd="30dp"
             android:background="@drawable/reply_shape"
             android:layout_width="300dp"
-            android:layout_height="match_parent">
-            <ImageView
-                android:padding="1dp"
-                android:src="@drawable/pen"
-                android:layout_width="20dp"
-                android:layout_height="20dp" />
-            <TextView
-                android:textColor="@color/text_back_1"
-                android:textSize="@dimen/text_1"
-                android:paddingStart="4dp"
-                android:text="写评论..."
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
         </LinearLayout>
         <LinearLayout
             android:layout_marginStart="15dp"
@@ -106,20 +95,20 @@
                 android:id="@+id/thumb"
                 android:layout_marginEnd="10dp"
                 android:padding="1dp"
-                android:src="@drawable/thumb"
+                android:src="@mipmap/like"
                 android:layout_width="24dp"
                 android:layout_height="24dp" />
             <ImageView
                 android:id="@+id/star"
                 android:layout_marginEnd="10dp"
                 android:padding="1dp"
-                android:src="@drawable/star_0"
+                android:src="@mipmap/love"
                 android:layout_width="24dp"
                 android:layout_height="24dp" />
             <ImageView
                 android:layout_marginEnd="10dp"
                 android:padding="1dp"
-                android:src="@drawable/see_right"
+                android:src="@mipmap/zf"
                 android:layout_width="24dp"
                 android:layout_height="24dp" />
         </LinearLayout>
@@ -139,10 +128,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <EditText
-                android:hint="写下你的评论吧 ~"
                 android:maxLines="3"
-                android:paddingTop="2dp"
-                android:paddingBottom="2dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
                 android:layout_marginBottom="4dp"
@@ -174,7 +162,7 @@
                 android:layout_gravity="end"
                 android:layout_marginEnd="15dp"
                 android:padding="1dp"
-                android:src="@drawable/emoj"
+                android:src="@mipmap/emoji"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginBottom="4dp"
@@ -203,5 +191,5 @@
         android:layout_alignParentLeft="true"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:src="@mipmap/back_b"/>
+        android:src="@mipmap/onback_blue"/>
 </android.support.design.widget.CoordinatorLayout>

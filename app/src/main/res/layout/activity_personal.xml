@@ -23,7 +23,7 @@
         android:background="@drawable/bg_ripple_oval_gray"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:src="@mipmap/back_w"/>
+        android:src="@mipmap/onback_white"/>
     <View
         android:visibility="gone"
         android:id="@+id/perBlackBg"
@@ -50,7 +50,7 @@
         <de.hdodenhof.circleimageview.CircleImageView
             android:elevation="1dp"
             android:id="@+id/perHeader"
-            android:src="@drawable/temp"
+            android:src="@drawable/header"
             android:layout_width="80dp"
             android:layout_height="80dp" />
         <LinearLayout
@@ -68,7 +68,7 @@
             android:layout_height="wrap_content">
             <ImageView
                 android:layout_gravity="center"
-                android:src="@drawable/share"
+                android:src="@mipmap/edit"
                 android:padding="1dp"
                 android:layout_width="24dp"
                 android:layout_height="24dp" />
@@ -82,6 +82,7 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
         <LinearLayout
+            android:elevation="6dp"
             android:id="@+id/perAttentionHe"
             android:visibility="gone"
             android:layout_marginTop="20dp"
@@ -98,11 +99,12 @@
                 android:layout_marginEnd="4dp"
                 android:layout_marginStart="4dp"
                 android:textSize="@dimen/text_2"
-                android:text="关注他"
+                android:text="关注"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
         <LinearLayout
+            android:elevation="6dp"
             android:id="@+id/perAttentioned"
             android:visibility="gone"
             android:layout_marginTop="20dp"
@@ -211,11 +213,6 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <View
-            android:id="@+id/perLayoutTop"
-            android:background="@drawable/personal_shape"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"/>
         <include
             android:id="@+id/perContentView"
             layout="@layout/personal_view"

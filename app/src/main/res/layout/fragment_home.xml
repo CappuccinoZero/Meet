@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:paddingTop="22dp"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#fff"
+    android:fitsSystemWindows="true"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.lin.meet.main.fragment.Home.Home">
     <android.support.design.widget.AppBarLayout
+        android:fitsSystemWindows="true"
         app:elevation="0dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <com.gigamole.navigationtabstrip.NavigationTabStrip
+            android:fitsSystemWindows="true"
             android:layout_marginStart="60dp"
             android:layout_marginEnd="60dp"
             android:id="@+id/home_tabLayout"
@@ -23,25 +28,15 @@
             app:nts_typeface="fonts/typeface.otf"
             app:nts_corners_radius="15dp"
             app:nts_animation_duration="300"
-            app:nts_color="#00BFA5"
-            app:nts_active_color="#00BFA5"
+            app:nts_color="#536DFE"
+            app:nts_active_color="#536DFE"
             app:nts_inactive_color="@color/text_back_2"
             />
     </android.support.design.widget.AppBarLayout>
-    <RelativeLayout
+    <com.lin.meet.override.MyViewPage
+        android:id="@+id/home_viewPage"
+        android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent">
-        <com.lin.meet.override.MyRefresh
-            android:id="@+id/home_refresh"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <com.lin.meet.override.MyViewPage
-                android:id="@+id/home_viewPage"
-                android:orientation="vertical"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </com.lin.meet.override.MyRefresh>
-    </RelativeLayout>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 </android.support.design.widget.CoordinatorLayout>

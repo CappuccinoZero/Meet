@@ -3,18 +3,20 @@ package com.lin.meet.picture_observer
 import android.content.Intent
 import android.net.Uri
 import android.os.Environment
+import cn.bmob.v3.BmobQuery
 import cn.bmob.v3.BmobUser
 import cn.bmob.v3.datatype.BmobFile
 import cn.bmob.v3.exception.BmobException
 import cn.bmob.v3.listener.DownloadFileListener
+import cn.bmob.v3.listener.FindListener
 import cn.bmob.v3.listener.SaveListener
 import cn.bmob.v3.listener.UploadFileListener
 import com.lin.meet.bean.User
-import com.lin.meet.bean.video_main
+import com.lin.meet.db_bean.picture_main
 import java.io.File
 
 class ObserverPresenter():ObserverContract.Presenter ,ObserverContract.SendPresenter{
-    override fun updateHot(bean: video_main) {
+    override fun updateHot(bean: picture_main) {
         bean.save(object :SaveListener<String>(){
             override fun done(p0: String?, p1: BmobException?) {
             }
@@ -33,8 +35,13 @@ class ObserverPresenter():ObserverContract.Presenter ,ObserverContract.SendPrese
             sendView?.toast("主题必须填写")
             return
         }
+        if(path.isEmpty()){
+            sendView?.toast("必须添加图片")
+            return
+        }
         if(!BmobUser.isLogin()){
             sendView?.toast("需要登录")
+            return
         }
         val user = BmobUser.getCurrentUser(User::class.java)
         sendView?.showLoadingDialog()
@@ -42,10 +49,9 @@ class ObserverPresenter():ObserverContract.Presenter ,ObserverContract.SendPrese
         bmobFile?.uploadblock(object :UploadFileListener(){
             override fun done(p0: BmobException?) {
                 if(p0==null){
-                    val bean = video_main()
+                    val bean = picture_main()
                     bean.uri = bmobFile?.fileUrl
                     bean.uid = user.uid
-                    bean.isPicture = true
                     bean.tltle = title
                     bean.content = if(content.isEmpty())"@null" else content
                     updateData(bean)
@@ -55,7 +61,7 @@ class ObserverPresenter():ObserverContract.Presenter ,ObserverContract.SendPrese
         })
     }
 
-    private fun updateData(bean:video_main){
+    private fun updateData(bean: picture_main){
         bean.save(object :SaveListener<String>(){
             override fun done(p0: String?, p1: BmobException?) {
                 if(p1 == null){
@@ -73,6 +79,16 @@ class ObserverPresenter():ObserverContract.Presenter ,ObserverContract.SendPrese
     override fun initAuthorMessage(uid: String) {
         if(uid == "@Meet")
             view?.updateAhthor(null,false)
+        val query = BmobQuery<User>()
+        query.addWhereEqualTo("uid",uid)
+        query.findObjects(object :FindListener<User>(){
+            override fun done(list: MutableList<User>?, e: BmobException?) {
+                if(e==null&&list!=null&&list.size>0){
+                    view?.setHeader(list[0].headerUri)
+                    view?.setNickName(list[0].nickName)
+                }
+            }
+        })
     }
     constructor(view:ObserverContract.View):this(){
         this.view = view

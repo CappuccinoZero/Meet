@@ -1,6 +1,8 @@
 package com.lin.meet.video;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,19 +10,23 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.lin.meet.R;
-import com.lin.meet.bean.ReplyBean;
-import com.lin.meet.bean.ReplyViewHolder;
-import com.lin.meet.bean.video_comment;
+import com.lin.meet.comment.CommentActivity;
+import com.lin.meet.db_bean.Reply;
+import com.lin.meet.db_bean.ReplyHolder;
+import com.lin.meet.db_bean.comment;
+import com.lin.meet.personal.PersonalActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.v3.BmobUser;
 
-public class CommentAdapter extends RecyclerView.Adapter<ReplyViewHolder> {
-    private List<ReplyBean> replys = new ArrayList<>();
+public class CommentAdapter extends RecyclerView.Adapter<ReplyHolder> {
+    private List<Reply> replys = new ArrayList<>();
     private Context context;
     private VideoCallback callback;
+    private int tempIndex = -1;
+    private int tempCount = -1;
 
     CommentAdapter(VideoCallback callback){
         this.callback = callback;
@@ -28,11 +34,11 @@ public class CommentAdapter extends RecyclerView.Adapter<ReplyViewHolder> {
 
     @NonNull
     @Override
-    public ReplyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public ReplyHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         if(context==null)
             context = viewGroup.getContext();
         View view = LayoutInflater.from(context).inflate(R.layout.comment_item,viewGroup,false);
-        return new ReplyViewHolder(view);
+        return new ReplyHolder(view);
     }
 
     private boolean isNoLogin(){
@@ -40,34 +46,35 @@ public class CommentAdapter extends RecyclerView.Adapter<ReplyViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ReplyViewHolder viewHolder, int index) {
-        viewHolder.content.setText(replys.get(index).content);
-        viewHolder.nickName0.setText(replys.get(index).nickName0);
-        viewHolder.time.setText(replys.get(index).time);
-        viewHolder.loadHeader(context,replys.get(index).header);
+    public void onBindViewHolder(@NonNull ReplyHolder viewHolder, int index) {
+        viewHolder.content.setText(replys.get(index).bean.getContent());
+        viewHolder.nickName.setText(replys.get(index).nickName);
+        viewHolder.time.setText(replys.get(index).bean.getCreatedAt());
+        viewHolder.loadHeader(context,replys.get(index).headUri);
         viewHolder.setLickCount(replys.get(index).likeCount);
         viewHolder.setLike(replys.get(index).like);
-        if(replys.get(index).commentCount>0)
-            viewHolder.replyCount.setText(String.valueOf(replys.get(index).commentCount)+"回复");
+        if(replys.get(index).replyCount>0)
+            viewHolder.replyCount.setText(String.valueOf(replys.get(index).replyCount)+"回复");
         else
             viewHolder.replyCount.setText("回复");
-        viewHolder.setReplyCount(replys.get(index).commentCount);
-        if(replys.get(index).nickName1!=null&&replys.get(index).content1!=null){
-            viewHolder.content1.setText(replys.get(index).content1);
-            viewHolder.nickName1.setText(replys.get(index).nickName1+"：");
-        }
-        if(replys.get(index).nickName2!=null&&replys.get(index).content2!=null){
-            viewHolder.content2.setText(replys.get(index).content2);
-            viewHolder.nickName2.setText(replys.get(index).nickName2+"：");
-        }
         viewHolder.item.setOnClickListener((v)->{
-            callback.showSonEdit(replys.get(index).getVideo(),index);
+            Intent intent = new Intent(context, CommentActivity.class);
+            intent.putExtra("id",replys.get(index).bean.getId());
+            intent.putExtra("flag",replys.get(index).bean.getFlag());
+            intent.putExtra("Like",replys.get(index).like);
+            intent.putExtra("Count",replys.get(index).replyCount);
+            callback.startComment(intent);
+            tempIndex = index;
         });
         viewHolder.like.setOnClickListener(v->{
             if(isNoLogin())return;
-            replys.get(index).like = viewHolder.onClickLike();
-            callback.onCommentLike(index,replys.get(index).floor);
+            replys.get(index).like = !replys.get(index).like;
+            viewHolder.setLikeAnim(replys.get(index).like);
+            updateCommentLike(index,viewHolder,replys.get(index).like);
+            callback.onCommentLike(replys.get(index).bean.getId(),replys.get(index).bean.getUid(),replys.get(index).like);
         });
+        viewHolder.replyCount.setOnClickListener(v-> callback.showSonEdit(replys.get(index).bean,index));
+        viewHolder.header.setOnClickListener(v-> PersonalActivity.Companion.startOther((Activity) context,replys.get(index).bean.getUid()));
     }
 
     @Override
@@ -75,58 +82,49 @@ public class CommentAdapter extends RecyclerView.Adapter<ReplyViewHolder> {
         return replys.size();
     }
 
-    synchronized int insertComment(ReplyBean bean){
-        if(replys.size()==0){
-            replys.add(bean);
-            notifyDataSetChanged();
-            return replys.size();
-        }
-        for(int i=0;i<replys.size();i++){
-            if(replys.get(i).updateTime<bean.updateTime){
-                replys.add(i,bean);
-                notifyDataSetChanged();
-                return i;
-            }
-        }
+    synchronized int insertComment(Reply bean){
         replys.add(bean);
         notifyDataSetChanged();
-        return replys.size();
+        return replys.size()-1;
     }
 
-    void updateSonReply(String msg,String nickName,int position,int floor){
-        if(floor == 1){
-            replys.get(position).content1 = msg;
-            replys.get(position).nickName1 = nickName;
-        }
-        else if(floor==2){
-            replys.get(position).content2 = msg;
-            replys.get(position).nickName2 = nickName;
-        }
-        replys.get(position).commentCount = floor;
+    public void addComment(int position){
+        replys.get(position).replyCount++;
         notifyDataSetChanged();
     }
 
-    void updateCommentLike(int position,boolean like){
-        replys.get(position).like = like;
+    private void updateCommentLike(int i,ReplyHolder holder,boolean like){
         if(like)
-            replys.get(position).likeCount = replys.get(position).likeCount +1;
+            replys.get(i).likeCount++;
         else
-            replys.get(position).likeCount = replys.get(position).likeCount -1;
-        notifyDataSetChanged();
-    }
-
-    void setCommentLikeCount(int position,int count){
-        replys.get(position).likeCount = count;
-        notifyDataSetChanged();
-    }
-
-    void setCommentLike(int position,boolean like){
-        replys.get(position).like = like;
+            replys.get(i).likeCount--;
         notifyDataSetChanged();
     }
 
     interface VideoCallback{
-        void showSonEdit(video_comment comment, int position);
-        void onCommentLike(int position,int floor);
+        void showSonEdit(comment comment, int position);
+        void onCommentLike(String parentId,String parentUid,boolean like);
+        void startComment(Intent intent);
+    }
+
+    void updateLikeStatus(boolean like){
+        if(tempIndex!=-1){
+            if(like&&!replys.get(tempIndex).like){
+                replys.get(tempIndex).likeCount++;
+            }else if(!like&&replys.get(tempIndex).like){
+                replys.get(tempIndex).likeCount--;
+            }
+            replys.get(tempIndex).like = like;
+            notifyDataSetChanged();
+        }
+    }
+
+    void updateCommentStatus(int count){
+        if(tempIndex!=-1&&count!=-1){
+            if(count!=tempCount){
+                replys.get(tempIndex).replyCount = count;
+                notifyDataSetChanged();
+            }
+        }
     }
 }

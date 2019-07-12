@@ -3,20 +3,20 @@ package com.lin.meet.main.fragment.Know
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.support.v4.app.ActivityCompat
-import android.support.v4.app.ActivityOptionsCompat
-import android.support.v4.util.Pair
+import android.support.v4.app.Fragment
 import android.support.v7.widget.RecyclerView
 import android.transition.Explode
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import com.lin.meet.Know.KnowActivity
 import com.lin.meet.R
+import com.lin.meet.know.KnowActivity
+import com.lin.meet.personal.PersonalActivity
 
-class KnowAdapter:RecyclerView.Adapter<KnowViewHolder>() {
+class KnowAdapter(fragment:Fragment):RecyclerView.Adapter<KnowViewHolder>() {
     private var knows:ArrayList<KnowAndUser> = ArrayList()
     private var context: Context?= null
+    private val fragment = fragment
+    private var flagId = -1
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): KnowViewHolder {
         if(context==null)
             context = p0.context
@@ -27,6 +27,7 @@ class KnowAdapter:RecyclerView.Adapter<KnowViewHolder>() {
     override fun getItemCount(): Int {
             return knows.size
     }
+
 
     override fun onBindViewHolder(viewHolder: KnowViewHolder, i: Int) {
         viewHolder.setHeader(context!!,knows!![i].user.headerUri)
@@ -43,12 +44,11 @@ class KnowAdapter:RecyclerView.Adapter<KnowViewHolder>() {
                 (context as Activity).window.exitTransition = Explode()
                 context!!.startActivity(intent)
             }else{
-                (context as Activity).window.sharedElementExitTransition = Explode()
-                val pair = Pair<View,String>(viewHolder.img,viewHolder.img.transitionName)
-                val compact = ActivityOptionsCompat.makeSceneTransitionAnimation(context as Activity,pair)
-                ActivityCompat.startActivity(context as Activity,intent,compact.toBundle())
+                fragment.startActivityForResult(intent,2000)
+                flagId = i
             }
         }
+        viewHolder.header.setOnClickListener { PersonalActivity.startOther(context as Activity,knows[i].bean.uid) }
     }
 
     fun refresh(){
@@ -63,6 +63,11 @@ class KnowAdapter:RecyclerView.Adapter<KnowViewHolder>() {
 
     fun insertKnow(position:Int,bean:KnowAndUser){
         knows.add(position,bean)
+        notifyDataSetChanged()
+    }
+
+    fun changeOk(){
+        knows[flagId].bean.solve = true
         notifyDataSetChanged()
     }
 }

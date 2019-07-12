@@ -22,6 +22,8 @@
             android:layout_weight="2"
             android:orientation="horizontal">
             <ImageView
+                android:layout_marginTop="4dp"
+                android:layout_marginStart="8dp"
                 android:paddingBottom="4dp"
                 android:paddingTop="4dp"
                 android:paddingRight="4dp"
@@ -32,7 +34,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:src="@mipmap/back_w"/>
+                android:src="@mipmap/onback_white"/>
             <ImageView
                 android:padding="4dp"
                 android:clickable="true"
@@ -43,7 +45,6 @@
                 android:layout_height="36dp"
                 android:src="@mipmap/light_close"
                 />
-
             <ImageView
                 android:padding="5dp"
                 android:clickable="true"
@@ -52,12 +53,10 @@
                 android:layout_width="34dp"
                 android:layout_height="34dp"
                 android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:layout_marginEnd="7dp"
-                android:layout_marginRight="7dp"
-                android:src="@mipmap/setting" />
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                android:src="@mipmap/setting2" />
         </RelativeLayout>
         <LinearLayout
             android:background="#00000000"
@@ -145,22 +144,23 @@
                 android:clickable="true"
                 />
             <ImageView
-                android:layout_width="64dp"
-                android:layout_height="64dp"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
                 android:layout_centerInParent="true"
                 android:background="@drawable/bg_camera"/>
-            <android.support.design.widget.FloatingActionButton
+            <ImageView
                 android:id="@+id/camera_discern"
                 android:scaleType="center"
-                android:backgroundTint="#4DB6AC"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:fabSize="normal"
                 android:layout_centerInParent="true"
-                android:layout_margin="16dp"
-                android:src="@mipmap/eye"
-                app:elevation="8dp"
-                app:borderWidth="0dp"/>
+                android:src="@mipmap/camera"
+                android:padding="50dp"
+                android:layout_gravity="bottom|center"
+                android:layout_marginBottom="6dp"
+                android:elevation="9dp"
+                android:background="@drawable/bg_camera_ripple"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                />
         </RelativeLayout>
     </LinearLayout>
 </RelativeLayout>

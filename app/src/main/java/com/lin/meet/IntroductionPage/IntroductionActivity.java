@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -14,6 +15,7 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
 import android.view.View;
@@ -24,19 +26,29 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baidu.location.BDAbstractLocationListener;
+import com.baidu.location.BDLocation;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.lin.meet.R;
+import com.lin.meet.my_util.MyUtil;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.tools.PictureFileUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.bmob.v3.BmobUser;
 import comulez.github.droplibrary.DropIndicator;
+import top.zibin.luban.CompressionPredicate;
+import top.zibin.luban.Luban;
+import top.zibin.luban.OnCompressListener;
 
 
 public class IntroductionActivity extends AppCompatActivity implements View.OnClickListener ,IntorductionContract.View{
@@ -64,10 +76,13 @@ public class IntroductionActivity extends AppCompatActivity implements View.OnCl
     private IntorductionContract.Presenter presenter;
     private RelativeLayout result_1,result_2,result_3;
     private TextView text11,text12,text21,text22,text31,text32;
-    private boolean fixResult = false,useCamera = false;
+    private boolean fixResult = false;
     private DropIndicator indicator;
     private RequestOptions requestOptions = new RequestOptions();
     private AlertDialog alertDialog;
+    private LocationClient locationClient;
+    private String name,maybe;
+    private int okId = -1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +93,7 @@ public class IntroductionActivity extends AppCompatActivity implements View.OnCl
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         init();
+        initLocation();
         Intent intent = getIntent();
         int page = intent.getIntExtra("page",0);
         if(intent.getBooleanExtra("usePhoto",true)){//来自相册
@@ -85,18 +101,71 @@ public class IntroductionActivity extends AppCompatActivity implements View.OnCl
             useCloseAnimation = true;
         }else {
             String path = intent.getStringExtra("imagePath");
+            image_path = path;
             setImageView(path);
             if(intent.getBooleanExtra("fromHistory",false)){//来自历史页
                 presenter.doIdentification(path,path);
                 ImageView tempImg = intent.getParcelableExtra("image");
             }else{//来自拍摄
                 timeId = intent.getLongExtra("time",0);
-                useCamera = true;
                 useCloseAnimation = true;
                 int id[]=intent.getIntArrayExtra("id");
                 float maybe[]=intent.getFloatArrayExtra("maybe");
                 presenter.doIdentification(id,maybe,page);
             }
+        }
+    }
+
+    private double latitude,longitude;
+    private void initLocation(){
+        LocationClientOption option = new LocationClientOption();
+        option.setOpenGps(true);
+        option.setCoorType("bd09ll");
+        option.setScanSpan(1000);
+        locationClient = new LocationClient(this);
+        locationClient.setLocOption(option);
+        locationClient.registerLocationListener(new MylocationListener());
+        locationClient.start();
+    }
+    public class MylocationListener extends BDAbstractLocationListener {
+        @Override
+        public void onReceiveLocation(BDLocation location) {
+            if (location == null){
+                return;
+            }
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+        }
+    }
+
+    @Override
+    public double getMapX() {
+        return latitude;
+    }
+
+    @Override
+    public double getMapY() {
+        return longitude;
+    }
+
+    @Override
+    public void saveError(String e) {
+        Toast.makeText(this,e,Toast.LENGTH_SHORT).show();
+        if(alertDialog!=null){
+            alertDialog.dismiss();
+        }
+    }
+
+    private void FlagOk(){
+        if(okId==1){
+            cancelResultView(result_1,text12);
+            text12.setText("标记成功");
+        }else if(okId==2){
+            cancelResultView(result_2,text22);
+            text22.setText("标记成功");
+        }else if(okId==3){
+            cancelResultView(result_3,text32);
+            text32.setText("标记成功");
         }
     }
 
@@ -142,10 +211,12 @@ public class IntroductionActivity extends AppCompatActivity implements View.OnCl
                     cancelResultView(result_2,text21);
                     cancelResultView(result_3,text31);
                     presenter.updateResult(timeId,animal_1.getText().toString());
-                    if(!useCamera)
-                        cancelResultView(result_1,text12);
-                }else
+                }else{
+                    name = animal_1.getText().toString();
+                    maybe = probability_1.getText().toString();
                     showMapDialog(0);
+                    okId = 1;
+                }
             }
         });
 
@@ -177,10 +248,13 @@ public class IntroductionActivity extends AppCompatActivity implements View.OnCl
                     cancelResultView(result_1,text11);
                     cancelResultView(result_3,text31);
                     presenter.updateResult(timeId,animal_2.getText().toString());
-                    if(!useCamera)
-                        cancelResultView(result_2,text22);
-                }else
+                }
+                else{
+                    name = animal_2.getText().toString();
+                    maybe = probability_2.getText().toString();
                     showMapDialog(0);
+                    okId = 2;
+                }
             }
         });
 
@@ -212,10 +286,12 @@ public class IntroductionActivity extends AppCompatActivity implements View.OnCl
                     cancelResultView(result_1,text11);
                     cancelResultView(result_2,text21);
                     presenter.updateResult(timeId,animal_3.getText().toString());
-                    if(!useCamera)
-                        cancelResultView(result_3,text32);
-                }else
+                }else{
+                    name = animal_3.getText().toString();
+                    maybe = probability_3.getText().toString();
                     showMapDialog(0);
+                    okId = 3;
+                }
             }
         });
 
@@ -339,6 +415,9 @@ public class IntroductionActivity extends AppCompatActivity implements View.OnCl
                 .isGif(false)
                 .openClickSound(true)
                 .isDragFrame(true)
+                .isCamera(false)
+                .compress(true)
+                .minimumCompressSize(300)
                 .forResult(requestCode);
     }
 
@@ -350,37 +429,59 @@ public class IntroductionActivity extends AppCompatActivity implements View.OnCl
             (mView.findViewById(R.id.map_dialog_1)).setVisibility(View.VISIBLE);
         else if(id==1)
             (mView.findViewById(R.id.map_dialog_2)).setVisibility(View.VISIBLE);
-        else if(id==2)
+        else if(id==2){
             (mView.findViewById(R.id.map_dialog_3)).setVisibility(View.VISIBLE);
-
+            FlagOk();
+            alertDialog.dismiss();
+        }
         if(id==0){
             builder.setNegativeButton("取消",null);
             builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                    if(!BmobUser.isLogin()){
+                        Toast.makeText(IntroductionActivity.this,"需要登录",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     showMapDialog(1);
                 }
             });
         }else if(id==1){
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try{
-                        //模拟网络操作
-                        Thread.sleep(5000);
-                        runOnUiThread(new Runnable() {
+            File file = new File(image_path);
+            long size = 0;
+            try {
+                size = MyUtil.getFileSize(file);
+                size/=1024;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if(size<=300){
+                presenter.onFlagMap(image_path,name,maybe);
+            }else{
+                Luban.with(this)
+                        .load(image_path)
+                        .ignoreBy(300)
+                        .setTargetDir(Environment.getExternalStorageDirectory().getAbsoluteFile().toString() + File.separator + "Mybitmap"+File.separator)
+                        .filter(new CompressionPredicate() {
                             @Override
-                            public void run() {
-                                if(alertDialog!=null)
-                                    alertDialog.dismiss();
-                                showMapDialog(2);
+                            public boolean apply(String path) {
+                                return !(TextUtils.isEmpty(path) || path.toLowerCase().endsWith(".gif"));
                             }
-                        });
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
+                        })
+                        .setCompressListener(new OnCompressListener() {
+                            @Override
+                            public void onStart() {
+                            }
+                            @Override
+                            public void onSuccess(File file) {
+                                presenter.onFlagMap(file.getAbsolutePath(),name,maybe);
+                            }
+                            @Override
+                            public void onError(Throwable e) {
+                                Toast.makeText(IntroductionActivity.this,"图片压缩失败",Toast.LENGTH_SHORT).show();
+                            }
+                        }).launch();
+            }
         }else{
             builder.setPositiveButton("确定",null);
         }
@@ -467,7 +568,10 @@ public class IntroductionActivity extends AppCompatActivity implements View.OnCl
                 }
                 initAllButton();
                 media = PictureSelector.obtainMultipleResult(data).get(0);
-                if(media!=null&&media.isCut()){
+                if(media!=null&&media.isCompressed()){
+                    image_path = media.getCompressPath();
+                }
+                else if(media!=null&&media.isCut()){
                     image_path = media.getCutPath();
                 }else if(media!=null){
                     image_path = media.getPath();
@@ -480,7 +584,10 @@ public class IntroductionActivity extends AppCompatActivity implements View.OnCl
                     return;
                 }
                 media = PictureSelector.obtainMultipleResult(data).get(0);
-                if(media!=null&&media.isCut()){
+                if(media!=null&&media.isCompressed()){
+                    image_path = media.getCompressPath();
+                }
+                else if(media!=null&&media.isCut()){
                     image_path = media.getCutPath();
                 }else if(media!=null){
                     image_path = media.getPath();
@@ -495,7 +602,7 @@ public class IntroductionActivity extends AppCompatActivity implements View.OnCl
     public void finish(){
         super.finish();
         if(useCloseAnimation)
-            overridePendingTransition(R.anim.anim_in,R.anim.anim_out);
+            overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
     }
 
     private void cancelResultView(RelativeLayout result,TextView text){
@@ -509,7 +616,6 @@ public class IntroductionActivity extends AppCompatActivity implements View.OnCl
         initButton(result_2,text21,text22);
         initButton(result_3,text31,text32);
         fixResult = false;
-        useCamera = false;
     }
 
     private void initButton(RelativeLayout result,TextView text1,TextView text2){
@@ -536,7 +642,7 @@ public class IntroductionActivity extends AppCompatActivity implements View.OnCl
 
 
 
-    public class DepthPageTransformer implements ViewPager.PageTransformer {
+    public static class DepthPageTransformer implements ViewPager.PageTransformer {
         private static final float MIN_SCALE = 0.75f;
 
         public void transformPage(View view, float position) {

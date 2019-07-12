@@ -17,7 +17,7 @@
             android:layout_marginStart="6dp"
             android:padding="3dp"
             android:layout_centerVertical="true"
-            android:src="@drawable/close_back"
+            android:src="@mipmap/close_black"
             android:layout_width="32dp"
             android:layout_height="32dp" />
         <TextView
@@ -95,7 +95,7 @@
                         android:layout_margin="4dp"
                         android:layout_alignParentEnd="true"
                         android:background="@drawable/bg_ripple_oval_bg"
-                        android:src="@drawable/close_back_white"
+                        android:src="@mipmap/close_white"
                         android:layout_width="18dp"
                         android:layout_height="18dp" />
                 </RelativeLayout>
@@ -118,7 +118,7 @@
                         android:layout_margin="4dp"
                         android:layout_alignParentEnd="true"
                         android:background="@drawable/bg_ripple_oval_bg"
-                        android:src="@drawable/close_back_white"
+                        android:src="@mipmap/close_white"
                         android:layout_width="18dp"
                         android:layout_height="18dp" />
                 </RelativeLayout>
@@ -141,7 +141,7 @@
                         android:layout_margin="4dp"
                         android:layout_alignParentEnd="true"
                         android:background="@drawable/bg_ripple_oval_bg"
-                        android:src="@drawable/close_back_white"
+                        android:src="@mipmap/close_white"
                         android:layout_width="18dp"
                         android:layout_height="18dp" />
                 </RelativeLayout>
@@ -169,7 +169,7 @@
                         android:layout_margin="4dp"
                         android:layout_alignParentEnd="true"
                         android:background="@drawable/bg_ripple_oval_bg"
-                        android:src="@drawable/close_back_white"
+                        android:src="@mipmap/close_white"
                         android:layout_width="18dp"
                         android:layout_height="18dp" />
                 </RelativeLayout>
@@ -192,7 +192,7 @@
                         android:layout_margin="4dp"
                         android:layout_alignParentEnd="true"
                         android:background="@drawable/bg_ripple_oval_bg"
-                        android:src="@drawable/close_back_white"
+                        android:src="@mipmap/close_white"
                         android:layout_width="18dp"
                         android:layout_height="18dp" />
                 </RelativeLayout>
@@ -215,7 +215,7 @@
                         android:layout_margin="4dp"
                         android:layout_alignParentEnd="true"
                         android:background="@drawable/bg_ripple_oval_bg"
-                        android:src="@drawable/close_back_white"
+                        android:src="@mipmap/close_white"
                         android:layout_width="18dp"
                         android:layout_height="18dp" />
                 </RelativeLayout>
@@ -270,7 +270,7 @@
                 android:layout_marginStart="2dp"
                 android:padding="2dp"
                 android:layout_alignParentEnd="true"
-                android:src="@drawable/close_back_white"
+                android:src="@mipmap/close_white"
                 android:layout_width="18dp"
                 android:layout_height="match_parent" />
         </LinearLayout>
@@ -296,7 +296,7 @@
                 android:id="@+id/emoji"
                 android:layout_marginStart="10dp"
                 android:layout_centerVertical="true"
-                android:src="@drawable/emoj"
+                android:src="@mipmap/emoji"
                 android:layout_width="24dp"
                 android:layout_height="24dp" />
             <ImageView
@@ -304,7 +304,7 @@
                 android:id="@+id/picture"
                 android:layout_marginStart="20dp"
                 android:layout_centerVertical="true"
-                android:src="@drawable/add_photo"
+                android:src="@mipmap/picture2"
                 android:layout_width="24dp"
                 android:layout_height="24dp" />
             <ImageView
@@ -312,7 +312,7 @@
                 android:id="@+id/location"
                 android:layout_marginStart="20dp"
                 android:layout_centerVertical="true"
-                android:src="@drawable/add_location"
+                android:src="@mipmap/location"
                 android:layout_width="24dp"
                 android:layout_height="24dp" />
             <ImageView
@@ -320,7 +320,7 @@
                 android:id="@+id/type"
                 android:layout_marginStart="20dp"
                 android:layout_centerVertical="true"
-                android:src="@drawable/type"
+                android:src="@mipmap/type"
                 android:layout_width="24dp"
                 android:layout_height="24dp" />
         </RelativeLayout>

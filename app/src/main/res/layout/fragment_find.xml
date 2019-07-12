@@ -9,58 +9,51 @@
         android:layout_height="match_parent"
         android:id="@+id/baiduView"
         android:clickable="true"
-        >
-    </com.baidu.mapapi.map.MapView>
-
+        />
     <LinearLayout
         android:id="@+id/map_send"
         android:clickable="true"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="46dp"
         android:layout_marginEnd="12dp"
         android:layout_alignParentEnd="true"
         android:elevation="4dp"
-        android:paddingBottom="2dp"
-        android:paddingTop="2dp"
-        android:paddingStart="2dp"
-        android:paddingEnd="8dp"
+        android:paddingBottom="3dp"
+        android:paddingTop="3dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         android:background="@drawable/bg_map_1"
         android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-        <ImageView
-            android:src="@drawable/send_map"
-            android:padding="1dp"
-            android:layout_width="24dp"
-            android:layout_height="24dp" />
         <TextView
+            android:textSize="18sp"
             android:layout_gravity="center"
             android:textColor="@color/text_white_2"
-            android:text="发布动态"
+            android:text="发布"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
     <ImageView
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="46dp"
         android:id="@+id/map_refresh"
         android:clickable="true"
         android:elevation="4dp"
         android:padding="2dp"
         android:background="@drawable/bg_map_2"
-        android:src="@drawable/refresh"
-        android:layout_width="32dp"
-        android:layout_height="32dp" />
+        android:src="@mipmap/refresh"
+        android:layout_width="36dp"
+        android:layout_height="36dp" />
     <ImageView
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="20dp"
         android:layout_below="@+id/map_refresh"
         android:id="@+id/map_location"
         android:clickable="true"
         android:elevation="4dp"
         android:padding="2dp"
         android:background="@drawable/bg_map_2"
-        android:src="@drawable/map_location"
-        android:layout_width="32dp"
-        android:layout_height="32dp" />
+        android:src="@mipmap/position"
+        android:layout_width="36dp"
+        android:layout_height="36dp" />
 </RelativeLayout>

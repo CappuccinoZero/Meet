@@ -7,20 +7,14 @@ import java.util.List;
 public class LoveNewsBean implements Serializable {
      private String title;
      private String time;
+     private String content;
      private String img;
-     private String type;
      private String author;
      private String contentUri;
-    private List<String> contents = new ArrayList<>();
+     private int flag = 0;
+     private List<String> contents = new ArrayList<>();
      private List<String> imgs = new ArrayList<>();
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getType() {
-        return type;
-    }
 
     public void setTime(String time) {
         this.time = time;
@@ -56,13 +50,13 @@ public class LoveNewsBean implements Serializable {
         this.img = img;
     }
 
-    public void setImgs(List<String> imgs) {
-        this.imgs = imgs;
-    }
-
     public void setTitle(String title) {
         String temps[] = title.split("、");
         this.title = temps[1];
+    }
+
+    public void setAbsoluteTitle(String title) {
+        this.title = title;
     }
 
     public String getContentUri() {
@@ -78,23 +72,27 @@ public class LoveNewsBean implements Serializable {
             imgs.add(url);
     }
 
-    public String removeImg(int i){
-        return imgs.remove(i);
-    }
-
     public List<String> getContents() {
         return contents;
-    }
-
-    public void setContents(List<String> contents) {
-        this.contents = contents;
     }
 
     public void addContent(String content){
         contents.add(content);
     }
 
-    public String removeContent(int i){
-        return contents.remove(i);
+    public int getFlag() {
+        return flag;
+    }
+
+    public void setFlag(int flag) {
+        this.flag = flag;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getContent() {
+        return content;
     }
 }

@@ -7,7 +7,7 @@ import cn.bmob.v3.listener.DeleteBatchListener
 import cn.bmob.v3.listener.SaveListener
 import cn.bmob.v3.listener.UploadBatchListener
 import com.lin.meet.bean.User
-import com.lin.meet.bean.topic_main
+import com.lin.meet.db_bean.topic_main
 
 class SendTopicPresenter(view:SendTopicConstract.View):SendTopicConstract.Presenter {
     override fun canelUpload() {
@@ -39,7 +39,7 @@ class SendTopicPresenter(view:SendTopicConstract.View):SendTopicConstract.Presen
     }
 
 
-    private fun uploadFile(topic:topic_main){
+    private fun uploadFile(topic: topic_main){
         var pathStrs = arrayOfNulls<String>(paths.size)
         for (index in 0 until paths.size)
             pathStrs[index] = paths[index]
@@ -98,7 +98,7 @@ class SendTopicPresenter(view:SendTopicConstract.View):SendTopicConstract.Presen
 
 
 
-    private fun saveTopic(topic:topic_main){
+    private fun saveTopic(topic: topic_main){
         topic.save(object :SaveListener<String>(){
             override fun done(p0: String?, p1: BmobException?) {
                 if(p1 == null){

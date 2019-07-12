@@ -1,8 +1,10 @@
 package com.lin.meet.main.fragment.Home;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,16 +17,18 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.lin.meet.R;
 import com.lin.meet.bean.TopicMain;
-import com.lin.meet.bean.topic_main;
+import com.lin.meet.db_bean.topic_main;
 import com.lin.meet.override.ScaleAnim;
+import com.lin.meet.personal.PersonalActivity;
 import com.lin.meet.topic.TopicActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class  TopicAdapter extends RecyclerView.Adapter<TopicAdapter.ViewHolder> {
-
+    private int flagId = -1;
     private Context context;
+    private Fragment fragment;
     private RequestOptions options;
     private List<TopicBean> topics;
     private TopicCallback callback;
@@ -43,9 +47,7 @@ public class  TopicAdapter extends RecyclerView.Adapter<TopicAdapter.ViewHolder>
         viewHolder.setImageView(context,topics.get(i).bean.getOne_uri());
         viewHolder.nickName.setText(topics.get(i).nickName);
         viewHolder.time.setText(topics.get(i).bean.getCreatedAt());
-        viewHolder.type.setText(topics.get(i).bean.getType());
         viewHolder.title.setText(topics.get(i).bean.getTitle());
-        viewHolder.content.setText(topics.get(i).bean.getContent());
         viewHolder.setThumb(topics.get(i).like);
         viewHolder.item.setOnClickListener(v->{
             TopicMain bean = new TopicMain(topics.get(i).bean);
@@ -53,13 +55,25 @@ public class  TopicAdapter extends RecyclerView.Adapter<TopicAdapter.ViewHolder>
             bean.setNickName(topics.get(i).nickName);
             Intent intent = new Intent(context, TopicActivity.class);
             intent.putExtra("bean",bean);
-            context.startActivity(intent);
+            flagId = i;
+            fragment.startActivityForResult(intent,2000);
+        });
+        viewHolder.comment.setOnClickListener(v->{
+            TopicMain bean = new TopicMain(topics.get(i).bean);
+            bean.setHeaderUri(topics.get(i).header);
+            bean.setNickName(topics.get(i).nickName);
+            Intent intent = new Intent(context, TopicActivity.class);
+            intent.putExtra("bean",bean);
+            intent.putExtra("comment",true);
+            flagId = i;
+            fragment.startActivityForResult(intent,2000);
         });
         viewHolder.thumb.setOnClickListener(v->{
             topics.get(i).like = !topics.get(i).like;
-            callback.onClickLike(i,topics.get(i).bean.getId());
+            callback.onClickLike(topics.get(i).like,topics.get(i).bean.getId(),topics.get(i).bean.getUid(),i);
             viewHolder.onThumbClick(topics.get(i).like);
         });
+        viewHolder.header.setOnClickListener(v-> PersonalActivity.Companion.startOther((Activity) context,topics.get(i).bean.getUid()));
     }
 
     @Override
@@ -76,8 +90,6 @@ public class  TopicAdapter extends RecyclerView.Adapter<TopicAdapter.ViewHolder>
         TextView nickName;
         TextView time;
         TextView title;
-        TextView content;
-        TextView type;
         ImageView header;
         ImageView image;
         ImageView thumb;
@@ -89,8 +101,6 @@ public class  TopicAdapter extends RecyclerView.Adapter<TopicAdapter.ViewHolder>
             nickName = (TextView)itemView.findViewById(R.id.nickName);
             time = (TextView)itemView.findViewById(R.id.time);
             title = (TextView)itemView.findViewById(R.id.title);
-            content = (TextView)itemView.findViewById(R.id.content);
-            type = (TextView)itemView.findViewById(R.id.type);
             image = (ImageView)itemView.findViewById(R.id.topic_image);
             header = (ImageView)itemView.findViewById(R.id.topic_header);
             comment = (ImageView)itemView.findViewById(R.id.comment);
@@ -108,18 +118,18 @@ public class  TopicAdapter extends RecyclerView.Adapter<TopicAdapter.ViewHolder>
 
         void onThumbClick(boolean like){
             if(like){
-                ScaleAnim.startAnim(thumb,R.drawable.thumb_red);
+                ScaleAnim.startAnim(thumb,R.mipmap.like2);
             }
             else {
-                ScaleAnim.startAnim(thumb,R.drawable.thumb);
+                ScaleAnim.startAnim(thumb,R.mipmap.like);
             }
         }
 
         void setThumb(boolean like){
             if(like){
-                thumb.setImageResource(R.drawable.thumb_red);
+                thumb.setImageResource(R.mipmap.like2);
             }else {
-                thumb.setImageResource(R.drawable.thumb);
+                thumb.setImageResource(R.mipmap.like);
             }
         }
 
@@ -138,7 +148,8 @@ public class  TopicAdapter extends RecyclerView.Adapter<TopicAdapter.ViewHolder>
         }
     }
 
-    TopicAdapter(TopicCallback callback){
+    TopicAdapter(TopicCallback callback,Fragment activity){
+        this.fragment = activity;
         this.callback = callback;
         options = new RequestOptions();
     }
@@ -169,8 +180,16 @@ public class  TopicAdapter extends RecyclerView.Adapter<TopicAdapter.ViewHolder>
         notifyDataSetChanged();
     }
 
+    public void likeChange(){
+        if(flagId!=-1){
+            topics.get(flagId).like = !topics.get(flagId).like;
+            flagId = -1;
+            notifyDataSetChanged();
+        }
+    }
+
 
     interface TopicCallback{
-        void onClickLike(int position,String id);
+        void onClickLike(boolean like,String id,String uid,int position);
     }
 }

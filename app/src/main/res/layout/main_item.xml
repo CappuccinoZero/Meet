@@ -1,169 +1,295 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#fff"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="@drawable/drawer_round">
     <LinearLayout
+        android:id="@+id/message"
+        android:layout_marginTop="1dp"
         android:background="@drawable/bg_ripple_rrect_teal_0"
         android:clickable="true"
-        android:layout_marginTop="1dp"
-        android:layout_marginBottom="1dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="4dp"
-        android:padding="10dp"
+        android:paddingBottom="4dp"
+        android:paddingTop="24dp"
+        android:paddingEnd="12dp"
+        android:paddingStart="11dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
             android:padding="1dp"
             android:layout_gravity="center"
-            android:layout_marginStart="4dp"
-            android:src="@drawable/msg"
+            android:src="@mipmap/message"
             android:layout_width="24dp"
             android:layout_height="24dp"  />
         <TextView
             android:textColor="@color/text_back_2"
             android:textSize="@dimen/text_2"
             android:layout_gravity="center"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="8dp"
             android:text="消息"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-    </LinearLayout>
-    <LinearLayout
-        android:background="@drawable/bg_ripple_rrect_teal_0"
-        android:clickable="true"
-        android:layout_marginTop="1dp"
-        android:layout_marginBottom="1dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="4dp"
-        android:padding="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:padding="1dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="4dp"
-            android:src="@drawable/friends"
-            android:layout_width="24dp"
-            android:layout_height="24dp" />
-        <TextView
-            android:textColor="@color/text_back_2"
-            android:textSize="@dimen/text_2"
-            android:layout_gravity="center"
-            android:layout_marginStart="20dp"
-            android:text="好友"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-    <LinearLayout
-        android:background="@drawable/bg_ripple_rrect_teal_0"
-        android:clickable="true"
-        android:layout_marginTop="1dp"
-        android:layout_marginBottom="1dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="4dp"
-        android:padding="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:padding="1dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="4dp"
-            android:src="@drawable/like"
-            android:layout_width="24dp"
-            android:layout_height="24dp" />
-        <TextView
-            android:textColor="@color/text_back_2"
-            android:textSize="@dimen/text_2"
-            android:layout_gravity="center"
-            android:layout_marginStart="20dp"
-            android:text="收藏"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-    <LinearLayout
-        android:background="@drawable/bg_ripple_rrect_teal_0"
-        android:clickable="true"
-        android:layout_marginTop="1dp"
-        android:layout_marginBottom="1dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="4dp"
-        android:padding="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:padding="1dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="4dp"
-            android:src="@drawable/dynamic"
-            android:layout_width="24dp"
-            android:layout_height="24dp" />
-        <TextView
-            android:textColor="@color/text_back_2"
-            android:textSize="@dimen/text_2"
-            android:layout_gravity="center"
-            android:layout_marginStart="20dp"
-            android:text="动态"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:src="@mipmap/enter"
+                android:layout_gravity="end"
+                android:layout_width="24dp"
+                android:layout_height="24dp" />
+        </LinearLayout>
     </LinearLayout>
     <View
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
         android:background="@color/line_back"
         android:layout_width="match_parent"
         android:layout_height="1dp"/>
     <LinearLayout
+        android:id="@+id/friends"
         android:background="@drawable/bg_ripple_rrect_teal_0"
         android:clickable="true"
-        android:layout_marginTop="1dp"
-        android:layout_marginBottom="1dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="4dp"
-        android:padding="10dp"
+        android:paddingBottom="4dp"
+        android:paddingTop="24dp"
+        android:paddingEnd="12dp"
+        android:paddingStart="11dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:padding="1dp"
+            android:src="@mipmap/friend" />
+        <TextView
+            android:textColor="@color/text_back_2"
+            android:textSize="@dimen/text_2"
+            android:layout_gravity="center"
+            android:layout_marginStart="8dp"
+            android:text="好友"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:src="@mipmap/enter"
+                android:layout_gravity="end"
+                android:layout_width="24dp"
+                android:layout_height="24dp" />
+        </LinearLayout>
+    </LinearLayout>
+    <View
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:background="@color/line_back"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+    <LinearLayout
+        android:id="@+id/collection"
+        android:paddingBottom="4dp"
+        android:background="@drawable/bg_ripple_rrect_teal_0"
+        android:clickable="true"
+        android:paddingTop="24dp"
+        android:paddingEnd="12dp"
+        android:paddingStart="11dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
             android:padding="1dp"
             android:layout_gravity="center"
-            android:layout_marginStart="4dp"
-            android:src="@drawable/foot"
+            android:src="@mipmap/star"
             android:layout_width="24dp"
             android:layout_height="24dp" />
         <TextView
             android:textColor="@color/text_back_2"
             android:textSize="@dimen/text_2"
             android:layout_gravity="center"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="8dp"
+            android:text="收藏"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:src="@mipmap/enter"
+                android:layout_gravity="end"
+                android:layout_width="24dp"
+                android:layout_height="24dp" />
+        </LinearLayout>
+    </LinearLayout>
+    <View
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:background="@color/line_back"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+    <LinearLayout
+        android:id="@+id/dynamic"
+        android:paddingBottom="4dp"
+        android:background="@drawable/bg_ripple_rrect_teal_0"
+        android:clickable="true"
+        android:paddingTop="24dp"
+        android:paddingEnd="12dp"
+        android:paddingStart="11dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:padding="1dp"
+            android:layout_gravity="center"
+            android:src="@mipmap/coll"
+            android:layout_width="24dp"
+            android:layout_height="24dp" />
+        <TextView
+            android:textColor="@color/text_back_2"
+            android:textSize="@dimen/text_2"
+            android:layout_gravity="center"
+            android:layout_marginStart="8dp"
+            android:text="动态"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:src="@mipmap/enter"
+                android:layout_gravity="end"
+                android:layout_width="24dp"
+                android:layout_height="24dp" />
+        </LinearLayout>
+    </LinearLayout>
+    <View
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:background="@color/line_back"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+    <LinearLayout
+        android:id="@+id/foot"
+        android:paddingBottom="4dp"
+        android:background="@drawable/bg_ripple_rrect_teal_0"
+        android:clickable="true"
+        android:paddingTop="24dp"
+        android:paddingEnd="12dp"
+        android:paddingStart="11dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:padding="1dp"
+            android:layout_gravity="center"
+            android:src="@mipmap/foot"
+            android:layout_width="24dp"
+            android:layout_height="24dp" />
+        <TextView
+            android:textColor="@color/text_back_2"
+            android:textSize="@dimen/text_2"
+            android:layout_gravity="center"
+            android:layout_marginStart="8dp"
             android:text="我的足迹"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:src="@mipmap/enter"
+                android:layout_gravity="end"
+                android:layout_width="24dp"
+                android:layout_height="24dp" />
+        </LinearLayout>
     </LinearLayout>
+    <View
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:background="@color/line_back"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
     <LinearLayout
+        android:id="@+id/ar"
+        android:paddingBottom="4dp"
         android:background="@drawable/bg_ripple_rrect_teal_0"
         android:clickable="true"
-        android:layout_marginTop="1dp"
-        android:layout_marginBottom="1dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="4dp"
-        android:padding="10dp"
+        android:paddingTop="24dp"
+        android:paddingEnd="12dp"
+        android:paddingStart="11dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
             android:padding="1dp"
             android:layout_gravity="center"
-            android:layout_marginStart="4dp"
-            android:src="@drawable/interest"
+            android:src="@mipmap/ar"
             android:layout_width="24dp"
             android:layout_height="24dp" />
         <TextView
             android:textColor="@color/text_back_2"
             android:textSize="@dimen/text_2"
             android:layout_gravity="center"
-            android:layout_marginStart="20dp"
-            android:text="趣味识图"
+            android:layout_marginStart="8dp"
+            android:text="AR体验"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:src="@mipmap/enter"
+                android:layout_gravity="end"
+                android:layout_width="24dp"
+                android:layout_height="24dp" />
+        </LinearLayout>
     </LinearLayout>
-
+    <View
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:background="@color/line_back"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+    <LinearLayout
+        android:paddingBottom="4dp"
+        android:id="@+id/setting"
+        android:background="@drawable/bg_ripple_rrect_teal_0"
+        android:clickable="true"
+        android:paddingTop="24dp"
+        android:paddingEnd="12dp"
+        android:paddingStart="11dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:padding="1dp"
+            android:layout_gravity="center"
+            android:src="@mipmap/setting"
+            android:layout_width="24dp"
+            android:layout_height="24dp" />
+        <TextView
+            android:textColor="@color/text_back_2"
+            android:textSize="@dimen/text_2"
+            android:layout_gravity="center"
+            android:layout_marginStart="8dp"
+            android:text="设置"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:src="@mipmap/enter"
+                android:layout_gravity="end"
+                android:layout_width="24dp"
+                android:layout_height="24dp" />
+        </LinearLayout>
+    </LinearLayout>
+    <View
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:background="@color/line_back"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
 </LinearLayout>

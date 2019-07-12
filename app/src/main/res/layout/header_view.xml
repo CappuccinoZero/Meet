@@ -3,40 +3,47 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:id="@+id/mainHeadLayout"
-    android:layout_height="230dp">
-    <ImageView
-        android:transitionName="main_bg"
-        android:scaleType="centerCrop"
-        android:src="#00BFA5"
-        android:id="@+id/user_background"
-        android:layout_width="match_parent"
-        android:layout_height="230dp" />
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:transitionName="main_header"
-        android:layout_marginStart="15dp"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_above="@+id/user_name"
-        android:layout_marginBottom="15dp"
-        android:src="@drawable/temp"
-        android:id="@+id/user_header"/>
-    <TextView
-        android:transitionName="main_text"
-        android:layout_marginStart="25dp"
+    android:background="@drawable/drawer_bg0"
+    android:layout_height="200dp">
+    <RelativeLayout
         android:layout_alignParentBottom="true"
-        android:id="@+id/user_name"
-        android:text = "未登录"
-        android:layout_marginBottom="25dp"
-        android:textSize="@dimen/text_2"
-        android:textColor="#F0F0F0"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <View
-        android:layout_marginTop="215dp"
-        android:transitionName="main_view"
-        android:id="@+id/user_view"
-        android:clickable="true"
-        android:background="@drawable/round_top"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/drawer_round"
         android:layout_width="match_parent"
-        android:layout_height="150dp"/>
+        android:layout_height="110dp">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_centerVertical="true"
+            android:transitionName="main_header"
+            android:layout_marginStart="15dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/header"
+            android:id="@+id/user_header"/>
+        <TextView
+            android:layout_toEndOf="@id/user_header"
+            android:transitionName="main_text"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="30dp"
+            android:id="@+id/user_name"
+            android:text = "未登录"
+            android:textSize="@dimen/text_2"
+            android:textColor="@color/text_back_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:maxLines="2"
+            android:layout_marginTop="8dp"
+            android:layout_toEndOf="@id/user_header"
+            android:transitionName="main_text"
+            android:layout_marginStart="10dp"
+            android:layout_below="@id/user_name"
+            android:id="@+id/user_signature"
+            android:text = "想遇见可可爱爱的动物呀"
+            android:textSize="@dimen/text_0"
+            android:textColor="@color/text_back_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
 </RelativeLayout>

@@ -7,20 +7,18 @@
     android:layout_height="match_parent"
     android:background="#fff"
     tools:context=".history.HistoryActivity">
-
     <ImageView
         android:id="@+id/history_imageview"
         android:layout_width="match_parent"
         android:layout_height="@dimen/history_head"
         android:src="@drawable/bg_1"
-        android:scaleType="fitXY"
-        />
+        android:scaleType="fitXY" />
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/history_appbarlayout"
         android:background="#00FFFFFF"
-        android:id="@+id/history_appbar"
-        >
+        android:elevation="0dp"
+        android:id="@+id/history_appbar">
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -32,10 +30,10 @@
             <android.support.v7.widget.Toolbar
                 android:id="@+id/history_toolbar"
                 android:layout_width="match_parent"
+                android:outlineAmbientShadowColor="#3F84A5"
                 android:background="@color/colorPrimary"
                 android:layout_height="@dimen/history_toobar_height"
-                app:layout_collapseMode="pin"
-                >
+                app:layout_collapseMode="pin">
                 <ImageView
                     android:paddingBottom="4dp"
                     android:paddingTop="4dp"
@@ -43,11 +41,11 @@
                     android:clickable="true"
                     android:background="@drawable/bg_ripple_oval_gray"
                     android:id="@+id/history_back"
-                    android:src="@mipmap/back_g"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp" />
+                    android:src="@mipmap/onback_black"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp" />
                 <com.lin.meet.override.SmoothCheckBox
-                    app:color_checked="@color/Histroy_fb_color_green"
+                    app:color_checked="#FF4081"
                     android:visibility="gone"
                     android:layout_width="28dp"
                     android:layout_height="28dp"
@@ -93,7 +91,6 @@
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
     <android.support.v7.widget.RecyclerView
-
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/history_recyclerView"
@@ -107,10 +104,10 @@
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="30dp"
-        android:src="@drawable/delete_forevery"
+        android:src="@mipmap/delete"
         android:scaleType="fitXY"
         app:fabSize="normal"
-        app:backgroundTint="@color/Histroy_fb_color_green"
+        app:backgroundTint="#7C4DFF"
         app:borderWidth="0dp"
         app:elevation="8dp"
         />

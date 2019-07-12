@@ -32,25 +32,76 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".picture_observer.SendPitureActivity"></activity>
-        <activity android:name=".picture_observer.PictureObserver" />
-        <activity android:name=".Know.SendKnowActivity" />
+        <activity android:name=".ar.SelectModelActivity"></activity>
+        <activity android:name=".ar.ARCoreActivity" />
+
+        <meta-data
+            android:name="com.google.ar.core"
+            android:value="optional" />
+
+        <activity android:name=".start.IntroduceActivity" />
         <activity
-            android:name=".Know.KnowActivity"
-            android:theme="@style/translationStatusTheme" />
+            android:name=".drawer_setting.FeedbackActivity"
+            android:theme="@style/SettingTheme" />
+        <activity android:name=".main.JsoupGet" />
+        <activity android:name=".main.MainSearchActivity" />
+        <activity
+            android:name=".drawer_setting.AboutApp"
+            android:theme="@style/SettingTheme" />
+        <activity
+            android:name=".drawer_setting.MainSettingActivity"
+            android:label="设置"
+            android:theme="@style/SettingTheme" />
+        <activity
+            android:name=".drawer_footprint.FootprintActivity"
+            android:label="足迹"
+            android:theme="@style/snakeTheme" />
+        <activity
+            android:name=".drawer_collection.CollectionActivity"
+            android:label="收藏"
+            android:theme="@style/snakeTheme" />
+        <activity
+            android:name=".drawer_dynamic.DynamicActivity"
+            android:label="动态"
+            android:theme="@style/snakeTheme" />
+        <activity
+            android:name=".drawer_friends.vc.FriendsActivity"
+            android:label="好友"
+            android:theme="@style/snakeTheme" />
+        <activity
+            android:name=".comment.CommentActivity"
+            android:theme="@style/snakeTheme" />
+        <activity
+            android:name=".IntroductionPage.IntroducationSnakeActivity"
+            android:theme="@style/snakeTheme" />
+        <activity
+            android:name=".drawer_message.view.MyMessageActivity"
+            android:theme="@style/snakeTheme" />
+        <activity
+            android:name=".picture_observer.SendPitureActivity"
+            android:theme="@style/snakeTheme" />
+        <activity android:name=".picture_observer.PictureObserver" />
+        <activity
+            android:name=".know.SendKnowActivity"
+            android:theme="@style/snakeTheme" />
+        <activity
+            android:name=".know.KnowActivity"
+            android:theme="@style/snakeTransTheme" />
         <activity android:name=".main.fragment.Book.BaikeSearch" />
-        <activity android:name=".video.SendVideo" />
+        <activity
+            android:name=".video.SendVideo"
+            android:theme="@style/snakeTheme" />
         <activity
             android:name=".topic.SendTopic"
+            android:theme="@style/snakeTheme"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".topic.TopicActivity"
-            android:label="" />
+            android:label=""
+            android:theme="@style/snakeTheme" />
         <activity
             android:name=".recommend.RecommendActivity"
             android:theme="@style/translationStatusTheme" />
-        <activity android:name=".main.JsoupTest" />
-        <activity android:name=".login.NoMaybe" />
         <activity android:name=".login.RegisterActivity" />
         <activity android:name=".login.StartActivity" />
         <activity
@@ -58,12 +109,12 @@
             android:hardwareAccelerated="false" />
         <activity
             android:name=".personal.PersonalSetting"
-            android:label="个人资料" />
+            android:label=""
+            android:theme="@style/snakeTheme" />
         <activity android:name=".personal.PersonalActivity" />
         <activity
             android:name=".video.VideoActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait" />
+            android:theme="@style/snakeTheme" />
 
         <service
             android:name="com.baidu.location.f"
@@ -74,13 +125,15 @@
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="RoFNCV0ycFV6Qn8T9aMuLXECk7RYLbDZ" />
 
-        <activity android:name=".main.HelloTest" />
-        <activity android:name=".main.WebActivity" />
+        <activity
+            android:name=".main.WebActivity"
+            android:theme="@style/snakeTheme" />
         <activity android:name=".encyclopedia.EncyclopediaActivity" />
         <activity android:name=".IntroductionPage.IntroductionActivity" />
         <activity
             android:name=".history.HistoryActivity"
-            android:label="" />
+            android:label=""
+            android:theme="@style/snakeTheme" />
 
         <service
             android:name="com.baidu.location.f"
@@ -89,8 +142,11 @@
 
         <activity
             android:name=".setting.CameraSetting"
-            android:label="设定" />
-        <activity android:name=".main.MainActivity">
+            android:label="设定"
+            android:theme="@style/SettingTheme" />
+        <activity
+            android:name=".main.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

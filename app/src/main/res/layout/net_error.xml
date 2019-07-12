@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="#00FFFFFF"
+    android:layout_height="match_parent">
+    <ImageView
+        android:layout_gravity="center"
+        android:layout_marginTop="150dp"
+        android:src="@drawable/dog"
+        android:layout_width="125dp"
+        android:layout_height="125dp" />
+    <TextView
+        android:textSize="@dimen/text_2"
+        android:textColor="@color/text_back_2"
+        android:layout_marginTop="8dp"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="网络连接失败,请重试"/>
+</LinearLayout>

@@ -32,11 +32,13 @@ import com.lin.meet.override.SmoothCheckBox;
 import com.lin.meet.main.DataBase;
 import com.lin.meet.main.DataBaseModel;
 import com.lin.meet.my_util.MyUtil;
+import com.youngfeng.snake.annotations.EnableDragToClose;
 
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+@EnableDragToClose
 public class HistoryActivity extends AppCompatActivity implements View.OnClickListener,HistoryContract.View{
     private HistoryContract.Presenter presenter;
     private String title = "历史记录";
@@ -227,7 +229,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         rotation_1.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
-                actionButton.setImageResource(R.drawable.delete);
+                actionButton.setImageResource(R.mipmap.add);
                 super.onAnimationStart(animation);
             }
         });
@@ -253,7 +255,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         rotation_1.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
-                actionButton.setImageResource(R.drawable.delete_forevery);
+                actionButton.setImageResource(R.mipmap.delete);
                 super.onAnimationStart(animation);
             }
         });
@@ -300,7 +302,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void finish(){
         super.finish();
-        overridePendingTransition(R.anim.anim_in,R.anim.anim_out);
+        overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
     }
 
 }

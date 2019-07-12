@@ -4,12 +4,12 @@
     <color name="transparent">#00FFFFFF</color>
     <color name="colorPrimary">#FFFFFF</color>
     <color name="colorPrimaryDark">#FFFFFF</color>
-    <color name="colorAccent">#1DE9B6</color>
+    <color name="colorAccent">#3F85A6</color>
     <color name="release_bg">#4B4B4B</color>
     <color name="pink_A700">#C51162</color>
     <color name="camera_setting_color">#1DE9B6</color>
     <color name="camera_setting_box">#1DE9B6</color>
-    <color name="camera_setting_line">#FF4081</color>
+    <color name="camera_setting_line">#E7607A</color>
     <color name="Histroy_fb_color_red">#FF5252</color>
     <color name="Histroy_fb_color_green">#00BFA5</color>
     <color name="Histroy_fb_color_back">#5C6BC0</color>
@@ -25,5 +25,13 @@
     <color name="line_back">#1F000000</color>
     <color name="onclick">#2979FF</color>
     <color name="video_default">#787878</color>
-    <color name="background_default">#F0F0F0</color>
+    <color name="background_default">#FFFFFF</color>
+
+    <color name="msg_statusbar">#7986CB</color>
+    <color name="msg_appbar">#7986CB</color>
+    <color name="msg_tab_text_0">#FFF</color>
+    <color name="msg_tab_text_1">#651FFF</color>
+    <color name="tg_bgColor_left">#fff</color>
+    <color name="status_bar">#80FFFFFF</color>
+    <color name="refresh_color">#3F85A6</color>
 </resources>

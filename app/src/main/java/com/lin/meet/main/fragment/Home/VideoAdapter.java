@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.lin.meet.R;
+import com.lin.meet.personal.PersonalActivity;
 import com.lin.meet.video.VideoActivity;
 
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
         CircleImageView header;
         TextView nickName;
         TextView title;
+        View item;
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             video_image = (ImageView) itemView.findViewById(R.id.video_image);
@@ -45,6 +47,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
             header = (CircleImageView)itemView.findViewById(R.id.video_header);
             nickName = (TextView)itemView.findViewById(R.id.video_nickName);
             title = (TextView)itemView.findViewById(R.id.video_title);
+            item = (View)itemView.findViewById(R.id.item);
         }
 
         void setVideoImage(Context context,String uri){
@@ -71,13 +74,15 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
         viewHolder.nickName.setText(videos.get(i).getNickName());
         viewHolder.setHeader(context,videos.get(i).getHeaderUri());
         viewHolder.setVideoImage(context,videos.get(i).getBean().getUri());
-        viewHolder.video_image.setOnClickListener(v-> startPlayVideo(videos.get(i).getBean().getId(),viewHolder.video_image));
-        viewHolder.play_video.setOnClickListener(v-> startPlayVideo(videos.get(i).getBean().getId(),viewHolder.video_image));
+        viewHolder.item.setOnClickListener(v-> startPlayVideo(videos.get(i).getBean().getId(),videos.get(i).getBean().getUid(),viewHolder.video_image));
+        viewHolder.play_video.setOnClickListener(v-> startPlayVideo(videos.get(i).getBean().getId(),videos.get(i).getBean().getUid(),viewHolder.video_image));
+        viewHolder.header.setOnClickListener(v-> PersonalActivity.Companion.startOther((Activity)context,videos.get(i).getBean().getUid()));
     }
 
-    private void startPlayVideo(String id,View view){
+    private void startPlayVideo(String id,String uid,View view){
         Intent intent = new Intent(context, VideoActivity.class);
         intent.putExtra("VIDEO",id);
+        intent.putExtra("UID",uid);
         ((Activity)context).getWindow().setExitTransition(new Explode());
         context.startActivity(intent);
     }

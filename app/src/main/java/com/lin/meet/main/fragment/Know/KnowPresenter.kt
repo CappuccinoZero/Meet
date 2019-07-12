@@ -8,6 +8,7 @@ import com.lin.meet.bean.User
 
 class KnowPresenter(view:KnowConstarct.View):KnowConstarct.Presenter {
     override fun onInsertKnowToTop() {
+        view.isNetError(false)
         val query:BmobQuery<KnowBean> = BmobQuery()
         query.setLimit(page)
         query.setSkip(paged)
@@ -19,8 +20,11 @@ class KnowPresenter(view:KnowConstarct.View):KnowConstarct.Presenter {
                     for(index in 0 until p0.size){
                         selectUser(index,p0[index])
                     }
-                    view.endRefresh()
+                }else{
+                    view.isNetError(true)
                 }
+                view.endRefresh()
+                view.endLoadMore()
             }
         })
     }
@@ -33,8 +37,9 @@ class KnowPresenter(view:KnowConstarct.View):KnowConstarct.Presenter {
             override fun done(p0: MutableList<KnowBean>?, p1: BmobException?) {
                 if(p1 == null){
                     selectUser(0,p0!![0])
-                    view.endRefresh()
                 }
+                view.endRefresh()
+                view.endLoadMore()
             }
         })
     }
@@ -46,10 +51,11 @@ class KnowPresenter(view:KnowConstarct.View):KnowConstarct.Presenter {
     override fun refreshKnows() {
         paged = 0
         view.refreshAdapter()
-        insetKnow()
+        view.isNetError(false)
+        insertKnows(true)
     }
 
-    override fun insetKnow() {
+    private fun insertKnows(refresh: Boolean){
         if(loading)return
         loading = true
         val query:BmobQuery<KnowBean> = BmobQuery()
@@ -59,16 +65,23 @@ class KnowPresenter(view:KnowConstarct.View):KnowConstarct.Presenter {
         query.findObjects(object :FindListener<KnowBean>(){
             override fun done(p0: MutableList<KnowBean>?, p1: BmobException?) {
                 if(p1 == null){
+                    view.isNetError(false)
                     paged += p0!!.size
                     for(index in 0 until p0.size){
                         selectUser(p0[index])
                     }
-
+                }else if(refresh){
+                    view.isNetError(true)
                 }
                 view.endRefresh()
+                view.endLoadMore()
                 loading = false
             }
         })
+    }
+
+    override fun insetKnow() {
+        insertKnows(false)
     }
 
     private fun selectUser(bean:KnowBean){

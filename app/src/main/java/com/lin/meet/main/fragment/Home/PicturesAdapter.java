@@ -21,7 +21,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.lin.meet.R;
-import com.lin.meet.bean.video_main;
+import com.lin.meet.db_bean.picture_main;
 import com.lin.meet.my_util.MyUtil;
 import com.lin.meet.picture_observer.PictureObserver;
 
@@ -30,7 +30,7 @@ import java.util.List;
 
 public class PicturesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private RequestOptions options = new RequestOptions();
-    private List<video_main> pictures = new ArrayList<>();
+    private List<picture_main> pictures = new ArrayList<>();
     private List<Float> scales = new ArrayList<>();
     private Context context;
     public PicturesAdapter(Context context){
@@ -46,7 +46,7 @@ public class PicturesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
         if(viewHolder instanceof ViewHolder){
-            video_main bean = pictures.get(i);
+            picture_main bean = pictures.get(i);
             final ViewGroup.LayoutParams params = ((ViewHolder)viewHolder).image.getLayoutParams();
             params.width = MyUtil.getScreenWidth((Activity)context)/2 - MyUtil.dp2px(context,4);
             ((ViewHolder) viewHolder).title.setText(bean.getTltle());
@@ -89,7 +89,7 @@ public class PicturesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         notifyDataSetChanged();
     }
 
-    void insertPicture(int position,final video_main bean){
+    void insertPicture(int position,final picture_main bean){
         Glide.with(context).load(bean.getUri()).into(new SimpleTarget<Drawable>() {
             @Override
             public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
@@ -102,7 +102,7 @@ public class PicturesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         notifyDataSetChanged();
     }
 
-    public void insertPicture(final video_main bean){
+    public void insertPicture(final picture_main bean){
         Glide.with(context).load(bean.getUri()).into(new SimpleTarget<Drawable>() {
             @Override
             public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {

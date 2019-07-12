@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#fff"
+    tools:context=".main.MainSearchActivity">
+    <LinearLayout
+        android:background="#fff"
+        android:elevation="12dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:background="@drawable/bg_ripple_oval_gray"
+                android:id="@+id/back"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="24dp"
+                android:padding="3dp"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/close_black"
+                android:layout_width="32dp"
+                android:layout_height="32dp" />
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/search_text"
+                android:textSize="@dimen/text_2"
+                android:background="@drawable/bg_ripple_rrect_gray"
+                android:clickable="true"
+                android:paddingTop="1dp"
+                android:paddingBottom="1dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:layout_marginEnd="24dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:textColor="@color/text_back_2"
+                android:text="搜索"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+        <EditText
+            android:maxLines="1"
+            android:id="@+id/search"
+            android:paddingTop="20dp"
+            android:paddingBottom="30dp"
+            android:background="@null"
+            android:hint="输入你想搜索的。"
+            android:textSize="@dimen/text_4"
+            android:textStyle="bold"
+            android:paddingEnd="30dp"
+            android:paddingStart="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</LinearLayout>

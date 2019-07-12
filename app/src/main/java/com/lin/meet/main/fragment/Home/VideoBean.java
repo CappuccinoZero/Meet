@@ -1,6 +1,6 @@
 package com.lin.meet.main.fragment.Home;
 
-import com.lin.meet.bean.video_main;
+import com.lin.meet.db_bean.video_main;
 
 public class VideoBean {
     private video_main bean;

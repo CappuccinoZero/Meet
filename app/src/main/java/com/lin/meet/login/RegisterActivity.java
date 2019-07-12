@@ -3,10 +3,10 @@ package com.lin.meet.login;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -41,8 +41,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private TextView phoneText;
     private EditText veriEdit;
     private RelativeLayout smsLayout;
-    private TextInputLayout userLayout;
-    private TextInputLayout passLayout;
     private Timer timer;
     private TimerTask timerTask;
     private int countTime = 60;
@@ -59,7 +57,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         waveLayout = (RelativeLayout)findViewById(R.id.wave_layout);
         waveBack = (ImageView)findViewById(R.id.waveBack);
         next = (Button)findViewById(R.id.register_next);
-        waveView = (WaveView)findViewById(R.id.login_waveView);
         usernameEdit = (EditText)findViewById(R.id.register_username_edit);
         passwordEdit = (EditText)findViewById(R.id.register_password_edit);
         reSendSms = (TextView)findViewById(R.id.register_reSend);
@@ -67,12 +64,54 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         phoneText = (TextView)findViewById(R.id.register_phone_message);
         veriEdit = (EditText)findViewById(R.id.register_veri_edit);
         smsLayout = (RelativeLayout)findViewById(R.id.register_sms_layout);
-        userLayout = (TextInputLayout)findViewById(R.id.register_user_layout);
-        passLayout = (TextInputLayout)findViewById(R.id.register_password_layout);
         reSendSms.setOnClickListener(this);
         veriEdit.addTextChangedListener(this);
         waveBack.setOnClickListener(this);
         next.setOnClickListener(this);
+        usernameEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(usernameEdit.getText().toString().isEmpty()){
+                    usernameEdit.setGravity(Gravity.CENTER);
+                    usernameEdit.setCursorVisible(false);
+                }else {
+                    usernameEdit.setGravity(Gravity.START);
+                    usernameEdit.setCursorVisible(true);
+                }
+            }
+        });
+        passwordEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(passwordEdit.getText().toString().isEmpty()){
+                    passwordEdit.setGravity(Gravity.CENTER);
+                    passwordEdit.setCursorVisible(false);
+                }else {
+                    passwordEdit.setGravity(Gravity.START);
+                    passwordEdit.setCursorVisible(true);
+                }
+            }
+        });
     }
 
     @Override
@@ -81,7 +120,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             case R.id.waveBack:
                 if(status==0){
                     startActivity(new Intent(this,StartActivity.class));
-                    overridePendingTransition(R.anim.anim_in,R.anim.anim_out);
+                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                     finish();
                 }
                 else
@@ -105,7 +144,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     public void onBackPressed() {
         if(status==0){
             startActivity(new Intent(this,StartActivity.class));
-            overridePendingTransition(R.anim.anim_in,R.anim.anim_out);
+            overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
             super.onBackPressed();
         }
         else
@@ -139,8 +178,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     public void showSmsLayout() {
         status = 1;
         smsLayout.setVisibility(View.VISIBLE);
-        userLayout.setVisibility(View.GONE);
-        passLayout.setVisibility(View.GONE);
+        usernameEdit.setVisibility(View.GONE);
+        passwordEdit.setVisibility(View.GONE);
         next.setVisibility(View.GONE);
         veriEdit.requestFocus();
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -152,8 +191,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     public void hideSmsLayout() {
         status = 0;
         smsLayout.setVisibility(View.GONE);
-        userLayout.setVisibility(View.VISIBLE);
-        passLayout.setVisibility(View.VISIBLE);
+        usernameEdit.setVisibility(View.VISIBLE);
+        passwordEdit.setVisibility(View.VISIBLE);
         next.setVisibility(View.VISIBLE);
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         View v = getWindow().peekDecorView();
@@ -214,8 +253,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     public void showSendSMSError() {
         status = 1;
         smsLayout.setVisibility(View.VISIBLE);
-        userLayout.setVisibility(View.GONE);
-        passLayout.setVisibility(View.GONE);
+        usernameEdit.setVisibility(View.GONE);
+        passwordEdit.setVisibility(View.GONE);
         next.setVisibility(View.GONE);
         reSendSms.setVisibility(View.GONE);
         countdown.setVisibility(View.GONE);

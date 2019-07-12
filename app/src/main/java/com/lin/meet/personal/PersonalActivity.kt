@@ -3,6 +3,7 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -29,6 +30,35 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class PersonalActivity : AppCompatActivity(), View.OnClickListener,PersonalContract.View {
+    override fun hideAttentionView() {
+        perEdit.visibility = View.GONE
+        perAttentionHe.visibility = View.GONE
+        perAttentioned.visibility = View.GONE
+    }
+
+    override fun attentionResult(success: Boolean, attention: Boolean) {
+        if(!success){
+            when(attention){
+                true->{
+                    toast("取消关注失败,请重试")
+                    showAttentioned()
+                }
+                false->{
+                    toast("关注失败,请重试")
+                    showAttentionHe()
+                }
+            }
+        }
+    }
+
+    companion object{
+        fun startOther(activity:Activity,uid:String){
+            val intent = Intent(activity,PersonalActivity::class.java)
+            intent.putExtra("Other",true)
+            intent.putExtra("uid",uid)
+            activity.startActivity(intent)
+        }
+    }
     override fun setAge(age: String) {
         perAge.setText(age+"岁")
     }
@@ -54,7 +84,8 @@ class PersonalActivity : AppCompatActivity(), View.OnClickListener,PersonalContr
     }
 
     override fun setHeadBg(uri: String) {
-        Glide.with(this).load(uri).into(perImage)
+        if(!uri.isEmpty())
+            Glide.with(this).load(uri).into(perImage)
     }
 
     override fun setNumber(str: String) {
@@ -146,7 +177,8 @@ class PersonalActivity : AppCompatActivity(), View.OnClickListener,PersonalContr
     }
 
     override fun setHeader(uri: String) {
-        Glide.with(this).load(uri).into(perHeader)
+        if(!uri.isEmpty())
+            Glide.with(this).load(uri).into(perHeader)
     }
 
     override fun setAttend(str: String) {
@@ -158,7 +190,7 @@ class PersonalActivity : AppCompatActivity(), View.OnClickListener,PersonalContr
     }
 
     override fun setFans(str: String) {
-        perFan.text = str
+        perFan.text = "粉丝:"+str
     }
 
     override fun getFans(): String {
@@ -167,7 +199,7 @@ class PersonalActivity : AppCompatActivity(), View.OnClickListener,PersonalContr
 
     private var isChange = false
     private val format = SimpleDateFormat("yyyy/MM/dd")
-    private var presenter:PersonalContract.Presenter?=null
+    private var presenter:PersonalContract.Presenter = PersonalPresenter(this)
     private var option: RequestOptions?= null
     private var isFirst:Boolean = true
     private var isDefault:Boolean = true
@@ -183,29 +215,39 @@ class PersonalActivity : AppCompatActivity(), View.OnClickListener,PersonalContr
     override fun showAttentionHe() {
         perEdit.visibility = View.GONE
         perAttentionHe.visibility = View.VISIBLE
-        perAttention.visibility = View.GONE
+        perAttentioned.visibility = View.GONE
     }
 
     override fun showAttentioned() {
         perEdit.visibility = View.GONE
         perAttentionHe.visibility = View.GONE
-        perAttention.visibility = View.VISIBLE
+        perAttentioned.visibility = View.VISIBLE
     }
 
     override fun showEdit() {
         perEdit.visibility = View.VISIBLE
         perAttentionHe.visibility = View.GONE
-        perAttention.visibility = View.GONE
+        perAttentioned.visibility = View.GONE
     }
 
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.perBack->onBackPressed()
             R.id.perAttentioned->{//取消关注
-
+                if(!BmobUser.isLogin()){
+                    toast("未登录")
+                    return
+                }
+                presenter.cancelAttention()
+                showAttentionHe()
             }
             R.id.perAttentionHe->{//关注
-
+                if(!BmobUser.isLogin()){
+                    toast("未登录")
+                    return
+                }
+                presenter.attention()
+                showAttentioned()
             }
             R.id.perEdit->{//编辑
                 startActivityForResult(Intent(this,PersonalSetting::class.java),1)
@@ -214,10 +256,8 @@ class PersonalActivity : AppCompatActivity(), View.OnClickListener,PersonalContr
     }
 
     private fun initTransitionAnimation() {
-        ViewCompat.setTransitionName(perImage, "main_bg")
         ViewCompat.setTransitionName(perHeader, "main_header")
         ViewCompat.setTransitionName(perUserName2, "main_text")
-        ViewCompat.setTransitionName(perLayoutTop,"main_view")
         ViewCompat.setTransitionName(perContentView,"main_item_layout")
 
         val set = TransitionSet()
@@ -225,10 +265,8 @@ class PersonalActivity : AppCompatActivity(), View.OnClickListener,PersonalContr
         set.addTransition(ChangeImageTransform())
         set.addTransition(ChangeTransform())
         set.addTransition(ChangeTextTransition())
-        set.addTarget(perImage)
         set.addTarget(perHeader)
         set.addTarget(perUserName2)
-        set.addTarget(perLayoutTop)
         set.addTarget(perContentView)
         window.sharedElementEnterTransition = set
         window.sharedElementEnterTransition = set
@@ -239,7 +277,10 @@ class PersonalActivity : AppCompatActivity(), View.OnClickListener,PersonalContr
         setContentView(R.layout.activity_personal)
         initView()
         initCalcul()
-        initLoadView()
+        if(intent.getBooleanExtra("Other",false))
+            presenter.initNetData(intent.getStringExtra("uid"))
+        else
+            initLoadView()
         initTransitionAnimation()
     }
 
@@ -257,8 +298,8 @@ class PersonalActivity : AppCompatActivity(), View.OnClickListener,PersonalContr
         perContent.translationY = distance_default
         perImage.pivotY = 0f
 
-        var height = resources.getDimension(R.dimen.per_roll_maxdistance)
-        var dy = distance_max - distance_default
+        val height = resources.getDimension(R.dimen.per_roll_maxdistance)
+        val dy = distance_max - distance_default
         scale_max = dy/height*1.5f
 
         perBlackBg.visibility = View.VISIBLE
@@ -266,7 +307,6 @@ class PersonalActivity : AppCompatActivity(), View.OnClickListener,PersonalContr
     }
 
     private fun initView(){
-        presenter = PersonalPresenter(this)
         option = RequestOptions()
 
         perAttentionHe.setOnClickListener(this)
@@ -403,9 +443,11 @@ class PersonalActivity : AppCompatActivity(), View.OnClickListener,PersonalContr
         setIntroduce(user.introduce)
         setAge(calculAge(user.brith))
         setConstellation(calculConstellation(user.brith) )
+        presenter.checkAttionCount()
+        presenter.checkFanCount()
     }
 
-    private fun calculAge(birth:String):String{
+    override fun calculAge(birth:String):String{
         var dates = birth.split("/")
         if(dates.size<3) return "0"
         var year = dates[0].toInt()
@@ -434,7 +476,7 @@ class PersonalActivity : AppCompatActivity(), View.OnClickListener,PersonalContr
         super.finish()
     }
 
-    private fun calculConstellation(birth:String):String{
+    override fun calculConstellation(birth:String):String{
         var dates = birth.split("/")
         if(dates.size<3) return "0"
         var month = dates[1].toInt()

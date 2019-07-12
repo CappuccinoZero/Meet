@@ -29,6 +29,9 @@ public interface IntorductionContract {
         void setContent(String uri,int position);
         void updateFromNetwork();
         void swap(int flag);
+        double getMapX();
+        double getMapY();
+        void saveError(String e);
     }
 
     public interface Presenter{
@@ -40,6 +43,7 @@ public interface IntorductionContract {
         void updateResult(long time,String newName);
         void swapCard(int item,int id[],float[] maybe,int random);
         void updateBaike(int id,int position);
+        void onFlagMap(String path,String name,String maybe);
     }
 
     public interface Model{

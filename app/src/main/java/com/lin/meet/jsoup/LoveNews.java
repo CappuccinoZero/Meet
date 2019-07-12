@@ -9,6 +9,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import java.util.List;
 public class LoveNews {
     public static final int JSOUP_NEWS_MESSAGE  = 3000;
     public static final int JSOUP_NEWS_MESSAGE_TOP  = 3001;
+    public static final int JSOUP_CONNECT_ERROR = 1000;
     private static int MAX_PAGE = 3;
     private static String URL_START = "http://www.lovehhy.net";
     private static String URL = "http://www.lovehhy.net/News/List/XDWSJ/";
@@ -35,10 +37,16 @@ public class LoveNews {
                 try {
                     document = Jsoup.connect("http://www.lovehhy.net/News/List/XDWSJ/"+i)
                             .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36")
-                            .timeout(30000)
+                            .timeout(5000)
                             .cookie("auth", "token")
                             .get();
-                    Elements elements = document.getElementsByClass("post_recommend_new");
+                } catch (IOException e) {
+                    Message msg = new Message();
+                    msg.what = JSOUP_CONNECT_ERROR;
+                    handler.sendMessage(msg);
+                    return;
+                }
+                Elements elements = document.getElementsByClass("post_recommend_new");
                     for(int i=0;i<elements.size();i++){
                         LoveNewsBean bean = new LoveNewsBean();
                         Element recommend = elements.get(i);
@@ -56,9 +64,7 @@ public class LoveNews {
 
                         Elements types_1 = recommend.select("div.post_recommend_channel");
                         Elements types_2 = types_1.select("a");
-                        String type = types_2.get(0).text();
                         String author = types_2.get(1).text();
-                        bean.setType(type);
                         bean.setAuthor(author);
 
                         Elements times = recommend.select("div.post_recommend_time");
@@ -74,9 +80,6 @@ public class LoveNews {
                         data.putSerializable("LoveNews",bean);
                         msg.setData(data);
                         handler.sendMessage(msg);
-                    }
-                }catch (Exception e){
-                    e.printStackTrace();
                 }
             }
         }).start();

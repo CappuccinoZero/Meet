@@ -1,6 +1,8 @@
 package com.lin.meet.recommend;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,11 +15,13 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.lin.meet.R;
-import com.lin.meet.bean.ReplyBean;
-import com.lin.meet.bean.ReplyViewHolder;
-import com.lin.meet.bean.recommentBean;
+import com.lin.meet.comment.CommentActivity;
+import com.lin.meet.db_bean.Reply;
+import com.lin.meet.db_bean.ReplyHolder;
+import com.lin.meet.db_bean.comment;
 import com.lin.meet.jsoup.LoveNewsBean;
 import com.lin.meet.override.ScaleAnim;
+import com.lin.meet.personal.PersonalActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,10 +32,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class RecommendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
     private int thumbCount = 0,commentCount = 0;
     private List<RecommendViewBean> list = new ArrayList<>();
-    private List<ReplyBean> replys = new ArrayList<>();
+    private List<Reply> replys = new ArrayList<>();
     private Context context;
     private RecommendCallback callback;
     private boolean isLike = false;
+    private int tempIndex = -1;
+    private int tempCount = -1;
 
     @NonNull
     @Override
@@ -45,7 +51,7 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
         else {
             view = LayoutInflater.from(context).inflate(R.layout.comment_item,viewGroup,false);
-            return new ReplyViewHolder(view);
+            return new ReplyHolder(view);
         }
     }
 
@@ -78,61 +84,73 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     break;
                 case RecommendViewBean.FLAG_CONTENT:
                     ((RecommendViewHoloder)viewHoloder).showLayout(2);
-                    ((RecommendViewHoloder)viewHoloder).text.setText(bean.content);
+                    if(bean.content.charAt(0)==' '||bean.content.charAt(0)=='　')
+                        ((RecommendViewHoloder)viewHoloder).text.setText(bean.content);
+                    else
+                        ((RecommendViewHoloder)viewHoloder).text.setText("　　"+bean.content);
                     break;
                 case RecommendViewBean.FLAG_CONTENT_BOTTOM:
                     ((RecommendViewHoloder)viewHoloder).setCount(thumbCount,commentCount);
                     ((RecommendViewHoloder)viewHoloder).showLayout(5);
-                    ((RecommendViewHoloder)viewHoloder).thumb.setImageResource(isLike?R.drawable.thumb_red:R.drawable.thumb);
+                    ((RecommendViewHoloder)viewHoloder).thumb.setImageResource(isLike?R.mipmap.like2:R.mipmap.like);
                     ((RecommendViewHoloder)viewHoloder).thumb.setOnClickListener((v)->{
                         if(isNoLogin())return;
                         if(isLike){
-                            isLike = !isLike;
-                            ScaleAnim.startAnim(((RecommendViewHoloder)viewHoloder).thumb,R.drawable.thumb);
+                            isLike = false;
+                            ScaleAnim.startAnim(((RecommendViewHoloder)viewHoloder).thumb,R.mipmap.like);
                             callback.setIsLike(isLike);
                         }
                         else {
-                            isLike = !isLike;
-                            ScaleAnim.startAnim(((RecommendViewHoloder)viewHoloder).thumb,R.drawable.thumb_red);
+                            isLike = true;
+                            ScaleAnim.startAnim(((RecommendViewHoloder)viewHoloder).thumb,R.mipmap.like2);
                             callback.setIsLike(isLike);
                         }
+                        changeThumbCount(isLike);
                     });
                     break;
                 case RecommendViewBean.FLAG_CONTENT_REPLY:
                     ((RecommendViewHoloder)viewHoloder).showLayout(6);
                     break;
             }
-        }else if(viewHoloder instanceof ReplyViewHolder) {
+        }else if(viewHoloder instanceof ReplyHolder) {
             int index = i - list.size();
-            ((ReplyViewHolder)viewHoloder).content.setText(replys.get(index).content);
-            ((ReplyViewHolder)viewHoloder).nickName0.setText(replys.get(index).nickName0);
-            ((ReplyViewHolder)viewHoloder).time.setText(replys.get(index).time);
-            ((ReplyViewHolder)viewHoloder).loadHeader(context,replys.get(index).header);
-            ((ReplyViewHolder)viewHoloder).setLickCount(replys.get(index).likeCount);
-            ((ReplyViewHolder)viewHoloder).setLike(replys.get(index).like);
-            if(replys.get(index).commentCount>0)
-                ((ReplyViewHolder)viewHoloder).replyCount.setText(String.valueOf(replys.get(index).commentCount)+"回复");
+            ((ReplyHolder)viewHoloder).content.setText(replys.get(index).bean.getContent());
+            ((ReplyHolder)viewHoloder).nickName.setText(replys.get(index).nickName);
+            ((ReplyHolder)viewHoloder).time.setText(replys.get(index).bean.getCreatedAt());
+            ((ReplyHolder)viewHoloder).loadHeader(context,replys.get(index).headUri);
+            ((ReplyHolder)viewHoloder).setLickCount(replys.get(index).likeCount);
+            ((ReplyHolder)viewHoloder).setLike(replys.get(index).like);
+            if(replys.get(index).replyCount>0)
+                ((ReplyHolder)viewHoloder).replyCount.setText(String.valueOf(replys.get(index).replyCount)+"回复");
             else
-                ((ReplyViewHolder)viewHoloder).replyCount.setText("回复");
-            ((ReplyViewHolder)viewHoloder).setReplyCount(replys.get(index).commentCount);
-            if(replys.get(index).nickName1!=null&&replys.get(index).content1!=null){
-                ((ReplyViewHolder)viewHoloder).content1.setText(replys.get(index).content1);
-                ((ReplyViewHolder)viewHoloder).nickName1.setText(replys.get(index).nickName1+"：");
-            }
-            if(replys.get(index).nickName2!=null&&replys.get(index).content2!=null){
-                ((ReplyViewHolder)viewHoloder).content2.setText(replys.get(index).content2);
-                ((ReplyViewHolder)viewHoloder).nickName2.setText(replys.get(index).nickName2+"：");
-            }
-            ((ReplyViewHolder)viewHoloder).item.setOnClickListener((v)->{
-                callback.showSonEdit(replys.get(index).getBean(),i);
+                ((ReplyHolder)viewHoloder).replyCount.setText("回复");
+            ((ReplyHolder)viewHoloder).item.setOnClickListener((v)->{
+                Intent intent = new Intent(context, CommentActivity.class);
+                intent.putExtra("id",replys.get(index).bean.getId());
+                intent.putExtra("flag",replys.get(index).bean.getFlag());
+                intent.putExtra("Like",replys.get(index).like);
+                intent.putExtra("Count",replys.get(index).replyCount);
+                callback.startComment(intent);
+                tempIndex = index;
             });
-            ((ReplyViewHolder)viewHoloder).like.setOnClickListener(v->{
+            ((ReplyHolder)viewHoloder).like.setOnClickListener(v->{
                 if(isNoLogin())return;
-                boolean like = ((ReplyViewHolder)viewHoloder).onClickLike();
-                replys.get(index).like = like;
-                callback.onSonLike(i,replys.get(index).floor,like);
+                replys.get(index).like = !replys.get(index).like;
+                ((ReplyHolder)viewHoloder).setLikeAnim(replys.get(index).like);
+                updateCommentLike(index,((ReplyHolder)viewHoloder),replys.get(index).like);
+                callback.onSonLike(replys.get(index).bean.getId(),replys.get(index).bean.getUid(),replys.get(index).like);
             });
+            ((ReplyHolder)viewHoloder).replyCount.setOnClickListener(v-> callback.showSonEdit(replys.get(index).bean,i));
+            ((ReplyHolder)viewHoloder).header.setOnClickListener(v-> PersonalActivity.Companion.startOther((Activity)context,replys.get(index).bean.getUid()));
         }
+    }
+
+    private void updateCommentLike(int i,ReplyHolder holder,boolean like){
+        if(like)
+            replys.get(i).likeCount++;
+        else
+            replys.get(i).likeCount--;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -244,30 +262,59 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         list.add(reBean);
     }
 
-    public void setCommentList(List<ReplyBean> comments){
-        replys = comments;
-    }
-
-    synchronized int insertComment(ReplyBean bean){
-        if(replys.size()==0){
-            replys.add(bean);
-            notifyDataSetChanged();
-            return list.size();
-        }
-        for(int i=0;i<replys.size();i++){
-            if(replys.get(i).updateTime<bean.updateTime){
-                replys.add(i,bean);
-                notifyDataSetChanged();
-                return i+list.size();
+    public void initAidongwuAdapter(LoveNewsBean bean){
+        if(bean==null)
+            return;
+        RecommendViewBean reBean= new RecommendViewBean();
+        reBean.author = bean.getAuthor();
+        reBean.time = bean.getTime();
+        reBean.flag = RecommendViewBean.FLAG_HEAD;
+        list.add(reBean);
+        int max = Math.max(bean.getContents().size(),bean.getImgs().size());
+        for(int i=0;i<max;i++){
+            if(bean.getContents().size()>i){
+                reBean = new RecommendViewBean();
+                reBean.flag = RecommendViewBean.FLAG_CONTENT;
+                reBean.content = bean.getContents().get(i);
+                list.add(reBean);
+            }
+            if(bean.getImgs().size()>i){
+                reBean = new RecommendViewBean();
+                reBean.flag = RecommendViewBean.FLAG_IMAGE;
+                reBean.uri = bean.getImgs().get(i);
+                list.add(reBean);
             }
         }
+        reBean = new RecommendViewBean();
+        reBean.flag = RecommendViewBean.FLAG_CONTENT_BOTTOM;
+        list.add(reBean);
+        reBean = new RecommendViewBean();
+        reBean.flag = RecommendViewBean.FLAG_CONTENT_REPLY;
+        list.add(reBean);
+    }
+
+    synchronized int insertComment(Reply bean){
         replys.add(bean);
+        notifyDataSetChanged();
+        return replys.size()+list.size()-1;
+    }
+
+    synchronized int insertComment(int position,Reply bean){
+        replys.add(position,bean);
         notifyDataSetChanged();
         return replys.size()+list.size()-1;
     }
 
     public void setThumbCount(int x){
         thumbCount = x;
+        notifyDataSetChanged();
+    }
+
+    public void changeThumbCount(boolean like){
+        if (like)
+            thumbCount++;
+        else
+            thumbCount--;
         notifyDataSetChanged();
     }
 
@@ -283,26 +330,15 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     public interface RecommendCallback{
-        void showSonEdit(recommentBean.recomment_comment comment,int position);
+        void showSonEdit(comment comment, int position);
         void setIsLike(Boolean isLike);
-        void onSonLike(int position,int floor,Boolean isLike);
-    }
-
-    void updateSonReply(String msg,String nickName,int position,int floor){
-        if(floor == 1){
-            replys.get(position-list.size()).content1 = msg;
-            replys.get(position-list.size()).nickName1 = nickName;
-        }
-        else if(floor==2){
-            replys.get(position-list.size()).content2 = msg;
-            replys.get(position-list.size()).nickName2 = nickName;
-        }
-        replys.get(position-list.size()).commentCount = floor;
-        notifyDataSetChanged();
+        void onSonLike(String parentId,String parentUid,boolean like);
+        void startComment(Intent intent);
     }
 
     public void setLike(Boolean isLike){
         this.isLike = isLike;
+        notifyDataSetChanged();
     }
 
     public void setSonLike(int position,int count){
@@ -313,5 +349,31 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void setCommentLike(int position,boolean isLike){
         replys.get(position-list.size()).like = isLike;
         notifyDataSetChanged();
+    }
+
+    public void addComment(int position){
+        replys.get(position-list.size()).replyCount++;
+        notifyDataSetChanged();
+    }
+
+    void updateLikeStatus(boolean like){
+        if(tempIndex!=-1){
+            if(like&&!replys.get(tempIndex).like){
+                replys.get(tempIndex).likeCount++;
+            }else if(!like&&replys.get(tempIndex).like){
+                replys.get(tempIndex).likeCount--;
+            }
+            replys.get(tempIndex).like = like;
+            notifyDataSetChanged();
+        }
+    }
+
+    void updateCommentStatus(int count){
+        if(tempIndex!=-1&&count!=-1){
+            if(count!=tempCount){
+                replys.get(tempIndex).replyCount = count;
+                notifyDataSetChanged();
+            }
+        }
     }
 }

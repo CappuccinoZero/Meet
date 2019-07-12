@@ -9,6 +9,7 @@ import java.util.*
 
 class BaikePresenter(view: BaikeConstract.View): BaikeConstract.Presenter {
     override fun onInsertBaikeToTop() {
+        view.initError()
         val query = BmobQuery<Baike>()
         query.setLimit(loadCount)
         query.setSkip(initCount)
@@ -16,12 +17,16 @@ class BaikePresenter(view: BaikeConstract.View): BaikeConstract.Presenter {
         query.findObjects(object : FindListener<Baike>(){
             override fun done(p0: MutableList<Baike>?, p1: BmobException?) {
                 if(p1==null&&p0!!.size>0){
+                    view.initError()
                     initCount = (initCount+p0.size)%maxCount
                     for(index in 0 until p0.size){
                         view.insertBaikeToTop(index,p0[index])
                     }
-                    view.endRefresh()
+                }else if(p1!=null){
+                    view.error()
                 }
+                view.endLoading()
+                view.endRefresh()
             }
         })
     }
@@ -42,6 +47,7 @@ class BaikePresenter(view: BaikeConstract.View): BaikeConstract.Presenter {
     override fun onInsertBaike() {
         if(loading)return
         loading = true
+        view.initError()
         val query = BmobQuery<Baike>()
         query.setLimit(loadCount)
         query.setSkip(initCount)
@@ -49,12 +55,16 @@ class BaikePresenter(view: BaikeConstract.View): BaikeConstract.Presenter {
         query.findObjects(object : FindListener<Baike>(){
             override fun done(p0: MutableList<Baike>?, p1: BmobException?) {
                 if(p1==null&&p0!!.size>0){
+                    view.initError()
                     initCount = (initCount+p0.size)%maxCount
                     for(index in 0 until p0.size){
                         view.insertBaike(p0[index])
                     }
-                    view.endRefresh()
+                }else if(p1!=null){
+                    view.error()
                 }
+                view.endRefresh()
+                view.endLoading()
                 loading = false
             }
         })

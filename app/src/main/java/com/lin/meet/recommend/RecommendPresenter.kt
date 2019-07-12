@@ -6,93 +6,63 @@ import cn.bmob.v3.exception.BmobException
 import cn.bmob.v3.listener.FindListener
 import cn.bmob.v3.listener.SaveListener
 import cn.bmob.v3.listener.UpdateListener
-import com.lin.meet.bean.*
+import com.lin.meet.bean.User
+import com.lin.meet.db_bean.*
+import com.lin.meet.jsoup.LoveNewsBean
 
 class RecommendPresenter(view:RecommendConstract.View):RecommendConstract.Presenter {
-    @Synchronized
-    override fun onLikeSon(floor: Int, position: Int, isLike: Boolean) {
+    override fun onLikeSon(parentId: String, parentUid:String, like: Boolean) {
         if(!checkSend("like"))
             return
-        var query:BmobQuery<comment_like> = BmobQuery()
-        query.addWhereEqualTo("uid",BmobUser.getCurrentUser(User::class.java).uid)
-        query.addWhereEqualTo("uri",uri)
-        query.addWhereEqualTo("floor",floor)
+        val queryList = ArrayList<BmobQuery<comment_like>>()
+        val query1 = BmobQuery<comment_like>()
+        query1.addWhereEqualTo("uid",BmobUser.getCurrentUser(User::class.java).uid)
+        queryList.add(query1)
+        val query2 = BmobQuery<comment_like>()
+        query2.addWhereEqualTo("parentId",parentId)
+        queryList.add(query2)
+        val query3 = BmobQuery<comment_like>()
+        query3.addWhereEqualTo("parentUid",parentUid)
+        queryList.add(query3)
+        val query4 = BmobQuery<comment_like>()
+        query4.addWhereEqualTo("mainId",uri)
+        queryList.add(query4)
+        val query5 = BmobQuery<comment_like>()
+        query5.addWhereEqualTo("isMain",false)
+        queryList.add(query5)
+        val query6 = BmobQuery<comment_like>()
+        query6.addWhereEqualTo("flag",0)
+        queryList.add(query6)
+        val query = BmobQuery<comment_like>()
+        query.and(queryList)
         query.findObjects(object :FindListener<comment_like>(){
             override fun done(p0: MutableList<comment_like>?, p1: BmobException?) {
-                if(p1==null&&p0!!.size>0){
-                    p0[0].like = isLike
-                    updateSonLike(p0[0],position)
-                }
-                else if(p1==null&&p0!!.size==0){
-                    var like:comment_like = comment_like()
-                    like.floor = floor
-                    like.uid = BmobUser.getCurrentUser(User::class.java).uid
-                    like.uri = uri
-                    like.like = isLike
-                    saveSonLike(like,position)
+                if(p0!=null&&p0.size>0&&!like){
+                    deleteSonLike(p0[0])
+                }else if(p0!=null&&like&&p0.size==0){
+                    insertSonLike(parentId,parentUid)
                 }
             }
         })
     }
 
-    private fun saveSonLike(like:comment_like,position: Int){
-        like.save(object :SaveListener<String>(){
+    @Synchronized
+    private fun deleteSonLike(like: comment_like){
+        like.delete(object :UpdateListener(){
+            override fun done(p0: BmobException?) {
+            }
+        })
+    }
+
+    @Synchronized
+    private fun insertSonLike(parentId: String, parentUid:String){
+        val like = comment_like.createSonLike(parentUid,parentId,uri,0)
+        like.save(object : SaveListener<String>() {
             override fun done(p0: String?, p1: BmobException?) {
-                if(p1==null){
-                    updateCommentView(position,like.floor)
-                }
             }
         })
     }
 
-    private fun updateSonLike(like:comment_like,position: Int){
-        like.update(object :UpdateListener(){
-            override fun done(p0: BmobException?) {
-                if(p0==null){
-                    updateCommentView(position,like.floor)
-                }
-            }
-        })
-    }
-
-    private fun updateCommentView(position: Int,floor: Int){
-        var query:BmobQuery<comment_like> = BmobQuery()
-        query.addWhereEqualTo("uri",uri)
-        query.addWhereEqualTo("floor",floor)
-        query.addWhereEqualTo("like",true)
-        query.findObjects(object :FindListener<comment_like>(){
-            override fun done(p0: MutableList<comment_like>?, p1: BmobException?) {
-                if(p1==null){
-                    view.lickSonResult(1,position,p0!!.size)
-                    findSonComment(floor,p0.size)
-                }
-            }
-        })
-    }
-
-    private fun findSonComment(floor: Int,count:Int){
-        var query:BmobQuery<recommentBean.recomment_comment> = BmobQuery()
-        query.addWhereEqualTo("uri",uri)
-        query.addWhereEqualTo("id",0)
-        query.addWhereEqualTo("floor",floor)
-        query.findObjects(object :FindListener<recommentBean.recomment_comment>(){
-            override fun done(p0: MutableList<recommentBean.recomment_comment>?, p1: BmobException?) {
-                if(p1==null){
-                    var comment = p0!![0]
-                    comment.like = count
-                    updateSonComment(comment)
-                }
-            }
-        })
-    }
-
-    private fun updateSonComment(comment: recommentBean.recomment_comment){
-        comment.update(object :UpdateListener(){
-            override fun done(p0: BmobException?) {
-
-            }
-        })
-    }
 
 
     override fun onStar() {
@@ -100,9 +70,10 @@ class RecommendPresenter(view:RecommendConstract.View):RecommendConstract.Presen
             view.toast("未登录")
             return
         }
-        var starQ:BmobQuery<love> = BmobQuery()
+        val starQ:BmobQuery<love> = BmobQuery()
         starQ.addWhereEqualTo("uid",BmobUser.getCurrentUser(User::class.java).uid)
-        starQ.addWhereEqualTo("uri",uri)
+        starQ.addWhereEqualTo("id",uri)
+        starQ.addWhereEqualTo("type",0)
         starQ.findObjects(object :FindListener<love>(){
             override fun done(p0: MutableList<love>?, p1: BmobException?) {
                 if(p1==null&&p0!!.size>0){
@@ -110,11 +81,8 @@ class RecommendPresenter(view:RecommendConstract.View):RecommendConstract.Presen
                         override fun done(p0: BmobException?) {
                         }
                     })
-                }else if(p1==null){
-                    var love = love()
-                    love.uri = uri
-                    love.uid = BmobUser.getCurrentUser(User::class.java).uid
-                    love.save(object :SaveListener<String>(){
+                }else if(p1==null&&p0!!.size==0){
+                    love.createLove(uri,BmobUser.getCurrentUser(User::class.java).uid,0).save(object :SaveListener<String>(){
                         override fun done(p0: String?, p1: BmobException?) {
                         }
                     })
@@ -128,67 +96,62 @@ class RecommendPresenter(view:RecommendConstract.View):RecommendConstract.Presen
             view.toast("未登录")
             return
         }
-        var query:BmobQuery<recommentBean.recomment_islike> = BmobQuery()
-        query.addWhereEqualTo("uri",uri)
-        query.addWhereEqualTo("uid",BmobUser.getCurrentUser(User::class.java).uid)
-        query.findObjects(object :FindListener<recommentBean.recomment_islike>(){
-            override fun done(p0: MutableList<recommentBean.recomment_islike>?, p1: BmobException?) {
-                var like:recommentBean.recomment_islike = recommentBean.recomment_islike()
-                if(p1==null&&p0!!.size>0){
-                    like = p0[0]
-                    like.islike = isLike
-                    updatelike(like)
+        val queryList = ArrayList<BmobQuery<comment_like>>()
+        val query1 = BmobQuery<comment_like>()
+        query1.addWhereEqualTo("uid",BmobUser.getCurrentUser(User::class.java).uid)
+        queryList.add(query1)
+        val query2 = BmobQuery<comment_like>()
+        query2.addWhereEqualTo("parentId",uri)
+        queryList.add(query2)
+        val query3 = BmobQuery<comment_like>()
+        query3.addWhereEqualTo("parentUid",parentUid)
+        queryList.add(query3)
+        val query4 = BmobQuery<comment_like>()
+        query4.addWhereEqualTo("mainId",uri)
+        queryList.add(query4)
+        val query5 = BmobQuery<comment_like>()
+        query5.addWhereEqualTo("isMain",true)
+        queryList.add(query5)
+        val query6 = BmobQuery<comment_like>()
+        query6.addWhereEqualTo("flag",0)
+        queryList.add(query6)
+        val query = BmobQuery<comment_like>()
+        query.and(queryList)
+        query.findObjects(object :FindListener<comment_like>(){
+            override fun done(p0: MutableList<comment_like>?, p1: BmobException?) {
+                if(p1==null&&p0!=null&&p0.size>0&&!isLike){
+                    deletelike(p0[0])
                 }
-                else if(p1==null&&p0!!.size==0){
-                    like.uid = BmobUser.getCurrentUser(User::class.java).uid
-                    like.uri = uri
-                    like.islike = isLike
-                    savelike(like)
+                else if(p1==null&&p0!!.size==0&&isLike){
+                    savelike(comment_like.createMainLike(parentUid,uri,0))
                 }
             }
         })
     }
 
     @Synchronized
-    private fun savelike(like:recommentBean.recomment_islike){
+    private fun savelike(like: comment_like){
         like.save(object :SaveListener<String>(){
             override fun done(p0: String?, p1: BmobException?) {
                 if(p1!=null){
                     view.likeError()
-                    view.toast("点赞失败")
+                    view.toast("like error!")
                 }else{
-                    updateMain()
+                    //like success
                 }
             }
         })
     }
 
     @Synchronized
-    private fun updatelike(like:recommentBean.recomment_islike){
-        like.update(object :UpdateListener(){
+    private fun deletelike(like: comment_like){
+        like.delete(object :UpdateListener(){
             override fun done(p0: BmobException?) {
                 if(p0!=null){
                     view.likeError()
                     view.toast("点赞失败")
                 }else{
-                    updateMain()
-                }
-            }
-        })
-    }
-
-    @Synchronized
-    private fun updateMain(){
-        var likeC:BmobQuery<recommentBean.recomment_islike> = BmobQuery()
-        likeC.addWhereEqualTo("uri",uri)
-        likeC.addWhereEqualTo("islike",true)
-        likeC.findObjects(object :FindListener<recommentBean.recomment_islike>(){
-            override fun done(p0: MutableList<recommentBean.recomment_islike>?, p1: BmobException?) {
-                if(p1==null){
-                    view.setThumn(p0!!.size)
-                }
-                else{
-                    view.setThumn(0)
+                    // like success
                 }
             }
         })
@@ -196,20 +159,20 @@ class RecommendPresenter(view:RecommendConstract.View):RecommendConstract.Presen
 
 
     private var uri:String = ""
-    private val REPLY_DEFAULT = 0
-    private val REPLY_MY_MESSAGE = 1
+    private val parentUid:String = "@null"
 
-    override fun checkNet(uri: String) {
-        this.uri = uri
-        var query:BmobQuery<recommentBean.recomment_main> = BmobQuery()
+    override fun checkNet(bean: LoveNewsBean) {
+        this.uri = bean.contentUri
+        val query:BmobQuery<recomment_main> = BmobQuery()
         query.addWhereEqualTo("uri",uri)
-        query.findObjects(object : FindListener<recommentBean.recomment_main>() {
-            override fun done(list: MutableList<recommentBean.recomment_main>?, e: BmobException?) {
+        query.findObjects(object : FindListener<recomment_main>() {
+            override fun done(list: MutableList<recomment_main>?, e: BmobException?) {
                 if(e == null&&list!!.size ==0){
-                    insertMainData(uri)
+                    insertMainData(bean)
                 }
                 else if(e ==null&&list!!.size>0){
-                    initData(list.get(0))
+                    view.setComment(list[0].comment)
+                    initData()
                 }
             }
         })
@@ -220,76 +183,55 @@ class RecommendPresenter(view:RecommendConstract.View):RecommendConstract.Presen
     override fun onSendMessage(msg: String) {
         if(!checkSend(msg))
             return
-        var query:BmobQuery<recommentBean.recomment_main> = BmobQuery()
-        query.addWhereEqualTo("uri",uri)
-        query.findObjects(object : FindListener<recommentBean.recomment_main>() {
-            override fun done(list: MutableList<recommentBean.recomment_main>?, e: BmobException?) {
-                if(e ==null&&list!!.size>0){
-                        senMessage(list.get(0),msg,BmobUser.getCurrentUser(User::class.java))
-                }
-            }
-        })
-
-    }
-
-    @Synchronized
-        private fun senMessage(main:recommentBean.recomment_main,msg:String,user:User){
-        var comment:recommentBean.recomment_comment = recommentBean.recomment_comment()
-        main.comment = main.comment + 1
-        comment.uri = this.uri
-        comment.content = msg
-        comment.floor = main.comment
-        comment.uid = user.uid
+        val comment = comment.createMainComment(msg,parentUid,uri,0)
         comment.save(object :SaveListener<String>(){
             override fun done(p0: String?, p1: BmobException?) {
                 if(p1==null){
-                    updateMainData(main,comment)
+                    val reply = Reply(comment)
+                    reply.headUri  = BmobUser.getCurrentUser(User::class.java).headerUri
+                    reply.nickName  = BmobUser.getCurrentUser(User::class.java).nickName
+                    view.senMessageResult(1,reply)
                 }else{
-                    view.senMessageResult(0)
+                    view.senMessageResult(0,null)
                 }
             }
         })
     }
 
-    @Synchronized
-    private fun updateMainData(main:recommentBean.recomment_main,comment:recommentBean.recomment_comment){
-        main.update(object : UpdateListener(){
-            override fun done(p0: BmobException?) {
-                if(p0==null){
-                    view.senMessageResult(1)
-                    insertComment(comment.uri,comment.uid,comment.floor)
-                }else{
-                    view.senMessageResult(0)
-                }
-            }
-        })
-    }
 
-    private fun insertMainData(uri:String){
-        var main:recommentBean.recomment_main = recommentBean.recomment_main()
-        main.uri = uri
+    private fun insertMainData(bean: LoveNewsBean){
+        var main:recomment_main = recomment_main()
+        main.uri = bean.contentUri
+        main.img = bean.img
+        main.title = bean.title
+        main.time = bean.time
+        main.flag = bean.flag
+        main.author = bean.author
         main.save(object : SaveListener<String>(){
             override fun done(p0: String?, p1: BmobException?) {
                 if(p1==null){
-
                 }
             }
         })
     }
 
-    private fun initData(main:recommentBean.recomment_main){
-        view.setComment(main.comment)
-        var query:BmobQuery<recommentBean.recomment_comment> = BmobQuery()
-        query.addWhereEqualTo("uri",uri)
-        query.addWhereEqualTo("id",0)
+    //查询父评论
+    private fun initData(){
+        val query:BmobQuery<comment> = BmobQuery()
+        query.addWhereEqualTo("parentId",uri)
+        query.addWhereEqualTo("mainId",uri)
+        query.addWhereEqualTo("main",true)
+        query.addWhereEqualTo("flag",0)
+        query.addWhereEqualTo("parentUid",parentUid)
         query.order("-updatedAt")
-        query.findObjects(object :FindListener<recommentBean.recomment_comment>(){
-            override fun done(p0: MutableList<recommentBean.recomment_comment>?, p1: BmobException?) {
-                if(p1==null){
-                    if(p0!!.size>0){
+        query.findObjects(object :FindListener<comment>(){
+            override fun done(p0: MutableList<comment>?, p1: BmobException?) {
+                if(p1==null&&p0!=null){
+                    if(p0.size>0){
                         for(index in 0 until p0.size){
-                            loadReply(p0[index],REPLY_DEFAULT)
+                            getReplyUser(p0[index])
                         }
+                        view.setComment(p0.size)
                     }
                     else{
 
@@ -300,32 +242,34 @@ class RecommendPresenter(view:RecommendConstract.View):RecommendConstract.Presen
                 }
             }
         })
-        var like:BmobQuery<recommentBean.recomment_islike> = BmobQuery()
-        like.addWhereEqualTo("uid",BmobUser.getCurrentUser(User::class.java).uid)
-        like.addWhereEqualTo("uri",uri)
-        like.findObjects(object :FindListener<recommentBean.recomment_islike>(){
-            override fun done(p0: MutableList<recommentBean.recomment_islike>?, p1: BmobException?) {
+        //查询是否赞
+        if(!BmobUser.isLogin()) return
+        val like:BmobQuery<comment_like> = BmobQuery()
+        like.addWhereEqualTo("flag",0)
+        like.addWhereEqualTo("parentId",uri)
+        like.addWhereEqualTo("parentUid",parentUid)
+        like.addWhereEqualTo("isMain",true)
+        like.addWhereEqualTo("mainId",uri)
+        like.findObjects(object :FindListener<comment_like>(){
+            override fun done(p0: MutableList<comment_like>?, p1: BmobException?) {
                 if(p1==null&&p0!!.size>0){
-                    view.setlike(p0[0].islike)
+                    var like = false
+                    for (index in 0 until p0.size){
+                        if(p0[index].uid == BmobUser.getCurrentUser(User::class.java).uid){
+                            like = true
+                            break
+                        }
+                    }
+                    view.setlike(like)
+                    view.setThumn(p0.size)
                 }
             }
         })
-        var likeC:BmobQuery<recommentBean.recomment_islike> = BmobQuery()
-        likeC.addWhereEqualTo("uri",uri)
-        likeC.addWhereEqualTo("islike",true)
-        likeC.findObjects(object :FindListener<recommentBean.recomment_islike>(){
-            override fun done(p0: MutableList<recommentBean.recomment_islike>?, p1: BmobException?) {
-                if(p1==null){
-                    view.setThumn(p0!!.size)
-                }
-                else{
-                    view.setThumn(0)
-                }
-            }
-        })
-        var starQ:BmobQuery<love> = BmobQuery()
+        //查询是否<手残
+        val starQ:BmobQuery<love> = BmobQuery()
         starQ.addWhereEqualTo("uid",BmobUser.getCurrentUser(User::class.java).uid)
-        starQ.addWhereEqualTo("uri",uri)
+        starQ.addWhereEqualTo("id",uri)
+        starQ.addWhereEqualTo("type",0)
         starQ.findObjects(object :FindListener<love>(){
             override fun done(p0: MutableList<love>?, p1: BmobException?) {
                 if(p1==null&&p0!!.size>0)
@@ -334,62 +278,66 @@ class RecommendPresenter(view:RecommendConstract.View):RecommendConstract.Presen
         })
     }
 
-    /**
-     * 不锁方法有时候会什么都加载不出
-     */
-    @Synchronized
-    private fun loadReply(bean: recommentBean.recomment_comment,flag:Int){
-        var query:BmobQuery<User> = BmobQuery()
-        var uids:ArrayList<String> = ArrayList()
-        uids.add(bean.uid)
-        if(bean.comment == 0){
-            query.addWhereEqualTo("uid",bean.uid)
-        }
-        else if(bean.comment == 1){
-            uids.add(bean.reply_uid1)
-            query.addWhereContainedIn("uid",uids)
-        }else{
-            uids.add(bean.reply_uid1)
-            uids.add(bean.reply_uid2)
-            query.addWhereContainedIn("uid",uids)
-        }
 
+    //获得评论用户信息
+    @Synchronized
+    private fun getReplyUser(bean: comment){
+        val query:BmobQuery<User> = BmobQuery()
+        query.addWhereEqualTo("uid",bean.uid)
         query.findObjects(object :FindListener<User>(){
             override fun done(p0: MutableList<User>?, p1: BmobException?) {
-                if(p1==null){
-                    var reply = ReplyBean(bean)
-                    for (index in 0 until p0!!.size){
-                        if(p0[index].uid.equals(bean.uid)){
-                            reply.nickName0 = p0[index].nickName
-                            reply.header = p0[index].headerUri
-                        }
-                        if(p0[index].uid.equals(bean.reply_uid1)){
-                            reply.nickName1 = p0[index].nickName
-                        }
-                        if(p0[index].uid.equals(bean.reply_uid2)){
-                            reply.nickName2 = p0[index].nickName
-                        }
-                    }
-                    var position=view.insertComment(reply)
-                    if(flag==REPLY_MY_MESSAGE){
-                        view.moveToPosition(position)
-                    }
-                    updateUserLikeComment(position,reply.bean)
+                if(p1==null&&p0!=null){
+                    val reply = Reply(bean)
+                    reply.nickName = p0[0].nickName
+                    reply.headUri = p0[0].headerUri
+                    getSonReplyCount(reply)
                 }
             }
         })
     }
 
-    private fun updateUserLikeComment(position: Int,bean:recommentBean.recomment_comment){
-        var query:BmobQuery<comment_like> = BmobQuery()
-        query.addWhereEqualTo("uid",BmobUser.getCurrentUser(User::class.java).uid)
-        query.addWhereEqualTo("uri",uri)
-        query.addWhereEqualTo("floor",bean.floor)
-        query.findObjects(object :FindListener<comment_like>(){
+
+
+    //获得字评论数目
+    private fun getSonReplyCount(reply:Reply){
+        val query:BmobQuery<comment> = BmobQuery()
+        query.addWhereEqualTo("parentId",reply.bean.id)
+        query.addWhereEqualTo("mainId",uri)
+        query.addWhereEqualTo("main",false)
+        query.addWhereEqualTo("flag",0)
+        query.order("-updatedAt")
+        query.findObjects(object :FindListener<comment>(){
+            override fun done(p0: MutableList<comment>?, p1: BmobException?) {
+                if(p1==null&&p0!=null){
+                    reply.replyCount = p0.size
+                    getSonLikeCount(reply)
+                }
+            }
+        })
+    }
+
+    //更新子赞数
+    private fun getSonLikeCount(reply:Reply){
+        val like:BmobQuery<comment_like> = BmobQuery()
+        like.addWhereEqualTo("flag",0)
+        like.addWhereEqualTo("parentId",reply.bean.id)
+        like.addWhereEqualTo("parentUid",reply.bean.uid)
+        like.addWhereEqualTo("isMain",false)
+        like.addWhereEqualTo("mainId",uri)
+        like.findObjects(object :FindListener<comment_like>(){
             override fun done(p0: MutableList<comment_like>?, p1: BmobException?) {
-                if(p1==null&&p0!!.size>0){
-                    if (p0[0].like)
-                        view.setLikeComment(position,true)
+                if(p1==null&&p0!=null){
+                    reply.likeCount = p0.size
+                    var like = false
+                    if(BmobUser.isLogin()){
+                        for(index in 0 until p0.size)
+                            if(p0[index].uid == BmobUser.getCurrentUser(User::class.java).uid){
+                                like = true
+                                break
+                            }
+                    }
+                    reply.like = like
+                    view.insertComment(reply)
                 }
             }
         })
@@ -400,7 +348,7 @@ class RecommendPresenter(view:RecommendConstract.View):RecommendConstract.Presen
             view.toast("内容不能为空")
             return false
         }
-        var user: User
+        val user: User
         if(BmobUser.isLogin())
             user = BmobUser.getCurrentUser(User::class.java)
         else{
@@ -410,88 +358,20 @@ class RecommendPresenter(view:RecommendConstract.View):RecommendConstract.Presen
         return true
     }
 
-    private fun insertComment(uri:String,uid:String,floor:Int){
-        var query:BmobQuery<recommentBean.recomment_comment> = BmobQuery()
-        query.addWhereEqualTo("uri",uri)
-        query.addWhereEqualTo("uid",uid)
-        query.addWhereEqualTo("floor",floor)
-        query.addWhereEqualTo("id",0)
-        query.findObjects(object :FindListener<recommentBean.recomment_comment>(){
-            override fun done(p0: MutableList<recommentBean.recomment_comment>?, p1: BmobException?) {
-                if(p1==null&&p0!!.size>0){
-                    loadReply(p0[0],REPLY_MY_MESSAGE)
-                }
-            }
-        })
+
+    @Synchronized
+    override fun onSendSonMessage(comment: comment, msg: String,position:Int) {
+        senSonMessage(comment,msg,BmobUser.getCurrentUser(User::class.java),position)
     }
 
     @Synchronized
-    override fun onSendSonMessage(comment: recommentBean.recomment_comment, msg: String,position:Int) {
-        var query:BmobQuery<recommentBean.recomment_comment> = BmobQuery()
-        query.addWhereEqualTo("uri",comment.uri)
-        query.addWhereEqualTo("uid",comment.uid)
-        query.addWhereEqualTo("floor",comment.floor)
-        query.addWhereEqualTo("id",0)
-        query.findObjects(object :FindListener<recommentBean.recomment_comment>(){
-            override fun done(p0: MutableList<recommentBean.recomment_comment>?, p1: BmobException?) {
-                if(p0!!.size>0&&p1==null){
-                    senSonMessage(p0[0],msg,BmobUser.getCurrentUser(User::class.java),position)
-                }
-
-            }
-        })
-    }
-
-    @Synchronized
-    private fun senSonMessage(comment: recommentBean.recomment_comment, msg: String,user:User,position:Int){
-        var sonComment = recommentBean.recomment_comment()
-        sonComment.uid = user.uid
-        sonComment.uri = this.uri
-        sonComment.floor = comment.floor
-        sonComment.id = comment.comment+1
-        sonComment.content = msg
-        sonComment.save(object :SaveListener<String>(){
+    private fun senSonMessage(comment: comment, msg: String,user:User,position:Int){
+        comment.createSonComment(msg,0).save(object :SaveListener<String>(){
             override fun done(p0: String?, p1: BmobException?) {
                 if(p1==null)
-                    updateParentComment(sonComment,comment,position)
+                    view.sonSendResult(1,position)
             }
         })
-    }
-
-
-    @Synchronized
-    private fun updateParentComment(sonComment: recommentBean.recomment_comment,parentComment: recommentBean.recomment_comment,position:Int){
-        parentComment.comment = parentComment.comment+1
-        var user = BmobUser.getCurrentUser(User::class.java)
-        if(parentComment.comment==1){
-            parentComment.reply_uid1 = user.uid
-            parentComment.content1 = sonComment.content
-        }
-        else if(parentComment.comment==2){
-            parentComment.reply_uid2 = user.uid
-            parentComment.content2 = sonComment.content
-        }
-        parentComment.update(object :UpdateListener(){
-            override fun done(p0: BmobException?) {
-                if(p0==null){
-                    updateView(sonComment,position)
-                }
-            }
-        })
-    }
-
-    private fun updateView(sonComment: recommentBean.recomment_comment,position:Int){
-        when(sonComment.id){
-            1->{
-                view.sonSendResult(1,sonComment.content,position)
-            }
-            2->{
-                view.sonSendResult(2,sonComment.content,position)
-            }
-            else->{
-                view.sonSendResult(sonComment.id,sonComment.content,position)
-            }
-        }
     }
 
     private val view:RecommendConstract.View = view

@@ -17,62 +17,55 @@
             android:layout_marginStart="6dp"
             android:padding="5dp"
             android:layout_centerVertical="true"
-            android:src="@mipmap/back_b"
+            android:src="@mipmap/close_black"
             android:layout_width="32dp"
             android:layout_height="32dp" />
-        <TextView
-            android:clickable="true"
-            android:paddingBottom="3dp"
-            android:paddingTop="3dp"
-            android:paddingEnd="16dp"
-            android:paddingStart="16dp"
-            android:background="@drawable/ripple_teal_bg"
-            android:id="@+id/send"
-            android:layout_marginEnd="10dp"
-            android:textColor="@color/text_white_2"
-            android:text="上传"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:textSize="@dimen/text_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
     </RelativeLayout>
-    <android.support.v4.widget.NestedScrollView
+    <LinearLayout
+        android:id="@+id/inputLayout"
+        android:background="@drawable/comment_stroke"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
         android:layout_below="@id/navi_Top"
-        android:id="@+id/scrollView"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
-            android:orientation="vertical"
+        android:layout_height="wrap_content">
+        <EditText
+            android:layout_marginEnd="12dp"
+            android:layout_marginStart="12dp"
+            android:textSize="@dimen/text_2"
+            android:id="@+id/titleEdit"
+            android:maxLines="1"
+            android:maxLength="25"
+            android:hint="写下图片的名称.."
+            android:background="@null"
+            android:layout_marginTop="20dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <EditText
-                android:textSize="@dimen/text_2"
-                android:id="@+id/titleEdit"
-                android:maxLines="1"
-                android:maxLength="25"
-                android:hint="写下图片的名称.."
-                android:background="@null"
-                android:layout_marginTop="20dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-            <EditText
-                android:textSize="@dimen/text_2"
-                android:id="@+id/contentEdit"
-                android:minLines="5"
-                android:layout_marginBottom="4dp"
-                android:gravity="top"
-                android:hint="此刻的想法.."
-                android:background="@null"
-                android:layout_marginTop="15dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+            android:layout_height="wrap_content" />
+        <EditText
+            android:layout_marginEnd="12dp"
+            android:layout_marginStart="12dp"
+            android:textSize="@dimen/text_2"
+            android:id="@+id/contentEdit"
+            android:minLines="5"
+            android:maxLines="5"
+            android:layout_marginBottom="4dp"
+            android:gravity="top"
+            android:hint="此刻的想法.."
+            android:background="@null"
+            android:layout_marginTop="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <android.support.v7.widget.CardView
+            app:cardElevation="0dp"
+            app:cardCornerRadius="8dp"
+            android:layout_marginBottom="12dp"
+            android:layout_gravity="center"
+            android:layout_width="300dp"
+            android:layout_height="300dp">
             <RelativeLayout
-                android:layout_gravity="center"
-                android:layout_width="300dp"
-                android:layout_height="300dp">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
                 <ImageView
                     android:id="@+id/img"
                     android:scaleType="centerCrop"
@@ -81,14 +74,32 @@
                     android:layout_height="match_parent" />
                 <ImageView
                     android:id="@+id/closePicture"
-                    android:padding="1dp"
+                    android:padding="4dp"
                     android:layout_margin="6dp"
                     android:layout_alignParentEnd="true"
                     android:background="@drawable/bg_ripple_oval_bg"
-                    android:src="@drawable/close_back_white"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp" />
+                    android:src="@mipmap/close_white"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp" />
             </RelativeLayout>
-        </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+        </android.support.v7.widget.CardView>
+    </LinearLayout>
+    <TextView
+        android:elevation="8dp"
+        android:paddingEnd="48dp"
+        android:paddingStart="48dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/inputLayout"
+        android:clickable="true"
+        android:background="@drawable/ripple_send_know"
+        android:id="@+id/send"
+        android:layout_marginEnd="10dp"
+        android:textColor="@color/text_white_2"
+        android:text="上传"
+        android:layout_centerHorizontal="true"
+        android:textSize="@dimen/text_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </RelativeLayout>

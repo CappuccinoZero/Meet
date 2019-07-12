@@ -1,6 +1,8 @@
 package com.lin.meet.topic;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,11 +15,13 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.lin.meet.R;
-import com.lin.meet.bean.ReplyBean;
-import com.lin.meet.bean.ReplyViewHolder;
 import com.lin.meet.bean.TopicMain;
-import com.lin.meet.bean.topic_comment;
+import com.lin.meet.comment.CommentActivity;
+import com.lin.meet.db_bean.Reply;
+import com.lin.meet.db_bean.ReplyHolder;
+import com.lin.meet.db_bean.comment;
 import com.lin.meet.override.ScaleAnim;
+import com.lin.meet.personal.PersonalActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,11 +31,14 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class TopicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
     private List<RecommendViewBean> list = new ArrayList<>();
-    private List<ReplyBean> replys = new ArrayList<>();
+    private List<Reply> replys = new ArrayList<>();
     private Context context;
     private TopicCallback callback;
     private int thumbCount = 0,commentCount = 0;
     private boolean like = false;
+    private int tempIndex = -1;
+    private int tempCount = -1;
+    private String authorUid = "";
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -44,7 +51,7 @@ public class TopicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
         else {
             view = LayoutInflater.from(context).inflate(R.layout.comment_item,viewGroup,false);
-            return new ReplyViewHolder(view);
+            return new ReplyHolder(view);
         }
     }
 
@@ -71,6 +78,7 @@ public class TopicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     ((TopicViewHoloder)viewHoloder).author.setText(bean.author);
                     ((TopicViewHoloder)viewHoloder).time.setText(bean.time);
                     ((TopicViewHoloder)viewHoloder).loadHeader(context,bean.uri);
+                    ((TopicViewHoloder)viewHoloder).header.setOnClickListener(v-> PersonalActivity.Companion.startOther((Activity) context,authorUid));
                     break;
                 case RecommendViewBean.FLAG_IMAGE:
                     ((TopicViewHoloder)viewHoloder).showLayout(3);
@@ -83,17 +91,17 @@ public class TopicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 case RecommendViewBean.FLAG_CONTENT_BOTTOM:
                     ((TopicViewHoloder)viewHoloder).setCount(thumbCount,commentCount);
                     ((TopicViewHoloder)viewHoloder).showLayout(5);
-                    ((TopicViewHoloder)viewHoloder).thumb.setImageResource(like?R.drawable.thumb_red:R.drawable.thumb);
+                    ((TopicViewHoloder)viewHoloder).thumb.setImageResource(like?R.mipmap.like2:R.mipmap.like);
                     ((TopicViewHoloder)viewHoloder).thumb.setOnClickListener((v)->{
                         if(isNoLogin())return;
                         if(like){
                             like = false;
-                            ScaleAnim.startAnim(((TopicViewHoloder)viewHoloder).thumb,R.drawable.thumb);
+                            ScaleAnim.startAnim(((TopicViewHoloder)viewHoloder).thumb,R.mipmap.like);
                             callback.setLike(like);
                         }
                         else {
                             like = true;
-                            ScaleAnim.startAnim(((TopicViewHoloder)viewHoloder).thumb,R.drawable.thumb_red);
+                            ScaleAnim.startAnim(((TopicViewHoloder)viewHoloder).thumb,R.mipmap.like2);
                             callback.setLike(like);
                         }
                     });
@@ -110,35 +118,38 @@ public class TopicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     ((TopicViewHoloder)viewHoloder).location.setText(bean.content);
                     break;
             }
-        }else if(viewHoloder instanceof ReplyViewHolder){
+        }else if(viewHoloder instanceof ReplyHolder){
             int index = i - list.size();
-            ((ReplyViewHolder)viewHoloder).content.setText(replys.get(index).content);
-            ((ReplyViewHolder)viewHoloder).nickName0.setText(replys.get(index).nickName0);
-            ((ReplyViewHolder)viewHoloder).time.setText(replys.get(index).time);
-            ((ReplyViewHolder)viewHoloder).loadHeader(context,replys.get(index).header);
-            ((ReplyViewHolder)viewHoloder).setLickCount(replys.get(index).likeCount);
-            ((ReplyViewHolder)viewHoloder).setLike(replys.get(index).like);
-            if(replys.get(index).commentCount>0)
-                ((ReplyViewHolder)viewHoloder).replyCount.setText(String.valueOf(replys.get(index).commentCount)+"回复");
+            ((ReplyHolder)viewHoloder).content.setText(replys.get(index).bean.getContent());
+            ((ReplyHolder)viewHoloder).nickName.setText(replys.get(index).nickName);
+            ((ReplyHolder)viewHoloder).time.setText(replys.get(index).bean.getCreatedAt());
+            ((ReplyHolder)viewHoloder).loadHeader(context,replys.get(index).headUri);
+            ((ReplyHolder)viewHoloder).setLickCount(replys.get(index).likeCount);
+            ((ReplyHolder)viewHoloder).setLike(replys.get(index).like);
+            if(replys.get(index).replyCount>0)
+                ((ReplyHolder)viewHoloder).replyCount.setText(String.valueOf(replys.get(index).replyCount)+"回复");
             else
-                ((ReplyViewHolder)viewHoloder).replyCount.setText("回复");
-            ((ReplyViewHolder)viewHoloder).setReplyCount(replys.get(index).commentCount);
-            if(replys.get(index).nickName1!=null&&replys.get(index).content1!=null){
-                ((ReplyViewHolder)viewHoloder).content1.setText(replys.get(index).content1);
-                ((ReplyViewHolder)viewHoloder).nickName1.setText(replys.get(index).nickName1+"：");
-            }
-            if(replys.get(index).nickName2!=null&&replys.get(index).content2!=null){
-                ((ReplyViewHolder)viewHoloder).content2.setText(replys.get(index).content2);
-                ((ReplyViewHolder)viewHoloder).nickName2.setText(replys.get(index).nickName2+"：");
-            }
-            ((ReplyViewHolder)viewHoloder).item.setOnClickListener((v)->{
-                callback.showSonEdit(replys.get(index).getTopic(),i);
+                ((ReplyHolder)viewHoloder).replyCount.setText("回复");
+            ((ReplyHolder)viewHoloder).item.setOnClickListener((v)->{
+                Intent intent = new Intent(context, CommentActivity.class);
+                intent.putExtra("id",replys.get(index).bean.getId());
+                intent.putExtra("flag",replys.get(index).bean.getFlag());
+                intent.putExtra("Like",replys.get(index).like);
+                intent.putExtra("Count",replys.get(index).replyCount);
+                tempIndex = i - list.size();
+                callback.startComment(intent);
             });
-            ((ReplyViewHolder)viewHoloder).like.setOnClickListener(v->{
+            ((ReplyHolder)viewHoloder).like.setOnClickListener(v->{
                 if(isNoLogin())return;
-                replys.get(index).like = ((ReplyViewHolder)viewHoloder).onClickLike();
-                callback.onCommentLike(i,replys.get(index).floor);
+                replys.get(index).like = !replys.get(index).like;
+                ((ReplyHolder)viewHoloder).setLikeAnim(replys.get(index).like);
+                updateCommentLike(index,((ReplyHolder)viewHoloder),replys.get(index).like);
+                callback.onCommentLike(replys.get(index).bean.getId(),replys.get(index).bean.getUid(),replys.get(index).like);
             });
+            ((ReplyHolder)viewHoloder).replyCount.setOnClickListener(v->{
+                callback.showSonEdit(replys.get(index).bean,i);
+            });
+            ((ReplyHolder)viewHoloder).header.setOnClickListener(v->PersonalActivity.Companion.startOther((Activity)context,replys.get(index).bean.getUid()));
         }
     }
 
@@ -232,7 +243,7 @@ public class TopicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public void initAdapter(TopicMain bean){
         if(bean==null)
             return;
-
+        this.authorUid = bean.bean.getUid();
         RecommendViewBean reBean= new RecommendViewBean();
         reBean.author = bean.getNickName();
         reBean.time = bean.bean.getCreatedAt();
@@ -281,41 +292,23 @@ public class TopicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         notifyDataSetChanged();
     }
 
-    synchronized int insertComment(ReplyBean bean){
-        if(replys.size()==0){
-            replys.add(bean);
-            notifyDataSetChanged();
-            return list.size();
-        }
-        for(int i=0;i<replys.size();i++){
-            if(replys.get(i).updateTime<bean.updateTime){
-                replys.add(i,bean);
-                notifyDataSetChanged();
-                return i+list.size();
-            }
-        }
+    synchronized int insertComment(int position,Reply bean){
+        replys.add(position,bean);
+        notifyDataSetChanged();
+        return replys.size()+list.size()-1;
+    }
+
+    synchronized int insertComment(Reply bean){
         replys.add(bean);
         notifyDataSetChanged();
         return replys.size()+list.size()-1;
     }
 
-    void updateSonReply(String msg,String nickName,int position,int floor){
-        if(floor == 1){
-            replys.get(position-list.size()).content1 = msg;
-            replys.get(position-list.size()).nickName1 = nickName;
-        }
-        else if(floor==2){
-            replys.get(position-list.size()).content2 = msg;
-            replys.get(position-list.size()).nickName2 = nickName;
-        }
-        replys.get(position-list.size()).commentCount = floor;
-        notifyDataSetChanged();
-    }
-
     interface TopicCallback{
-        void showSonEdit(topic_comment comment, int position);
+        void showSonEdit(comment comment, int position);
         void setLike(boolean like);
-        void onCommentLike(int position,int floor);
+        void onCommentLike(String parentId,String parentUid,boolean like);
+        void startComment(Intent intent);
     }
 
     public void setThumbCount(int count){
@@ -333,28 +326,42 @@ public class TopicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return thumbCount;
     }
 
-    void updateCommentLike(int position,boolean like){
-        replys.get(position-list.size()).like = like;
+    private void updateCommentLike(int i,ReplyHolder holder,boolean like){
         if(like)
-            replys.get(position-list.size()).likeCount = replys.get(position-list.size()).likeCount +1;
+            replys.get(i).likeCount++;
         else
-            replys.get(position-list.size()).likeCount = replys.get(position-list.size()).likeCount -1;
-        notifyDataSetChanged();
-    }
-
-
-    void setCommentLikeCount(int position,int count){
-        replys.get(position - list.size()).likeCount = count;
-        notifyDataSetChanged();
-    }
-
-    void setCommentLike(int position,boolean like){
-        replys.get(position - list.size()).like = like;
+            replys.get(i).likeCount--;
         notifyDataSetChanged();
     }
 
     void setLike(boolean like){
         this.like = like;
         notifyDataSetChanged();
+    }
+
+    void addComment(int position){
+        replys.get(position-list.size()).replyCount++;
+        notifyDataSetChanged();
+    }
+
+    void updateLikeStatus(boolean like){
+        if(tempIndex!=-1){
+            if(like&&!replys.get(tempIndex).like){
+                replys.get(tempIndex).likeCount++;
+            }else if(!like&&replys.get(tempIndex).like){
+                replys.get(tempIndex).likeCount--;
+            }
+            replys.get(tempIndex).like = like;
+            notifyDataSetChanged();
+        }
+    }
+
+    void updateCommentStatus(int count){
+        if(tempIndex!=-1&&count!=-1){
+            if(count!=tempCount){
+                replys.get(tempIndex).replyCount = count;
+                notifyDataSetChanged();
+            }
+        }
     }
 }

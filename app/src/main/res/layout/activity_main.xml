@@ -5,20 +5,19 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/main_drawer"
-    android:fitsSystemWindows="true"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".main.MainActivity">
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <FrameLayout
-            android:layout_marginBottom="50dp"
             android:id="@+id/main_content"
-            android:layout_above="@+id/main_bottom_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </FrameLayout>
+            android:layout_height="match_parent"
+            android:layout_above="@+id/main_bottom_layout"
+            android:layout_marginBottom="60dp"/>
         <FrameLayout
+            android:fitsSystemWindows="true"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:id="@+id/main_bottom_layout"
             android:layout_gravity="bottom"
@@ -54,18 +53,17 @@
                     android:layout_weight="2"/>
             </LinearLayout>
         </FrameLayout>
-        <android.support.design.widget.FloatingActionButton
-            android:id = "@+id/open_camera_activity"
+        <ImageView
+            android:fitsSystemWindows="true"
+            android:padding="20dp"
+            android:id="@+id/open_camera_activity"
             android:layout_gravity="bottom|center"
-            android:layout_marginBottom="28dp"
+            android:layout_marginBottom="6dp"
             android:elevation="9dp"
-            android:src="@drawable/camera_test"
-            android:backgroundTint="#1DE9B6"
-            app:fabSize="normal"
-            app:borderWidth="0dp"
-            app:elevation="1dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:src="@mipmap/camera"
+            android:background="@drawable/bg_camera_ripple"
+            android:layout_width="64dp"
+            android:layout_height="64dp" />
         <FrameLayout
             android:id="@+id/animator_layout"
             android:background="#000"
@@ -84,66 +82,17 @@
         android:layout_gravity="start"
         app:headerLayout="@layout/header_view">
         <RelativeLayout
-            android:transitionName="main_item_layout"
-            android:id="@+id/draw_item_layout"
-            android:layout_marginTop="230dp"
+            android:background="@drawable/drawer_bg1"
+            android:layout_marginTop="200dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <include layout="@layout/main_item"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="40dp"
                 android:id="@+id/main_include"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
-            <LinearLayout
-                android:layout_above="@+id/main_include"
-                android:background="#fff"
-                android:layout_alignParentBottom="true"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <LinearLayout
-                    android:clickable="true"
-                    android:background="@drawable/bg_ripple_rect_gray"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    >
-                    <TextView
-                        android:paddingBottom="10dp"
-                        android:paddingTop="10dp"
-                        android:drawablePadding="4dp"
-                        android:layout_gravity="center"
-                        android:drawableLeft="@drawable/setting"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/text_2"
-                        android:textColor="@color/text_back_2"
-                        android:text="设置"
-                        />
-                </LinearLayout>
-                <LinearLayout
-                    android:clickable="true"
-                    android:background="@drawable/bg_ripple_rect_gray"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    >
-                    <TextView
-                        android:id="@+id/exit"
-                        android:paddingBottom="10dp"
-                        android:paddingTop="10dp"
-                        android:drawablePadding="4dp"
-                        android:layout_gravity="center"
-                        android:drawableLeft="@drawable/exit"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/text_2"
-                        android:textColor="@color/text_back_2"
-                        android:text="退出"
-                        />
-                </LinearLayout>
-            </LinearLayout>
         </RelativeLayout>
     </android.support.design.widget.NavigationView>
 </android.support.v4.widget.DrawerLayout>

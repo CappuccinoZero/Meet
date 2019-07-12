@@ -7,7 +7,7 @@ import cn.bmob.v3.exception.BmobException
 import cn.bmob.v3.listener.SaveListener
 import cn.bmob.v3.listener.UploadFileListener
 import com.lin.meet.bean.User
-import com.lin.meet.bean.video_main
+import com.lin.meet.db_bean.video_main
 import java.io.File
 
 class SendVideoPresenter(view:VideoContract.SendView):VideoContract.SendPresenter {
@@ -42,7 +42,6 @@ class SendVideoPresenter(view:VideoContract.SendView):VideoContract.SendPresente
         video.uid = getUser().uid
         video.tltle = title
         video.uri = uri
-        video.isPicture = false
         video.save(object :SaveListener<String>(){
             override fun done(p0: String?, p1: BmobException?) {
                 if(p1==null){

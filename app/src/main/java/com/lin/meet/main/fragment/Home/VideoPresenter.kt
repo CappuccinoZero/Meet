@@ -4,12 +4,13 @@ import cn.bmob.v3.BmobQuery
 import cn.bmob.v3.exception.BmobException
 import cn.bmob.v3.listener.FindListener
 import com.lin.meet.bean.User
-import com.lin.meet.bean.video_main
+import com.lin.meet.db_bean.video_main
 
 class VideoPresenter(view:HomeConstract.VideoView):HomeConstract.VideoPresenter {
     override fun onInsertToTop() {
         if (loading)return
         loading = true
+        view.setNetError(false)
         val query = BmobQuery<video_main>()
         query.order("-updatedAt")
         query.addWhereEqualTo("isPicture",false)
@@ -17,13 +18,17 @@ class VideoPresenter(view:HomeConstract.VideoView):HomeConstract.VideoPresenter 
         query.setSkip(allPage)
         query.findObjects(object :FindListener<video_main>(){
             override fun done(p0: MutableList<video_main>?, p1: BmobException?) {
-                if (p1 == null && p0!!.isNotEmpty()) {
+                if (p1 == null && p0!=null) {
+                    view.setNetError(false)
                     allPage += p0.size
                     for (i in p0.indices) {
                         val bean = VideoBean(p0[i])
                         onLoadUserTop(bean, i)
                     }
+                }else if(p1!=null){
+                    view.setNetError(true)
                 }
+                view.endLoadMore()
                 view.endRefresh()
                 loading = false
             }
@@ -54,22 +59,25 @@ class VideoPresenter(view:HomeConstract.VideoView):HomeConstract.VideoPresenter 
     private fun onLoadVideos(flag: Int) {
         if (loading)return
         loading = true
+        view.setNetError(false)
         val query = BmobQuery<video_main>()
         query.order("-updatedAt")
-        query.addWhereEqualTo("isPicture",false)
         query.setLimit(page)
         query.setSkip(allPage)
         query.findObjects(object :FindListener<video_main>(){
             override fun done(p0: MutableList<video_main>?, p1: BmobException?) {
-                if (p1 == null && p0!!.isNotEmpty()) {
+                if (p1 == null && p0!=null) {
+                    view.setNetError(false)
                     allPage += p0.size
                     for (i in p0.indices) {
                         val bean = VideoBean(p0[i])
                         onLoadUser(bean, flag)
                     }
-                    if (flag == 2)
-                        view.endRefresh()
+                }else if(p1!=null&&flag==2){
+                    view.setNetError(true)
                 }
+                view.endLoadMore()
+                view.endRefresh()
                 loading = false
             }
         })

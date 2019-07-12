@@ -13,11 +13,11 @@
         <de.hdodenhof.circleimageview.CircleImageView
             app:civ_border_width="0.5dp"
             app:civ_border_color="#4D000000"
-            android:src="@drawable/temp"
+            android:src="@drawable/header"
             android:id="@+id/topic_view_header"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="20dp"
             android:layout_width="36dp"
             android:layout_height="36dp" />
         <TextView
@@ -49,6 +49,7 @@
         android:layout_height="match_parent">
         <TextView
             android:id="@+id/topic_view_title"
+            android:layout_marginStart="10dp"
             android:padding="10dp"
             android:textColor="@color/text_back_2"
             android:textSize="@dimen/text_3"
@@ -57,6 +58,8 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
     <LinearLayout
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
         android:background="#fff"
         android:id="@+id/topic_view_layout2"
         android:layout_width="match_parent"
@@ -81,12 +84,12 @@
         android:layout_height="match_parent">
         <ImageView
             android:layout_marginStart="20dp"
-            android:src="@drawable/location_teal"
+            android:src="@mipmap/location"
             android:padding="2dp"
             android:layout_width="22dp"
             android:layout_height="22dp" />
         <TextView
-            android:textColor="#00B8D4"
+            android:textColor="#5492AF"
             android:id="@+id/location_text"
             android:layout_marginStart="4dp"
             android:text="地址信息"
@@ -104,8 +107,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <ImageView
-            android:layout_marginStart="30dp"
-            android:src="@drawable/thumb"
+            android:layout_marginStart="20dp"
+            android:src="@mipmap/like"
             android:padding="2dp"
             android:id="@+id/topic_thumb"
             android:layout_width="22dp"
@@ -120,7 +123,7 @@
             android:layout_height="match_parent" />
         <ImageView
             android:layout_marginStart="8dp"
-            android:src="@drawable/reply_img"
+            android:src="@mipmap/comment2"
             android:padding="2dp"
             android:id="@+id/topic_reply"
             android:layout_width="22dp"

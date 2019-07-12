@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
@@ -13,6 +14,7 @@ import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
@@ -32,10 +34,12 @@ import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
 import com.luck.picture.lib.tools.PictureFileUtils
+import com.youngfeng.snake.annotations.EnableDragToClose
 import kotlinx.android.synthetic.main.activity_persetting.*
 import java.util.*
 import kotlin.collections.ArrayList
 
+@EnableDragToClose
 class PersonalSetting : AppCompatActivity(), View.OnClickListener,PerStContract.View {
     private fun hideInputMethod() {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -265,17 +269,24 @@ class PersonalSetting : AppCompatActivity(), View.OnClickListener,PerStContract.
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.statusBarColor=resources.getColor(R.color.camera_setting_color)
+        val decorView = window.decorView
+        val option = (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
+        decorView.systemUiVisibility = option
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.statusBarColor = Color.TRANSPARENT
         setContentView(R.layout.activity_persetting)
         initView()
     }
 
     private fun initView(){
         toolbar = findViewById(R.id.perStToolbar)
-        setSupportActionBar(toolbar!!)
-        supportActionBar!!.title = "我的资料"
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar!!.setHomeAsUpIndicator(R.mipmap.back_x)
+        setSupportActionBar(perStToolbar)
+        if(supportActionBar!=null){
+            supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+            supportActionBar!!.setHomeAsUpIndicator(R.mipmap.onback_blue)
+        }
         persenter = PerStPresenter(this)
         perStBg.setOnClickListener(this)
         perStEmail.setOnClickListener(this)
@@ -330,6 +341,8 @@ class PersonalSetting : AppCompatActivity(), View.OnClickListener,PerStContract.
             saveEditFinish()
         }else
             super.onBackPressed()
+        if(intent.getBooleanExtra("fromMain",false))
+            overridePendingTransition(R.anim.fade_in,R.anim.fade_out)
     }
 
     private fun saveEditFinish(){
@@ -388,6 +401,7 @@ class PersonalSetting : AppCompatActivity(), View.OnClickListener,PerStContract.
                 .rotateEnabled(true)
                 .scaleEnabled(true)
                 .isDragFrame(true)
+                .isCamera(false)
                 .forResult(requestCode)
     }
 
@@ -420,6 +434,8 @@ class PersonalSetting : AppCompatActivity(), View.OnClickListener,PerStContract.
         }else
             setResult(0)
         super.finish()
+        if(intent.getBooleanExtra("fromMain",false))
+            overridePendingTransition(R.anim.fade_in,R.anim.fade_out)
     }
 
     private fun createDatePickDialog(){

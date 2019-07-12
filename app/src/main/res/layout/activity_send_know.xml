@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="#fff"
-    tools:context=".Know.SendKnowActivity">
+    tools:context=".know.SendKnowActivity">
     <RelativeLayout
         android:id="@+id/navi_Top"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="50dp">
         <ImageView
@@ -17,7 +17,7 @@
             android:layout_marginStart="6dp"
             android:padding="3dp"
             android:layout_centerVertical="true"
-            android:src="@drawable/close_back"
+            android:src="@mipmap/close_black"
             android:layout_width="32dp"
             android:layout_height="32dp" />
         <TextView
@@ -27,73 +27,51 @@
             android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/send"
-            android:layout_marginEnd="10dp"
-            android:textColor="#00B0FF"
-            android:text="发布"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:textSize="@dimen/text_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
     </RelativeLayout>
-    <android.support.v4.widget.NestedScrollView
+    <FrameLayout
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
-        android:layout_above="@id/navi_bottom"
-        android:layout_below="@id/navi_Top"
-        android:id="@+id/scrollView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <EditText
-                android:paddingTop="4dp"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:textSize="@dimen/text_2"
-                android:id="@+id/know_edit"
-                android:minLines="12"
-                android:maxLines="12"
-                android:layout_marginBottom="4dp"
-                android:gravity="top"
-                android:hint="写下你的提问吧"
-                android:background="@drawable/comment_stroke"
-                android:layout_marginTop="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
-    <View
-        android:background="@color/line_back"
-        android:layout_above="@+id/navi_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"/>
-    <LinearLayout
         android:orientation="vertical"
-        android:id="@+id/navi_bottom"
-        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <GridView
-            android:padding="4dp"
-            android:visibility="gone"
-            android:numColumns="10"
-            android:stretchMode="columnWidth"
-            android:id="@+id/emoji_View"
+        <EditText
+            android:paddingTop="4dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:textSize="@dimen/text_2"
+            android:id="@+id/know_edit"
+            android:minLines="12"
+            android:maxLines="12"
+            android:layout_marginBottom="4dp"
+            android:gravity="top"
+            android:background="@drawable/comment_stroke"
+            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/open_photo"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:backgroundTint="#1DE9B6"
-        android:src="@drawable/add_photo"
-        android:layout_margin="24dp"
+            android:layout_height="wrap_content" />
+        <android.support.design.widget.FloatingActionButton
+            app:elevation="0dp"
+            app:fabSize="mini"
+            android:id="@+id/open_photo"
+            android:layout_gravity="bottom|end"
+            android:backgroundTint="#3F85A6"
+            android:src="@mipmap/picture"
+            android:layout_margin="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </FrameLayout>
+    <TextView
+        android:elevation="8dp"
+        android:paddingEnd="48dp"
+        android:paddingStart="48dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:background="@drawable/ripple_send_know"
+        android:id="@+id/send"
+        android:textColor="#FBFBFB"
+        android:text="发布"
+        android:textSize="@dimen/text_3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-</RelativeLayout>
+</LinearLayout>

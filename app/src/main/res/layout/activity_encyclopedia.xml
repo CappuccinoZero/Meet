@@ -10,7 +10,7 @@
     android:id="@+id/ency_img"
     android:layout_width="match_parent"
     android:layout_height="@dimen/ency_head"
-    android:src="@drawable/bg_0"
+    android:src="@drawable/gradient_bg"
     android:scaleType="fitXY"
     />
     <android.support.design.widget.AppBarLayout
@@ -86,7 +86,7 @@
         android:layout_alignParentLeft="true"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:src="@mipmap/back_g"/>
+        android:src="@mipmap/onback_blue"/>
 
 
 </android.support.design.widget.CoordinatorLayout>

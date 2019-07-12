@@ -15,11 +15,20 @@ import com.bumptech.glide.Glide
 import com.hw.ycshareelement.transition.ChangeTextTransition
 import com.lin.meet.R
 import com.lin.meet.bean.User
-import com.lin.meet.bean.video_main
+import com.lin.meet.db_bean.picture_main
+import com.lin.meet.personal.PersonalActivity
 import kotlinx.android.synthetic.main.activity_picture_observer.*
 
 class PictureObserver : AppCompatActivity() ,ObserverContract.View{
-    var bean :video_main ?= null
+    override fun setNickName(str:String) {
+        nickName.text = str
+    }
+
+    override fun setHeader(str:String) {
+        Glide.with(this).load(str).into(header)
+    }
+
+    var bean : picture_main?= null
     override fun updateHot() {
         if(bean!=null)
             presenter.updateHot(bean!!)
@@ -36,14 +45,13 @@ class PictureObserver : AppCompatActivity() ,ObserverContract.View{
 
     override fun setDownloadClickable(clickable: Boolean) {
             download.isClickable = clickable
-            download.setImageResource(if(clickable)R.drawable.download else R.drawable.downloading)
+            download.setImageResource(if(clickable)R.mipmap.download else R.mipmap.downloading)
     }
 
     val presenter:ObserverContract.Presenter = ObserverPresenter(this)
     val DEFAULT_NICKNAME = "智能百科"
     override fun updateAhthor(user: User?,showAttention:Boolean) {
         if(!showAttention){
-            attention.visibility = View.GONE
             nickName.text = DEFAULT_NICKNAME
         }else{
             nickName.text = user?.nickName
@@ -60,7 +68,7 @@ class PictureObserver : AppCompatActivity() ,ObserverContract.View{
 
     fun initData(){
         if(intent.getBooleanExtra("haveContent",false)){
-            val bean = intent.getSerializableExtra("bean") as video_main
+            val bean = intent.getSerializableExtra("bean") as picture_main
             this.bean = bean
             this.url = bean.uri
             Glide.with(this).load(bean.uri).into(image)
@@ -70,6 +78,7 @@ class PictureObserver : AppCompatActivity() ,ObserverContract.View{
                 content.text = bean.content
             }
             presenter.initAuthorMessage(bean.uid)
+            header.setOnClickListener { if(bean.uid!="@Meet"&&bean.uid.isNotEmpty())PersonalActivity.startOther(this,bean.uid) }
         }else{
 
         }

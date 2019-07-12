@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.lin.meet.override.MyRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:id="@+id/parent_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#050505"
     tools:context=".video.VideoActivity">
-    <com.lin.meet.override.JZVideo
-        android:id="@+id/player"
+    <include
+        android:layout_marginTop="21dp"
+        android:id="@+id/videoView"
+        layout="@layout/video_view"
         android:layout_width="match_parent"
-        android:layout_height="200dp"/>
+        android:layout_height="225dp"/>
     <RelativeLayout
         android:paddingStart="10dp"
         android:elevation="1dp"
         android:background="@color/background_default"
-        android:layout_below="@+id/player"
+        android:layout_below="@+id/videoView"
         android:id="@+id/video_user_layout"
-        android:paddingBottom="4dp"
-        android:layout_width="wrap_content"
+        android:paddingBottom="8dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_marginStart="5dp"
@@ -27,7 +30,7 @@
             android:layout_gravity="center"
             android:layout_width="28dp"
             android:layout_height="28dp"
-            android:src="@drawable/temp"
+            android:src="@drawable/header"
             app:civ_border_color="#C8C8C8"
             app:civ_border_width="1dp"
             />
@@ -40,34 +43,41 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_0"
-            android:textColor="#00BFA5"
+            android:textColor="#8C9EFF"
             android:text="作者"/>
-        <TextView
-            android:clickable="true"
-            android:id="@+id/attention"
-            android:elevation="1dp"
-            android:textColor="@color/text_white_2"
-            android:paddingTop="1dp"
-            android:paddingBottom="1dp"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp"
-            android:layout_marginEnd="20dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:textSize="@dimen/text_1"
-            android:text="关注"
-            android:background="@drawable/bg_ripple_attention"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
     </RelativeLayout>
     <android.support.v7.widget.RecyclerView
+        android:background="#fff"
         android:id="@+id/video_recyclerView"
         android:layout_below="@id/video_user_layout"
         android:layout_above="@id/video_reply_normal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/nullComment"
+        android:layout_marginTop="50dp"
+        android:layout_below="@id/video_user_layout"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_gravity="center"
+            android:src="@drawable/xiaoli"
+            android:layout_width="150dp"
+            android:layout_height="150dp" />
+        <TextView
+            android:textColor="@color/text_back_2"
+            android:textSize="@dimen/text_2"
+            android:layout_marginTop="4dp"
+            android:text="╮(╯ε╰)╭还没有被评论呢"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
     <RelativeLayout
-        android:background="@drawable/round_top_util"
+        android:background="#fff"
         android:paddingStart="4dp"
         android:paddingTop="6dp"
         android:paddingBottom="4dp"
@@ -75,7 +85,7 @@
         android:id="@+id/video_reply_normal"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="42dp">
+        android:layout_height="48dp">
         <LinearLayout
             android:id="@+id/video_reply_layout"
             android:layout_toLeftOf="@id/video_bottom_right"
@@ -87,19 +97,8 @@
             android:paddingEnd="30dp"
             android:background="@drawable/reply_shape"
             android:layout_width="300dp"
-            android:layout_height="match_parent">
-            <ImageView
-                android:padding="1dp"
-                android:src="@drawable/pen"
-                android:layout_width="20dp"
-                android:layout_height="20dp" />
-            <TextView
-                android:textColor="@color/text_back_1"
-                android:textSize="@dimen/text_1"
-                android:paddingStart="4dp"
-                android:text="写评论..."
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
         </LinearLayout>
         <LinearLayout
             android:layout_marginStart="15dp"
@@ -113,28 +112,29 @@
                 android:id="@+id/video_thumb"
                 android:layout_marginEnd="10dp"
                 android:padding="1dp"
-                android:src="@drawable/thumb"
+                android:src="@mipmap/like"
                 android:layout_width="24dp"
                 android:layout_height="24dp" />
             <ImageView
                 android:id="@+id/star"
                 android:layout_marginEnd="10dp"
                 android:padding="1dp"
-                android:src="@drawable/star_0"
+                android:src="@mipmap/love"
                 android:layout_width="24dp"
                 android:layout_height="24dp" />
             <ImageView
                 android:layout_marginEnd="10dp"
                 android:padding="1dp"
-                android:src="@drawable/see_right"
+                android:src="@mipmap/zf"
                 android:layout_width="24dp"
                 android:layout_height="24dp" />
         </LinearLayout>
     </RelativeLayout>
     <LinearLayout
+        android:fitsSystemWindows="true"
         android:clickable="true"
         android:visibility="gone"
-        android:background="@drawable/round_top_util"
+        android:background="#fff"
         android:paddingTop="4dp"
         android:layout_alignParentBottom="true"
         android:id="@+id/video_reply_write"
@@ -146,10 +146,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <EditText
-                android:hint="写下你的评论吧 ~"
                 android:maxLines="3"
-                android:paddingTop="2dp"
-                android:paddingBottom="2dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
                 android:layout_marginBottom="4dp"
@@ -162,6 +161,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
             <TextView
+                android:textColor="#2C6E8E"
                 android:clickable="true"
                 android:layout_marginEnd="10dp"
                 android:layout_alignParentEnd="true"
@@ -181,7 +181,7 @@
                 android:layout_gravity="end"
                 android:layout_marginEnd="15dp"
                 android:padding="1dp"
-                android:src="@drawable/emoj"
+                android:src="@mipmap/emoji"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginBottom="4dp"
@@ -196,4 +196,4 @@
                 android:layout_height="wrap_content"/>
         </LinearLayout>
     </LinearLayout>
-</com.lin.meet.override.MyRelativeLayout>
+</RelativeLayout>
