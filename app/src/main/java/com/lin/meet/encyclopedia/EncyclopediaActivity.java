@@ -31,7 +31,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.hw.ycshareelement.transition.ChangeTextTransition;
 import com.lin.meet.R;
 import com.lin.meet.jsoup.AnimalBaike;
 import com.lin.meet.jsoup.BaikeBean;
@@ -123,7 +122,6 @@ public class EncyclopediaActivity extends AppCompatActivity implements View.OnCl
         set.addTransition(new ChangeBounds());
         set.addTransition(new ChangeImageTransform());
         set.addTransition(new ChangeTransform());
-        set.addTransition(new ChangeTextTransition());
         set.addTarget(img);
         set.addTarget(title_c);
         set.addTarget(title_e);

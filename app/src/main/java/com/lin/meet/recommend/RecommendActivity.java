@@ -28,7 +28,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.hw.ycshareelement.transition.ChangeTextTransition;
 import com.lin.meet.R;
 import com.lin.meet.db_bean.Reply;
 import com.lin.meet.db_bean.comment;
@@ -114,7 +113,6 @@ public class RecommendActivity extends AppCompatActivity implements View.OnClick
         set.addTransition(new ChangeBounds());
         set.addTransition(new ChangeImageTransform());
         set.addTransition(new ChangeTransform());
-        set.addTransition(new ChangeTextTransition());
         set.addTarget(headImage);
         set.addTarget(title);
 

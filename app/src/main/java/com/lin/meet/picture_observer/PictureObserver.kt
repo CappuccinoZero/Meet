@@ -12,7 +12,6 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
 import com.bumptech.glide.Glide
-import com.hw.ycshareelement.transition.ChangeTextTransition
 import com.lin.meet.R
 import com.lin.meet.bean.User
 import com.lin.meet.db_bean.picture_main
@@ -92,7 +91,6 @@ class PictureObserver : AppCompatActivity() ,ObserverContract.View{
         set.addTransition(ChangeBounds())
         set.addTransition(ChangeImageTransform())
         set.addTransition(ChangeTransform())
-        set.addTransition(ChangeTextTransition())
         window.sharedElementExitTransition = set
         window.sharedElementEnterTransition = set
     }

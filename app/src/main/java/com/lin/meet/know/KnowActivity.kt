@@ -18,7 +18,6 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.bumptech.glide.Glide
-import com.hw.ycshareelement.transition.ChangeTextTransition
 import com.lin.meet.R
 import com.lin.meet.bean.DefaultUtil
 import com.lin.meet.bean.KnowBean
@@ -142,7 +141,6 @@ class KnowActivity : AppCompatActivity(), View.OnClickListener,Constarct.View, K
         val set = TransitionSet()
         set.addTransition(ChangeTransform())
         set.addTransition(ChangeImageTransform())
-        set.addTransition(ChangeTextTransition())
         set.addTransition(ChangeBounds())
         set.addTarget(know_img)
         window.sharedElementExitTransition = set

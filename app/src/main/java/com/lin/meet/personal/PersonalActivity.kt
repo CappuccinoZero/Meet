@@ -21,7 +21,6 @@ import android.widget.Toast
 import cn.bmob.v3.BmobUser
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.hw.ycshareelement.transition.ChangeTextTransition
 import com.lin.meet.R
 import com.lin.meet.bean.User
 import kotlinx.android.synthetic.main.activity_personal.*
@@ -264,7 +263,6 @@ class PersonalActivity : AppCompatActivity(), View.OnClickListener,PersonalContr
         set.addTransition(ChangeBounds())
         set.addTransition(ChangeImageTransform())
         set.addTransition(ChangeTransform())
-        set.addTransition(ChangeTextTransition())
         set.addTarget(perHeader)
         set.addTarget(perUserName2)
         set.addTarget(perContentView)

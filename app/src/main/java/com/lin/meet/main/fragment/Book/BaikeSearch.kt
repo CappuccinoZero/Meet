@@ -16,7 +16,6 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
-import com.hw.ycshareelement.transition.ChangeTextTransition
 import com.lin.meet.R
 import kotlinx.android.synthetic.main.activity_baike_search.*
 
@@ -36,7 +35,6 @@ class BaikeSearch : AppCompatActivity() {
         set.addTransition(ChangeBounds())
         set.addTransition(ChangeImageTransform())
         set.addTransition(ChangeTransform())
-        set.addTransition(ChangeTextTransition())
         set.addTarget(search)
         window.sharedElementExitTransition = set
         window.sharedElementEnterTransition = set

@@ -94,8 +94,7 @@ public class RecommendFragment extends Fragment implements RecommendConstract.se
                     }
                     break;
                 case LoveNews.JSOUP_CONNECT_ERROR:
-                    loadAidongwu(false);
-                    loveError = true;
+                    Toast.makeText(getContext(),"连接错误！！",Toast.LENGTH_SHORT).show();
                     break;
             }
         }
@@ -293,10 +292,7 @@ public class RecommendFragment extends Fragment implements RecommendConstract.se
         int randomNum = random.nextInt(2);
         if(mAdapter.isError())
             mAdapter.setError(false);
-        if(lovehhyPage<3&&isLoadLovehhy&&randomNum==0&&!loveError)
-            loadLovehhy(top);
-        else
-            loadAidongwu(top);
+        loadLovehhy(top);
     }
 
     private void loadLovehhy(boolean top){
